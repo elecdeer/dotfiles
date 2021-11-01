@@ -1,4 +1,4 @@
-export ZPLUG_HOME=/usr/local/opt/zplug
+export ZPLUG_HOME=$(brew --prefix)/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 # ================================
@@ -23,6 +23,7 @@ DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
 zplug "pinelibg/dircolors-solarized-zsh"
 zplug "felixr/docker-zsh-completion"
 
+zplug "asdf-vm/asdf"
 
 # ================================
 # alias
@@ -35,10 +36,15 @@ alias la="gls -Nla --color"
 # ================================
 # config
 # ================================
-#保管にも色付
-if [ -n "$LS_COLORS" ]; then
-    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-fi
+#補完にも色付
+
+setopt auto_list
+setopt auto_menu
+zstyle ':completion:*:default' menu select=1 
+# if [ -n "$LS_COLORS" ]; then
+#     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# fi
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 # 大文字小文字を区別しない
 zstyle ":completion:*" matcher-list "m:{a-z}={A-Z}"
@@ -57,10 +63,18 @@ zplug load
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+
+#asdf
+fpath=($HOME/.asdf/completions $fpath)
+autoload -Uz compinit && compinit
+autoload -U bashcompinit && bashcompinit
+                                                         
+source $HOME/.asdf/asdf.sh                                                                                                                                     
+source $HOME/.asdf/completions/asdf.bash 
+
+
 #dockerCompletion
 if [ -e ~/.zsh/completions ]; then
   fpath=(~/.zsh/completions $fpath)
 fi
 
-#asdf
-. $(brew --prefix asdf)/asdf.sh

@@ -3,7 +3,7 @@ cask "affinity-photo"
 cask "affinity-publisher"
 cask "arduino-cli"
 cask "arduino"
-cask "hex-fiend
+cask "hex-fiend"
 cask "kindle"
 cask "line"
 cask "mathpix-snipping-tool"
