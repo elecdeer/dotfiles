@@ -1,7 +1,7 @@
+brew "arduino-cli"
 cask "affinity-designer"
 cask "affinity-photo"
 cask "affinity-publisher"
-cask "arduino-cli"
 cask "arduino"
 cask "hex-fiend"
 cask "kindle"
@@ -10,3 +10,4 @@ cask "mathpix-snipping-tool"
 cask "minecraft"
 cask "processing"
 cask "steam"
+mas "LINE", id:539883307 
