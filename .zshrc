@@ -1,29 +1,54 @@
-export ZPLUG_HOME=$(brew --prefix)/opt/zplug
-source $ZPLUG_HOME/init.zsh
+### Added by Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
+
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+
+### End of Zinit's installer chunk
+
 
 # ================================
 # plugins
 # ================================
 
-# zplug from: https://qiita.com/Jung0/items/300f8b83520e56766f22
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-# theme
-zplug "mafredri/zsh-async"
-zplug "sindresorhus/pure"
-# 構文のハイライト(https://github.com/zsh-users/zsh-syntax-highlighting)
-zplug "zsh-users/zsh-syntax-highlighting"
-# history関係
-zplug "zsh-users/zsh-history-substring-search"
-# タイプ補完
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-completions"
-zplug "chrissicool/zsh-256color"
+# テーマ https://github.com/sindresorhus/pure#zinit
+zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zinit light sindresorhus/pure
 
+# 構文ハイライト https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#zplugin
+zinit light zsh-users/zsh-syntax-highlighting
+
+# history
+zinit load zsh-users/zsh-history-substring-search
+
+# 補完
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-completions
+zinit light chrissicool/zsh-256color
+
+# color
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
-zplug "pinelibg/dircolors-solarized-zsh"
-zplug "felixr/docker-zsh-completion"
+zinit load pinelibg/dircolors-solarized-zsh
 
-zplug "asdf-vm/asdf"
+zinit light asdf-vm/asdf
+
+
+
 
 # ================================
 # alias
@@ -40,7 +65,7 @@ alias la="gls -Nla --color"
 
 setopt auto_list
 setopt auto_menu
-zstyle ':completion:*:default' menu select=1 
+zstyle ':completion:*:default' menu select=1
 # if [ -n "$LS_COLORS" ]; then
 #     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # fi
@@ -50,31 +75,27 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ":completion:*" matcher-list "m:{a-z}={A-Z}"
 
 
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo; zplug install
-  fi
-fi
-# Then, source plugins and add commands to $PATH
-zplug load
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+
+
+# ================================
+# Completion
+# ================================
 
 #asdf
 fpath=($HOME/.asdf/completions $fpath)
 autoload -Uz compinit && compinit
 autoload -U bashcompinit && bashcompinit
-                                                         
-source $HOME/.asdf/asdf.sh                                                                                                                                     
-source $HOME/.asdf/completions/asdf.bash 
+
+source $HOME/.asdf/asdf.sh
+source $HOME/.asdf/completions/asdf.bash
+
+
 
 
 #dockerCompletion
-if [ -e ~/.zsh/completions ]; then
-  fpath=(~/.zsh/completions $fpath)
-fi
+# if [ -e ~/.zsh/completions ]; then
+#   fpath=(~/.zsh/completions $fpath)
+# fi
 
