@@ -49,7 +49,6 @@ zinit light asdf-vm/asdf
 
 
 
-
 # ================================
 # alias
 # ================================
@@ -83,19 +82,26 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Completion
 # ================================
 
-#asdf
-fpath=($HOME/.asdf/completions $fpath)
+COMPLETIONS_DIR=~/.zsh/completions
+
+if [ ! -d $COMPLETIONS_DIR ]; then
+  mkdir -p $COMPLETIONS_DIR
+fi
+
+# docker-compose
+if [ ! -e $COMPLETIONS_DIR/_docker-compose ]; then
+  ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion $COMPLETIONS_DIR/_docker-compose
+fi
+
+# deno
+if [ ! -e $COMPLETIONS_DIR/_deno ]; then
+  deno completions zsh > $COMPLETIONS_DIR/_deno
+fi
+
+fpath=($(brew --prefix)/share/zsh-completions $fpath)
+fpath=(~/.zsh/completions $fpath)
+
+
 autoload -Uz compinit && compinit
 autoload -U bashcompinit && bashcompinit
-
-source $HOME/.asdf/asdf.sh
-source $HOME/.asdf/completions/asdf.bash
-
-
-
-
-#dockerCompletion
-# if [ -e ~/.zsh/completions ]; then
-#   fpath=(~/.zsh/completions $fpath)
-# fi
 
