@@ -23,9 +23,12 @@ section "Install Basic tap and formulae"
 brew tap Homebrew/bundle
 brew install mas
 
-section "Install Brew formulae"
-touch Brewfile
-brew bundle --file "./Brewfile"
+section "Install Brew cli formulae"
+touch Brewfile-cli
+brew bundle --file "./Brewfile-cli"
 
+section "Install Brew app formulae"
+touch Brewfile-app
+brew bundle --file "./Brewfile-app"
 
 section "Done!"

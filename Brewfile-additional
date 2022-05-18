@@ -1,3 +1,6 @@
+brew "imagemagick"
+brew "opencv"
+brew "platformio"
 brew "arduino-cli"
 cask "affinity-designer"
 cask "affinity-photo"
@@ -10,4 +13,4 @@ cask "mathpix-snipping-tool"
 cask "minecraft"
 cask "processing"
 cask "steam"
-mas "LINE", id:539883307 
+mas "LINE", id:539883307
