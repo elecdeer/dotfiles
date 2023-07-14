@@ -45,6 +45,7 @@ zinit light chrissicool/zsh-256color
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
 zinit load pinelibg/dircolors-solarized-zsh
 
+# asdf
 zinit light asdf-vm/asdf
 
 # ni.zsh
@@ -91,11 +92,6 @@ if [ ! -d $COMPLETIONS_DIR ]; then
   mkdir -p $COMPLETIONS_DIR
 fi
 
-# docker-compose
-if [ ! -e $COMPLETIONS_DIR/_docker-compose ]; then
-  ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion $COMPLETIONS_DIR/_docker-compose
-fi
-
 # deno
 if [ ! -e $COMPLETIONS_DIR/_deno ]; then
   deno completions zsh > $COMPLETIONS_DIR/_deno
@@ -111,3 +107,9 @@ zinit wait lucid is-snippet as"completion" for \
 autoload -Uz compinit && compinit
 autoload -U bashcompinit && bashcompinit
 
+# secret.zshが存在するなら読み込む
+if [ -f ~/dotfiles/secret.zsh ]; then
+  source ~/dotfiles/secret.zsh
+fi
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
