@@ -101,6 +101,9 @@ fi
 fpath=($(brew --prefix)/share/zsh-completions $fpath)
 fpath=(~/.zsh/completions $fpath)
 
+zinit wait lucid is-snippet as"completion" for \
+  OMZP::docker/_docker \
+  OMZP::docker-compose/_docker-compose
 
 autoload -Uz compinit && compinit
 autoload -U bashcompinit && bashcompinit
