@@ -47,6 +47,9 @@ zinit load pinelibg/dircolors-solarized-zsh
 
 zinit light asdf-vm/asdf
 
+# ni.zsh
+zinit load azu/ni.zsh
+
 
 
 # ================================
