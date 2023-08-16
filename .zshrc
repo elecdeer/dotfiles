@@ -82,6 +82,12 @@ zi wait lucid id-as"deno-completion" \
 zi wait lucid as"completion" \
     for OMZP::docker/completions/_docker
 
+# arduino-cli
+zi wait lucid id-as"arduino-cli-completion" for \
+    has'arduino-cli' as'command' \
+    atclone'echo "\$arduino-cli completion zsh > _arduino-cli"; arduino-cli completion zsh > _arduino-cli' \
+    atpull'%atclone' run-atpull'%atclone'\
+    z-shell/null
 
 # ================================
 
