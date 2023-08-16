@@ -1,115 +1,101 @@
-### Added by Zinit's installer
-if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
-    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
-    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
-        print -P "%F{33} %F{34}Installation successful.%f%b" || \
-        print -P "%F{160} The clone has failed.%f%b"
-fi
+source <(curl -sL init.zshell.dev); zzinit
 
-source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
-zinit light-mode for \
-    zdharma-continuum/zinit-annex-as-monitor \
-    zdharma-continuum/zinit-annex-bin-gem-node \
-    zdharma-continuum/zinit-annex-patch-dl \
-    zdharma-continuum/zinit-annex-rust
-
-### End of Zinit's installer chunk
-
+DOTFILES_DIR="${HOME}/dotfiles"
 
 # ================================
-# plugins
+# theme
 # ================================
+zi ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zi light sindresorhus/pure
 
-# テーマ https://github.com/sindresorhus/pure#zinit
-zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
-zinit light sindresorhus/pure
-
-# 構文ハイライト https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#zplugin
-zinit light zsh-users/zsh-syntax-highlighting
-
-# history
-zinit load zsh-users/zsh-history-substring-search
-
-# 補完
-zinit light zsh-users/zsh-autosuggestions
-zinit light zsh-users/zsh-completions
-zinit light chrissicool/zsh-256color
-
-# color
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
-zinit load pinelibg/dircolors-solarized-zsh
-
-# asdf
-zinit light asdf-vm/asdf
-
-# ni.zsh
-zinit load azu/ni.zsh
-
-
-
-# ================================
-# alias
-# ================================
-
-alias ls="gls -N --color"
-alias ll="gls -Nl --color"
-alias la="gls -Nla --color"
+zi light pinelibg/dircolors-solarized-zsh
 
 # ================================
 # config
 # ================================
-#補完にも色付
 
-setopt auto_list
-setopt auto_menu
-zstyle ':completion:*:default' menu select=1
-# if [ -n "$LS_COLORS" ]; then
-#     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# fi
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+setopt auto_list # 補完候補を一覧で表示
+setopt auto_menu # 補完キー連打で補完候補を順に表示する
+setopt complete_in_word # 単語の途中でも補完を行う
+setopt hist_ignore_dups # 直前と同じコマンドラインはヒストリに追加しない
 
-# 大文字小文字を区別しない
-zstyle ":completion:*" matcher-list "m:{a-z}={A-Z}"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} # 補完候補に色を付ける
+zstyle ':completion:*' matcher-list "m:{a-z}={A-Z}" # 補完時に大文字小文字を区別しない
+zstyle ':completion:*:default' menu select=1 # 補完候補をカーソル的にハイライト
+zstyle ':completion::complete:*' use-cache true # 補完候補をキャッシュする
+
+# ================================
+# highlight
+# ================================
+
+# 構文ハイライト https://github.com/zdharma-continuum/fast-syntax-highlighting
 
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
+zi wait lucid atinit"ZI[COMPINIT_OPTS]=-C;" for \
+    zdharma-continuum/fast-syntax-highlighting
 
 
 # ================================
-# Completion
+# tools
 # ================================
 
-COMPLETIONS_DIR=~/.zsh/completions
+zi wait lucid light-mode for \
+    asdf-vm/asdf \
+    azu/ni.zsh
 
-if [ ! -d $COMPLETIONS_DIR ]; then
-  mkdir -p $COMPLETIONS_DIR
-fi
+# exaがインストールされている場合にlsを置き換え
+zi wait lucid for \
+  has'exa' \
+  atinit'AUTOCD=1' \
+  atload='exa_params=('--git' '--classify' '--group' '--group-directories-first' '--time-style=long-iso' '--color-scale')' \
+    zplugin/zsh-exa
 
-# deno
-if [ ! -e $COMPLETIONS_DIR/_deno ]; then
-  deno completions zsh > $COMPLETIONS_DIR/_deno
-fi
+zi pick'init.zsh' compile'*.zsh' for \
+    laggardkernel/zsh-iterm2
 
-fpath=($(brew --prefix)/share/zsh-completions $fpath)
-fpath=(~/.zsh/completions $fpath)
-
-zinit wait lucid is-snippet as"completion" for \
-  OMZP::docker/_docker \
-  OMZP::docker-compose/_docker-compose
-
-autoload -Uz compinit && compinit
-autoload -U bashcompinit && bashcompinit
-
-# secret.zshが存在するなら読み込む
-if [ -f ~/dotfiles/secret.zsh ]; then
-  source ~/dotfiles/secret.zsh
-fi
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+
+# zinit wait lucid depth"1" blockf for \
+#     yuki-yano/zeno.zsh
+
+
+# ================================
+# completions
+# ================================
+
+zi wait lucid light-mode for \
+    atload'_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
+    blockf zsh-users/zsh-completions \
+    zsh-users/zsh-history-substring-search \
+
+# deno
+zi id-as"deno-completion" \
+    has'deno' as'command' run-atpull \
+    atclone'deno completions zsh > _deno-completion' atpull'%atclone' for \
+    z-shell/null
+
+# docker
+zi wait lucid as"completion" for \
+    OMZP::docker/completions/_docker
+
+
+# ================================
+
+# .zshrc.localがあれば読み込み
+zi light-mode as'null' \
+    atinit'if [ -f ${DOTFILES_DIR}/.zshrc.local ]; then source ${DOTFILES_DIR}/.zshrc.local; fi' for \
+    z-shell/null
+
+
+# ================================
+# 最後に遅延ロード
+zi id-as"load-completion" wait lucid light-mode as'null' for \
+    atload"zicompinit; zicdreplay" \
+    z-shell/null
+
+#
+# if type zprof > /dev/null 2>&1; then
+#    zprof | cat
+# fi
