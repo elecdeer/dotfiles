@@ -74,7 +74,7 @@ zi wait lucid light-mode \
 # deno
 zi wait lucid id-as"deno-completion" \
     has'deno' as'command' \
-    atclone'\$deno completions zsh > _deno"; deno completions zsh > _deno' \
+    atclone'echo "\$deno completions zsh > _deno"; deno completions zsh > _deno' \
     atpull'%atclone' run-atpull'%atclone' \
     for z-shell/null
 
