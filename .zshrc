@@ -45,11 +45,11 @@ zi wait lucid light-mode for \
     azu/ni.zsh
 
 # exaがインストールされている場合にlsを置き換え
-zi wait lucid for \
+zi wait lucid \
   has'exa' \
   atinit'AUTOCD=1' \
   atload='exa_params=('--git' '--classify' '--group' '--group-directories-first' '--time-style=long-iso' '--color-scale')' \
-    zplugin/zsh-exa
+  for zplugin/zsh-exa
 
 zi pick'init.zsh' compile'*.zsh' for \
     laggardkernel/zsh-iterm2
@@ -65,35 +65,37 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 # completions
 # ================================
 
-zi wait lucid light-mode for \
+zi wait lucid light-mode \
+    for \
     atload'_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
     blockf zsh-users/zsh-completions \
     zsh-users/zsh-history-substring-search \
 
 # deno
-zi id-as"deno-completion" \
-    has'deno' as'command' run-atpull \
-    atclone'deno completions zsh > _deno-completion' atpull'%atclone' for \
-    z-shell/null
+zi wait lucid id-as"deno-completion" \
+    has'deno' as'command' \
+    atclone'\$deno completions zsh > _deno"; deno completions zsh > _deno' \
+    atpull'%atclone' run-atpull'%atclone' \
+    for z-shell/null
 
 # docker
-zi wait lucid as"completion" for \
-    OMZP::docker/completions/_docker
+zi wait lucid as"completion" \
+    for OMZP::docker/completions/_docker
 
 
 # ================================
 
 # .zshrc.localがあれば読み込み
 zi light-mode as'null' \
-    atinit'if [ -f ${DOTFILES_DIR}/.zshrc.local ]; then source ${DOTFILES_DIR}/.zshrc.local; fi' for \
-    z-shell/null
+    atinit'if [ -f ${DOTFILES_DIR}/.zshrc.local ]; then source ${DOTFILES_DIR}/.zshrc.local; fi' \
+    for z-shell/null
 
 
 # ================================
 # 最後に遅延ロード
-zi id-as"load-completion" wait lucid light-mode as'null' for \
+zi id-as"load-completion" wait lucid light-mode as'null' \
     atload"zicompinit; zicdreplay" \
-    z-shell/null
+    for z-shell/null
 
 #
 # if type zprof > /dev/null 2>&1; then
