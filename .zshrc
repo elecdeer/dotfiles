@@ -1,6 +1,34 @@
 source <(curl -sL init.zshell.dev); zzinit
 
+# ================================
+# env
+# ================================
+
+get_os() {
+	os="$(uname -s)"
+	if [ "$os" = Darwin ]; then
+		echo "macos"
+	elif [ "$os" = Linux ]; then
+		echo "linux"
+	else
+		error "unsupported OS: $os"
+	fi
+}
+
+get_arch() {
+	arch="$(uname -m)"
+	if [ "$arch" = x86_64 ]; then
+		echo "x64"
+	elif [ "$arch" = aarch64 ] || [ "$arch" = arm64 ]; then
+		echo "arm64"
+	else
+		error "unsupported architecture: $arch"
+	fi
+}
+
 DOTFILES_DIR="${HOME}/dotfiles"
+OS="$(get_os)"
+ARCH="$(get_arch)"
 
 # ================================
 # theme
@@ -44,18 +72,31 @@ zi wait lucid atinit"ZI[COMPINIT_OPTS]=-C;" for \
 # tools
 # ================================
 
-zi wait lucid light-mode \
-    for @asdf-vm/asdf
+# zi wait lucid light-mode \
+#     for @asdf-vm/asdf
+
+# https://rtx.pub/install.sh を参考に
+RTX_BPICK="*${OS}-${ARCH}.tar.gz"
+# GitHub ReleaseのLatestを取得
+zi from'gh-r' as'program' bpick"$RTX_BPICK" \
+    pick'rtx/bin/rtx' \
+    atload'eval "$(rtx activate zsh)"' \
+    atclone'echo "\$rtx completion zsh > _rtx"; ./rtx/bin/rtx completion zsh > _rtx' \
+    atpull'%atclone' \
+    for @jdxcode/rtx
+alias asdf='rtx'
+# asdfとの互換性を持たせる
+export RTX_ASDF_COMPAT=1
 
 zi wait lucid light-mode \
     for azu/ni.zsh
 
 # exaがインストールされている場合にlsを置き換え
 zi wait lucid \
-  has'exa' \
-  atinit'AUTOCD=1' \
-  atload='exa_params=('--git' '--classify' '--group' '--group-directories-first' '--time-style=long-iso' '--color-scale')' \
-  for zplugin/zsh-exa
+    has'exa' \
+    atinit'AUTOCD=1' \
+    atload='exa_params=('--git' '--classify' '--group' '--group-directories-first' '--time-style=long-iso' '--color-scale')' \
+    for zplugin/zsh-exa
 
 zi pick'init.zsh' compile'*.zsh' for \
     laggardkernel/zsh-iterm2
