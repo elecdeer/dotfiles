@@ -5,11 +5,15 @@ DOTFILES_DIR="${HOME}/dotfiles"
 # ================================
 # theme
 # ================================
-zi ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
-zi light sindresorhus/pure
 
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
 zi light pinelibg/dircolors-solarized-zsh
+
+zi ice as"command" from"gh-r" \
+  atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+  atpull"%atclone" src"init.zsh"
+zi light starship/starship
+export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
 
 # ================================
 # config
@@ -40,9 +44,11 @@ zi wait lucid atinit"ZI[COMPINIT_OPTS]=-C;" for \
 # tools
 # ================================
 
-zi wait lucid light-mode for \
-    asdf-vm/asdf \
-    azu/ni.zsh
+zi wait lucid light-mode \
+    for @asdf-vm/asdf
+
+zi wait lucid light-mode \
+    for azu/ni.zsh
 
 # exaがインストールされている場合にlsを置き換え
 zi wait lucid \
