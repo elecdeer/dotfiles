@@ -47,10 +47,14 @@ export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
 # config
 # ================================
 
+# https://zsh.sourceforge.io/Doc/Release/Options.html
+
 setopt auto_list # 補完候補を一覧で表示
 setopt auto_menu # 補完キー連打で補完候補を順に表示する
 setopt complete_in_word # 単語の途中でも補完を行う
 setopt hist_ignore_dups # 直前と同じコマンドラインはヒストリに追加しない
+# setopt LIST_ROWS_FIRST # 補完の並び順を列優先にする
+bindkey "^[[Z" reverse-menu-complete  # Shift押しながらで逆順に
 
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} # 補完候補に色を付ける
 zstyle ':completion:*' matcher-list "m:{a-z}={A-Z}" # 補完時に大文字小文字を区別しない
