@@ -140,6 +140,8 @@ zi wait lucid id-as"arduino-cli-completion" for \
     atpull'%atclone' run-atpull'%atclone'\
     z-shell/null
 
+zi add-fpath "$(brew --prefix)/share/zsh/site-functions"
+
 # ================================
 
 # .zshrc.localがあれば読み込み
