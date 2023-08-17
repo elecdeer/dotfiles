@@ -80,6 +80,7 @@ zi wait lucid atinit"ZI[COMPINIT_OPTS]=-C;" for \
 # zi wait lucid light-mode \
 #     for @asdf-vm/asdf
 
+# この辺要らないかも
 # https://rtx.pub/install.sh を参考に
 RTX_BPICK="*${OS}-${ARCH}.tar.gz"
 # GitHub ReleaseのLatestを取得
@@ -96,24 +97,25 @@ export RTX_ASDF_COMPAT=1
 zi wait lucid light-mode \
     for azu/ni.zsh
 
-zi wait lucid as"program" from"gh-r" mv"bat* -> bat" pick"bat/bat" light-mode \
+zi wait lucid as"program" from"gh-r" mv"bat* -> bat" light-mode \
+    atclone'cp -vf bat/autocomplete/bat.zsh bat/autocomplete/_bat' \
     for @sharkdp/bat
 alias cat='bat'
 
-zi wait lucid as"program" from"gh-r" mv"lsd* -> lsd" pick"lsd/lsd" light-mode \
+zi wait lucid as"program" from"gh-r" mv"lsd* -> lsd" light-mode \
     for @lsd-rs/lsd
 alias ls='lsd'
 
-zi wait lucid as"program" from"gh-r" mv"fd* -> fd" pick"fd/fd" light-mode \
+zi wait lucid as"program" from"gh-r" mv"fd* -> fd" light-mode \
     for @sharkdp/fd
 alias find='fd'
 
-zi wait lucid as"program" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg" light-mode \
+zi wait lucid as"program" from"gh-r" mv"ripgrep* -> rg" light-mode \
     for BurntSushi/ripgrep
 alias grep='rg'
 
-zi pick'init.zsh' compile'*.zsh' for \
-    laggardkernel/zsh-iterm2
+zi pick'init.zsh' compile'*.zsh' \
+    for laggardkernel/zsh-iterm2
 
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
