@@ -80,14 +80,10 @@ zi wait lucid atinit"ZI[COMPINIT_OPTS]=-C;" for \
 # zi wait lucid light-mode \
 #     for @asdf-vm/asdf
 
-# この辺要らないかも
-# https://rtx.pub/install.sh を参考に
-RTX_BPICK="*${OS}-${ARCH}.tar.gz"
-# GitHub ReleaseのLatestを取得
-zi from'gh-r' as'program' bpick"$RTX_BPICK" \
-    pick'rtx/bin/rtx' \
+zi from'gh-r' as'program' \
+    pick'rtx/bin/rtx' mv"rtx* -> rtx" \
     atload'eval "$(rtx activate zsh)"' \
-    atclone'echo "\$rtx completion zsh > _rtx"; ./rtx/bin/rtx completion zsh > _rtx' \
+    atclone'echo "\$rtx completion zsh > _rtx"; ./rtx completion zsh > _rtx' \
     atpull'%atclone' \
     for @jdxcode/rtx
 alias asdf='rtx'
