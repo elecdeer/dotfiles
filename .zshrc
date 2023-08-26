@@ -115,6 +115,10 @@ zi wait lucid as"program" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg" light-mode \
     for BurntSushi/ripgrep
 alias grep='rg'
 
+zi  wait lucid as"program" from"gh-r" ver"jq-1.7rc1" mv"jq* -> jq" light-mode \
+    for @jqlang/jq
+
+
 zi pick'init.zsh' compile'*.zsh' \
     for laggardkernel/zsh-iterm2
 
