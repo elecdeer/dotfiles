@@ -52,14 +52,18 @@ export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
 setopt auto_list # 補完候補を一覧で表示
 setopt auto_menu # 補完キー連打で補完候補を順に表示する
 setopt complete_in_word # 単語の途中でも補完を行う
-setopt hist_ignore_dups # 直前と同じコマンドラインはヒストリに追加しない
 # setopt LIST_ROWS_FIRST # 補完の並び順を列優先にする
 bindkey "^[[Z" reverse-menu-complete  # Shift押しながらで逆順に
+
+export HISTSIZE=10000 # ヒストリの保存行数
+export SAVEHIST=10000 # ヒストリの保存行数
 setopt share_history # ヒストリをセッション間で共有
+setopt hist_ignore_all_dups # ヒストリに重複を保存しない
+setopt hist_reduce_blanks # 記録時に余計な空白を除去する
 
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} # 補完候補に色を付ける
 zstyle ':completion:*' matcher-list "m:{a-z}={A-Z}" # 補完時に大文字小文字を区別しない
-zstyle ':completion:*:default' menu select=1 # 補完候補をカーソル的にハイライト
+zstyle ':completio,n:*:default' menu select=1 # 補完候補をカーソル的にハイライト
 zstyle ':completion::complete:*' use-cache true # 補完候補をキャッシュする
 
 # ================================
