@@ -175,7 +175,7 @@ zi add-fpath "$(brew --prefix)/share/zsh/site-functions"
 # かつていたことのあるディレクトリに移動する
 # https://qiita.com/kamykn/items/aa9920f07487559c0c7e
 function fzf-z-search() {
-    local res=$(z | sort -rn | cut -c 12- | fzf --reverse)
+    local res=$(z | sort -rn | cut -c 12- | fzf --reverse --prompt="cd > ")
     if [ -n "$res" ]; then
         BUFFER+="cd $res"
         zle accept-line
