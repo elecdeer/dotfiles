@@ -117,6 +117,12 @@ zi wait lucid as"program" from"gh-r" ver"jq-1.7rc1" mv"jq* -> jq" light-mode \
 zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
     for zyedidia/micro
 
+zi wait lucid light-mode \
+    for rupa/z
+
+zi wait lucid from'gh-r' as'program' light-mode \
+    for junegunn/fzf
+
 zi pick'init.zsh' compile'*.zsh' \
     for laggardkernel/zsh-iterm2
 
@@ -157,6 +163,9 @@ zi wait lucid id-as"arduino-cli-completion" for \
 
 zi add-fpath "$(brew --prefix)/share/zsh/site-functions"
 
+
+# ================================
+# features
 # ================================
 
 # .zshrc.localがあれば読み込み
