@@ -187,6 +187,16 @@ fzf-z-search() {
 zle -N fzf-z-search
 bindkey '^z' fzf-z-search
 
+
+function select-history() {
+  BUFFER=$(history -n -r 1 | fzf --exact --reverse --query="$LBUFFER" --prompt="History > ")
+  CURSOR=${#BUFFER}
+}
+
+zle -N select-history       # ZLEのウィジェットとして関数を登録
+bindkey '^r' select-history # `Ctrl+r` で登録したselect-historyウィジェットを呼び出す
+
+
 # ================================
 
 # .zshrc.localがあれば読み込み
