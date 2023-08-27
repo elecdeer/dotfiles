@@ -115,6 +115,9 @@ zi wait lucid as"program" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg" light-mode \
     for BurntSushi/ripgrep
 alias grep='rg'
 
+zi wait lucid as"program" from"gh-r" mv"pastel* -> pastel" pick"pastel/pastel" light-mode \
+    for @sharkdp/pastel
+
 zi wait lucid as"program" from"gh-r" ver"jq-1.7rc1" mv"jq* -> jq" light-mode \
     for @jqlang/jq
 
