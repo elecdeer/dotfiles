@@ -174,8 +174,8 @@ zi add-fpath "$(brew --prefix)/share/zsh/site-functions"
 
 # かつていたことのあるディレクトリに移動する
 # https://qiita.com/kamykn/items/aa9920f07487559c0c7e
-fzf-z-search() {
-    local res=$(z | sort -rn | cut -c 12- | fzf)
+function fzf-z-search() {
+    local res=$(z | sort -rn | cut -c 12- | fzf --reverse)
     if [ -n "$res" ]; then
         BUFFER+="cd $res"
         zle accept-line
@@ -189,12 +189,12 @@ bindkey '^z' fzf-z-search
 
 
 function select-history() {
-  BUFFER=$(history -n -r 1 | fzf --exact --reverse --query="$LBUFFER" --prompt="History > ")
-  CURSOR=${#BUFFER}
+    BUFFER=$(history -n -r 1 | fzf --exact --reverse --query="$LBUFFER" --prompt="History > ")
+    CURSOR=${#BUFFER}
 }
 
-zle -N select-history       # ZLEのウィジェットとして関数を登録
-bindkey '^r' select-history # `Ctrl+r` で登録したselect-historyウィジェットを呼び出す
+zle -N select-history
+bindkey '^r' select-history
 
 
 # ================================
