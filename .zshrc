@@ -147,21 +147,29 @@ zi wait lucid light-mode \
     blockf zsh-users/zsh-completions \
     zsh-users/zsh-history-substring-search \
 
-# deno
+# deno（あれば）
 zi wait lucid id-as"deno-completion" \
     has'deno' as'command' \
     atclone'echo "\$deno completions zsh > _deno"; deno completions zsh > _deno' \
     atpull'%atclone' run-atpull'%atclone' \
     for z-shell/null
 
-# docker
+# docker（あれば）
 zi wait lucid as"completion" \
+    has'docker' \
     for OMZP::docker/completions/_docker
 
-# arduino-cli
+# arduino-cli（あれば）
 zi wait lucid id-as"arduino-cli-completion" for \
     has'arduino-cli' as'command' \
     atclone'echo "\$arduino-cli completion zsh > _arduino-cli"; arduino-cli completion zsh > _arduino-cli' \
+    atpull'%atclone' run-atpull'%atclone'\
+    z-shell/null
+
+# gh（あれば）
+zi wait lucid id-as"gh-completion" for \
+    has'gh' as'command' \
+    atclone'echo "\$gh completion zsh > _gh"; gh completion -s zsh > _gh' \
     atpull'%atclone' run-atpull'%atclone'\
     z-shell/null
 
