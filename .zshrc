@@ -168,6 +168,23 @@ zi add-fpath "$(brew --prefix)/share/zsh/site-functions"
 # features
 # ================================
 
+# かつていたことのあるディレクトリに移動する
+# https://qiita.com/kamykn/items/aa9920f07487559c0c7e
+fzf-z-search() {
+    local res=$(z | sort -rn | cut -c 12- | fzf)
+    if [ -n "$res" ]; then
+        BUFFER+="cd $res"
+        zle accept-line
+    else
+        return 1
+    fi
+}
+
+zle -N fzf-z-search
+bindkey '^z' fzf-z-search
+
+# ================================
+
 # .zshrc.localがあれば読み込み
 zi light-mode as'null' \
     atinit'if [ -f ${DOTFILES_DIR}/.zshrc.local ]; then source ${DOTFILES_DIR}/.zshrc.local; fi' \
