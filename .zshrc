@@ -37,11 +37,11 @@ ARCH="$(get_arch)"
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
 zi light pinelibg/dircolors-solarized-zsh
 
+export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
 zi ice as"command" from"gh-r" \
   atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
   atpull"%atclone" src"init.zsh"
 zi light starship/starship
-export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
 
 # ================================
 # config
