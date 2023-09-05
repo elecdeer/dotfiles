@@ -89,7 +89,7 @@ zi from'gh-r' as'program' \
     atload'eval "$(rtx activate zsh)"' \
     atclone'echo "\$rtx completion zsh > _rtx"; ./rtx completion zsh > _rtx' \
     atpull'%atclone' \
-    for @jdxcode/rtx
+    for @jdx/rtx
 alias asdf='rtx'
 # asdfとの互換性を持たせる
 export RTX_ASDF_COMPAT=1
