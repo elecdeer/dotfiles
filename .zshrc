@@ -118,7 +118,7 @@ alias grep='rg'
 zi wait lucid as"program" from"gh-r" mv"pastel* -> pastel" pick"pastel/pastel" light-mode \
     for @sharkdp/pastel
 
-zi wait lucid as"program" from"gh-r" ver"jq-1.7rc1" mv"jq* -> jq" light-mode \
+zi wait lucid as"program" from"gh-r" mv"jq* -> jq" light-mode \
     for @jqlang/jq
 
 zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
