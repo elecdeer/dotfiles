@@ -130,6 +130,9 @@ zi wait lucid light-mode \
 zi wait lucid from'gh-r' as'program' light-mode \
     for junegunn/fzf
 
+zi wait lucid light-mode \
+    for Aloxaf/fzf-tab
+
 zi pick'init.zsh' compile'*.zsh' \
     for laggardkernel/zsh-iterm2
 
