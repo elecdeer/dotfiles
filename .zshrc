@@ -118,6 +118,9 @@ alias grep='rg'
 zi wait lucid as"program" from"gh-r" mv"pastel* -> pastel" pick"pastel/pastel" light-mode \
     for @sharkdp/pastel
 
+zi wait lucid as"program" from"gh-r" mv"hexyl* -> hexyl" pick"hexyl/hexyl" light-mode \
+    for @sharkdp/hexyl
+
 zi wait lucid as"program" from"gh-r" mv"jq* -> jq" light-mode \
     for @jqlang/jq
 
