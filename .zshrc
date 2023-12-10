@@ -214,6 +214,48 @@ bindkey '^r' select-history
 
 
 # ================================
+function sync_rtx_node_version_with_volta() {
+    # echo "sync_rtx_node_version_with_volta"
+
+    if [[ ! -f "package.json" ]] || [[ "$RTX_VOLTA_SYNC_USER_CONFIRMED" == "true" ]]; then
+        return
+    fi
+
+    volta_node_version=$(jq -r '.volta.node // empty' package.json)
+
+    if [[ -z $volta_node_version ]]; then
+        return
+    fi
+
+    current_node_version=$(rtx current node)
+
+    if [[ $volta_node_version == $current_node_version ]]; then
+        return
+    fi
+
+    echo "package.jsonに記載されているnodeのバージョンとrtxで管理されているnodeのバージョンが一致しません。"
+    printf "volta.node:\t\t%s\n" "$volta_node_version"
+    printf "rtx current node:\t%s\n" "$current_node_version"
+
+    echo "rtx local node $volta_node_version を実行しますか？ [y/N]"
+    read answer
+
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        rtx local node $volta_node_version
+        echo "実行しました。"
+    fi
+
+    export RTX_VOLTA_SYNC_USER_CONFIRMED=true
+}
+
+# cd後フック
+function chpwd() {
+    sync_rtx_node_version_with_volta
+}
+
+# ================================
+
+# ================================
 
 # .zshrc.localがあれば読み込み
 zi light-mode as'null' \
@@ -226,6 +268,8 @@ zi light-mode as'null' \
 zi id-as"load-completion" wait lucid light-mode as'null' \
     atload"zicompinit; zicdreplay" \
     for z-shell/null
+
+
 
 #
 # if type zprof > /dev/null 2>&1; then
