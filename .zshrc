@@ -139,8 +139,6 @@ zi light-mode \
 zi pick'init.zsh' compile'*.zsh' \
     for laggardkernel/zsh-iterm2
 
-export PATH="$HOME/.local/share/rtx/shims:$PATH"
-
 # zinit wait lucid depth"1" blockf for \
 #     yuki-yano/zeno.zsh
 
