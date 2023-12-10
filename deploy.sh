@@ -8,6 +8,6 @@ section "Create symbolic links"
 
 ln -sfv ~/dotfiles/.zshrc ~/.zshrc
 ln -sfv ~/dotfiles/.zprofile ~/.zprofile
-ln -sfv ~/dotfiles/config/lsd ~/.config/lsd
+ln -sfv ~/dotfiles/config/lsd/config.yaml ~/.config/lsd/config.yaml
 
 section "Done!"
