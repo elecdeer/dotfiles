@@ -115,6 +115,9 @@ zi wait lucid as"program" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg" light-mode \
     for BurntSushi/ripgrep
 alias grep='rg'
 
+zi wait lucid as"program" from"gh-r" mv"delta* -> delta" pick"delta/delta" light-mode \
+    for dandavison/delta
+
 zi wait lucid as"program" from"gh-r" mv"pastel* -> pastel" pick"pastel/pastel" light-mode \
     for @sharkdp/pastel
 
