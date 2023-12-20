@@ -6,9 +6,9 @@ section "Deploy dotfiles"
 
 section "Create symbolic links"
 
-ln -sfv ~/dotfiles/.zshrc ~/.zshrc
-ln -sfv ~/dotfiles/.zprofile ~/.zprofile
-ln -sfv ~/dotfiles/config/lsd/config.yaml ~/.config/lsd/config.yaml
-ln -sfv ~/dotfiles/config/wezterm ~/.config/wezterm
+ln -sfvn ~/dotfiles/.zshrc ~/.zshrc
+ln -sfvn ~/dotfiles/.zprofile ~/.zprofile
+ln -sfvn ~/dotfiles/config/lsd/config.yaml ~/.config/lsd/config.yaml
+ln -sfvn ~/dotfiles/config/wezterm ~/.config/wezterm
 
 section "Done!"
