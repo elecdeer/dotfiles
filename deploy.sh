@@ -10,5 +10,6 @@ ln -sfvn ~/dotfiles/.zshrc ~/.zshrc
 ln -sfvn ~/dotfiles/.zprofile ~/.zprofile
 ln -sfvn ~/dotfiles/config/lsd/config.yaml ~/.config/lsd/config.yaml
 ln -sfvn ~/dotfiles/config/wezterm ~/.config/wezterm
+ln -sfvn ~/dotfiles/config/git ~/.config/git
 
 section "Done!"
