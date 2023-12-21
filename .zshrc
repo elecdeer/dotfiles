@@ -1,3 +1,6 @@
+# .zshrc
+# インタラクティブシェルでのみ読み込まれるファイル
+
 source <(curl -sL init.zshell.dev); zzinit
 
 # ================================

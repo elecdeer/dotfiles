@@ -1,3 +1,5 @@
+# ログインシェルで1度だけ読み込まれるファイル
+
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 if [ -d "/Users/elecdeer/Library/Application Support/JetBrains/Toolbox/scripts" ] ; then
