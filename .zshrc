@@ -88,14 +88,14 @@ zi wait lucid atinit"ZI[COMPINIT_OPTS]=-C;" for \
 #     for @asdf-vm/asdf
 
 zi from'gh-r' as'program' \
-    pick'rtx/bin/rtx' mv"rtx* -> rtx" \
-    atload'eval "$(rtx activate zsh)"' \
-    atclone'echo "\$rtx completion zsh > _rtx"; ./rtx completion zsh > _rtx' \
+    pick'mise/bin/mise' mv"mise* -> mise" \
+    atload'eval "$(mise activate zsh)"' \
+    atclone'echo "\$mise completion zsh > _mise"; ./mise completion zsh > _mise' \
     atpull'%atclone' \
-    for @jdx/rtx
-alias asdf='rtx'
+    for @jdx/mise
+alias asdf='mise'
 # asdfとの互換性を持たせる
-export RTX_ASDF_COMPAT=1
+export MISE_ASDF_COMPAT=1
 
 zi wait lucid light-mode \
     for azu/ni.zsh
@@ -218,10 +218,10 @@ bindkey '^r' select-history
 
 
 # ================================
-function sync_rtx_node_version_with_volta() {
-    # echo "sync_rtx_node_version_with_volta"
+function sync_mise_node_version_with_volta() {
+    # echo "sync_mise_node_version_with_volta"
 
-    if [[ ! -f "package.json" ]] || [[ "$RTX_VOLTA_SYNC_USER_CONFIRMED" == "true" ]]; then
+    if [[ ! -f "package.json" ]] || [[ "$MISE_VOLTA_SYNC_USER_CONFIRMED" == "true" ]]; then
         return
     fi
 
@@ -231,30 +231,30 @@ function sync_rtx_node_version_with_volta() {
         return
     fi
 
-    current_node_version=$(rtx current node)
+    current_node_version=$(mise current node)
 
     if [[ $volta_node_version == $current_node_version ]]; then
         return
     fi
 
-    echo "package.jsonに記載されているnodeのバージョンとrtxで管理されているnodeのバージョンが一致しません。"
+    echo "package.jsonに記載されているnodeのバージョンとmiseで管理されているnodeのバージョンが一致しません。"
     printf "volta.node:\t\t%s\n" "$volta_node_version"
-    printf "rtx current node:\t%s\n" "$current_node_version"
+    printf "mise current node:\t%s\n" "$current_node_version"
 
-    echo "rtx local node $volta_node_version を実行しますか？ [y/N]"
+    echo "mise local node $volta_node_version を実行しますか？ [y/N]"
     read answer
 
     if [[ "$answer" =~ ^[Yy]$ ]]; then
-        rtx local node $volta_node_version
+        mise local node $volta_node_version
         echo "実行しました。"
     fi
 
-    export RTX_VOLTA_SYNC_USER_CONFIRMED=true
+    export MISE_VOLTA_SYNC_USER_CONFIRMED=true
 }
 
 # cd後フック
 function chpwd() {
-    sync_rtx_node_version_with_volta
+    sync_mise_node_version_with_volta
 }
 
 # ================================
