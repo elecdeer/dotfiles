@@ -257,6 +257,9 @@ function chpwd() {
     sync_mise_node_version_with_volta
 }
 
+# シェル開いた時にもチェック
+sync_mise_node_version_with_volta
+
 # ================================
 
 # ================================
