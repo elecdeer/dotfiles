@@ -131,6 +131,7 @@ zi wait lucid as"program" from"gh-r" mv"jq* -> jq" light-mode \
     for @jqlang/jq
 
 zi wait lucid as"program" from"gh-r" mv"yq* -> yq" light-mode \
+    atclone'yq shell-completion zsh > _yq' \
     for @mikefarah/yq
 
 zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
@@ -151,6 +152,10 @@ zi pick'init.zsh' compile'*.zsh' \
 # zinit wait lucid depth"1" blockf for \
 #     yuki-yano/zeno.zsh
 
+zi wait lucid as"program" from"gh-r" mv"gh* -> gh" pick"gh/bin/gh" light-mode \
+    atclone'gh completion zsh > ../_gh' \
+    atpull'%atclone' run-atpull'%atclone'\
+    for cli/cli
 
 # ================================
 # completions
@@ -181,20 +186,6 @@ zi wait lucid id-as"arduino-cli-completion" for \
     atpull'%atclone' run-atpull'%atclone'\
     z-shell/null
 
-# gh（あれば）
-zi wait lucid id-as"gh-completion" for \
-    has'gh' as'command' \
-    atclone'echo "\$gh completion zsh > _gh"; gh completion -s zsh > _gh' \
-    atpull'%atclone' run-atpull'%atclone'\
-    z-shell/null
-
-# yq（あれば）
-zi id-as"yq-completion" \
-    as'command' \
-    wait'[[ -n "$commands[yq]" ]]' lucid \
-    atclone'echo "\$yq shell-completion zsh > _yq"; yq shell-completion zsh > _yq' \
-    atpull'%atclone' run-atpull'%atclone' \
-    for z-shell/null
 
 zi add-fpath "$(brew --prefix)/share/zsh/site-functions"
 
