@@ -130,6 +130,9 @@ zi wait lucid as"program" from"gh-r" mv"hexyl* -> hexyl" pick"hexyl/hexyl" light
 zi wait lucid as"program" from"gh-r" mv"jq* -> jq" light-mode \
     for @jqlang/jq
 
+zi wait lucid as"program" from"gh-r" mv"yq* -> yq" light-mode \
+    for @mikefarah/yq
+
 zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
     for zyedidia/micro
 
@@ -184,6 +187,14 @@ zi wait lucid id-as"gh-completion" for \
     atclone'echo "\$gh completion zsh > _gh"; gh completion -s zsh > _gh' \
     atpull'%atclone' run-atpull'%atclone'\
     z-shell/null
+
+# TODO このタイミングだとyqが無いのでhasに引っかからずスルーされているっぽい
+# yq（あれば）
+zi wait lucid id-as"yq-completion" \
+    has'yq' as'command' \
+    atclone'echo "\$yq shell-completion zsh > _yq"; yq shell-completion zsh > _yq' \
+    atpull'%atclone' run-atpull'%atclone' \
+    for z-shell/null
 
 zi add-fpath "$(brew --prefix)/share/zsh/site-functions"
 
