@@ -188,10 +188,10 @@ zi wait lucid id-as"gh-completion" for \
     atpull'%atclone' run-atpull'%atclone'\
     z-shell/null
 
-# TODO このタイミングだとyqが無いのでhasに引っかからずスルーされているっぽい
 # yq（あれば）
-zi wait lucid id-as"yq-completion" \
-    has'yq' as'command' \
+zi id-as"yq-completion" \
+    as'command' \
+    wait'[[ -n "$commands[yq]" ]]' lucid \
     atclone'echo "\$yq shell-completion zsh > _yq"; yq shell-completion zsh > _yq' \
     atpull'%atclone' run-atpull'%atclone' \
     for z-shell/null
