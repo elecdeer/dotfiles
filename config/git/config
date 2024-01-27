@@ -1,0 +1,12 @@
+[user]
+	name = elecdeer
+	email = 37701077+elecdeer@users.noreply.github.com
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[core]
+	autocrlf = input
+[pull]
+	rebase = false
