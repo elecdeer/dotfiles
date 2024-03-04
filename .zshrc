@@ -261,12 +261,12 @@ function sync_mise_node_version_with_volta() {
 }
 
 # cd後フック
-function chpwd() {
-    sync_mise_node_version_with_volta
-}
+# function chpwd() {
+#     sync_mise_node_version_with_volta
+# }
 
-# シェル開いた時にもチェック
-sync_mise_node_version_with_volta
+# # シェル開いた時にもチェック
+# sync_mise_node_version_with_volta
 
 # ================================
 
