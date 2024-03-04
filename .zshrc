@@ -131,15 +131,18 @@ zi wait lucid as"program" from"gh-r" mv"jq* -> jq" light-mode \
     for @jqlang/jq
 
 zi wait lucid as"program" from"gh-r" mv"yq* -> yq" light-mode \
-    atclone'yq shell-completion zsh > _yq' \
+    atclone'./yq shell-completion zsh > _yq' \
+    atpull'%atclone' run-atpull'%atclone'\
     for @mikefarah/yq
 
 zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
     for zyedidia/micro
 
 zi wait lucid as"program" from"gh-r" light-mode \
+    atclone'./sg completions zsh > _sg' \
+    atpull'%atclone' run-atpull'%atclone'\
     for @ast-grep/ast-grep
-
+    
 zi wait lucid light-mode \
     for rupa/z
 
@@ -156,7 +159,7 @@ zi pick'init.zsh' compile'*.zsh' \
 #     yuki-yano/zeno.zsh
 
 zi wait lucid as"program" from"gh-r" mv"gh* -> gh" pick"gh/bin/gh" light-mode \
-    atclone'gh completion zsh > ../_gh' \
+    atclone'./gh/bin/gh completion --shell zsh > _gh' \
     atpull'%atclone' run-atpull'%atclone'\
     for cli/cli
 
