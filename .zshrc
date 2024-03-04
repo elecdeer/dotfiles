@@ -137,6 +137,9 @@ zi wait lucid as"program" from"gh-r" mv"yq* -> yq" light-mode \
 zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
     for zyedidia/micro
 
+zi wait lucid as"program" from"gh-r" light-mode \
+    for @ast-grep/ast-grep
+
 zi wait lucid light-mode \
     for rupa/z
 
