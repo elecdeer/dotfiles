@@ -64,9 +64,9 @@ setopt share_history # ヒストリをセッション間で共有
 setopt hist_ignore_all_dups # ヒストリに重複を保存しない
 setopt hist_reduce_blanks # 記録時に余計な空白を除去する
 
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} # 補完候補に色を付ける
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # 補完候補に色を付ける
 zstyle ':completion:*' matcher-list "m:{a-z}={A-Z}" # 補完時に大文字小文字を区別しない
-zstyle ':completio,n:*:default' menu select=1 # 補完候補をカーソル的にハイライト
+zstyle ':completion:*:default' menu select=1 # 補完候補をカーソル的にハイライト
 zstyle ':completion::complete:*' use-cache true # 補完候補をキャッシュする
 
 # ================================
@@ -151,6 +151,17 @@ zi wait lucid from'gh-r' as'program' light-mode \
 
 zi light-mode \
     for Aloxaf/fzf-tab
+
+# git補完でのa-zソートを無効化
+zstyle ':completion:*:git*:*' sort false
+# 補完候補のgroupを有効にする
+zstyle ':completion:*:descriptions' format '[%d]'
+# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+zstyle ':completion:*' menu no
+# cdの補完でプレビュー
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --icon=always --color=always $realpath'
+# switch group using `<` and `>`
+zstyle ':fzf-tab:*' switch-group '<' '>'
 
 zi pick'init.zsh' compile'*.zsh' \
     for laggardkernel/zsh-iterm2
