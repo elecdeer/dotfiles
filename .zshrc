@@ -96,6 +96,8 @@ zi from'gh-r' as'program' \
 alias asdf='mise'
 # asdfとの互換性を持たせる
 export MISE_ASDF_COMPAT=1
+# Node.jsのインストール後にcorepack enableを自動でやる
+export MISE_NODE_COREPACK=1
 
 zi wait lucid light-mode \
     for azu/ni.zsh
