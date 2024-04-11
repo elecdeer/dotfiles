@@ -98,6 +98,8 @@ alias asdf='mise'
 export MISE_ASDF_COMPAT=1
 # Node.jsのインストール後にcorepack enableを自動でやる
 export MISE_NODE_COREPACK=1
+# Node.jsのインストール後に自動でインストールするパッケージを指定するファイルのパスを指定
+export MISE_NODE_DEFAULT_PACKAGES_FILE="${DOTFILES_DIR}/config/mise/.default-npm-packages"
 
 zi wait lucid light-mode \
     for azu/ni.zsh
