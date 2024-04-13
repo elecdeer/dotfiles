@@ -3,6 +3,9 @@
 
 source <(curl -sL init.zshell.dev); zzinit
 
+
+eval "$(sheldon source)"
+
 # ================================
 # env
 # ================================
@@ -37,8 +40,8 @@ ARCH="$(get_arch)"
 # theme
 # ================================
 
-DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
-zi light pinelibg/dircolors-solarized-zsh
+# DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
+# zi light pinelibg/dircolors-solarized-zsh
 
 export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
 zi ice as"command" from"gh-r" \
@@ -76,8 +79,8 @@ zstyle ':completion::complete:*' use-cache true # 補完候補をキャッシュ
 # 構文ハイライト https://github.com/zdharma-continuum/fast-syntax-highlighting
 
 
-zi wait lucid atinit"ZI[COMPINIT_OPTS]=-C;" for \
-    zdharma-continuum/fast-syntax-highlighting
+# zi wait lucid atinit"ZI[COMPINIT_OPTS]=-C;" for \
+#     zdharma-continuum/fast-syntax-highlighting
 
 
 # ================================
@@ -101,8 +104,8 @@ export MISE_NODE_COREPACK=1
 # Node.jsのインストール後に自動でインストールするパッケージを指定するファイルのパスを指定
 export MISE_NODE_DEFAULT_PACKAGES_FILE="${DOTFILES_DIR}/config/mise/.default-npm-packages"
 
-zi wait lucid light-mode \
-    for azu/ni.zsh
+# zi wait lucid light-mode \
+#     for azu/ni.zsh
 
 zi wait lucid as"program" from"gh-r" mv"bat* -> bat" pick"bat/bat" light-mode \
     atclone'cp -vf bat/autocomplete/bat.zsh bat/autocomplete/_bat' \
@@ -147,14 +150,14 @@ zi wait lucid as"program" from"gh-r" light-mode \
     atpull'%atclone' run-atpull'%atclone'\
     for @ast-grep/ast-grep
     
-zi wait lucid light-mode \
-    for rupa/z
+# zi wait lucid light-mode \
+#     for rupa/z
 
 zi wait lucid from'gh-r' as'program' light-mode \
     for junegunn/fzf
 
-zi light-mode \
-    for Aloxaf/fzf-tab
+# zi light-mode \
+#     for Aloxaf/fzf-tab
 
 # git補完でのa-zソートを無効化
 zstyle ':completion:*:git*:*' sort false
@@ -167,8 +170,8 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --icon=always --color=always
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
-zi pick'init.zsh' compile'*.zsh' \
-    for laggardkernel/zsh-iterm2
+# zi pick'init.zsh' compile'*.zsh' \
+#     for laggardkernel/zsh-iterm2
 
 # zinit wait lucid depth"1" blockf for \
 #     yuki-yano/zeno.zsh
@@ -182,11 +185,11 @@ zi wait lucid as"program" from"gh-r" mv"gh* -> gh" pick"gh/bin/gh" light-mode \
 # completions
 # ================================
 
-zi wait lucid light-mode \
-    for \
-    atload'_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
-    blockf zsh-users/zsh-completions \
-    zsh-users/zsh-history-substring-search \
+# zi wait lucid light-mode \
+#     for \
+#     atload'_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
+#     blockf zsh-users/zsh-completions \
+#     zsh-users/zsh-history-substring-search \
 
 # deno（あれば）
 zi wait lucid id-as"deno-completion" \
