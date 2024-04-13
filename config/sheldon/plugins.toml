@@ -12,18 +12,42 @@
 
 shell = "zsh"
 
+[plugins.zsh-defer]
+github = "romkatv/zsh-defer"
+
+[plugins.on-demand-completion]
+local = "~/dotfiles/plugins"
+
 [templates]
 defer = "{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}"
 
+# =====================
+# Zsh Plugins
+# =====================
 
-[plugins]
+[plugins.compinit]
+# inline = 'autoload -Uz compinit && zsh-defer compinit'
 
-[plugins.zsh-defer]
-github = "romkatv/zsh-defer"
-hooks.post = '''
-zsh-defer source $ZSHRC_DIR/lazy.zsh
-zsh-defer -t 0.001 autoload -Uz compinit
-zsh-defer -t 0.001 compinit
+# from https://gist.github.com/ctechols/ca1035271ad134841284
+inline = '''
+_compinit() {
+  local re_initialize=0
+  for match in .zcompdump*(.Nmh+24); do
+    re_initialize=1
+    break
+  done
+
+  autoload -Uz compinit
+  if [ "$re_initialize" -eq "1" ]; then
+    compinit
+    # update the timestamp on compdump file
+    compdump
+  else
+    # omit the check for new functions since we updated today
+    compinit -C
+  fi
+}
+_compinit
 '''
 
 [plugins.dircolors-solarized-zsh]
@@ -48,6 +72,75 @@ github = 'laggardkernel/zsh-iterm2'
 apply = ['defer']
 use = ['init.zsh']
 
+[plugins.zsh-history-substring-search]
+github = 'zsh-users/zsh-history-substring-search'
+
 [plugins.zsh-completions]
 github = 'zsh-users/zsh-completions'
-apply = ["defer"]
+
+[plugins.zsh-autosuggestions]
+github = 'zsh-users/zsh-autosuggestions'
+# apply = ["defer"]
+
+
+# =====================
+# tools from aqua activation
+# =====================
+
+
+# star shipとmiseよりも先
+[plugins.aqua]
+inline = '''
+export PATH="$(aqua root-dir)/bin:$PATH"
+export AQUA_GLOBAL_CONFIG="${DOTFILES_DIR}/config/aqua.yaml"
+on_demand_completion "aqua"
+'''
+
+[plugins.starship]
+inline = '''
+eval "$(starship init zsh)"
+on_demand_completion "starship"
+'''
+
+[plugins.mise]
+inline = '''
+alias asdf='mise'
+# asdfとの互換性を持たせる
+export MISE_ASDF_COMPAT=1
+# Node.jsのインストール後にcorepack enableを自動でやる
+export MISE_NODE_COREPACK=1
+# Node.jsのインストール後に自動でインストールするパッケージを指定するファイルのパスを指定
+export MISE_NODE_DEFAULT_PACKAGES_FILE="${DOTFILES_DIR}/config/mise/.default-npm-packages"
+
+source <(mise activate zsh)
+on_demand_completion "mise"
+'''
+
+# =====================
+# Completion of external commands
+# =====================
+
+[plugins.arduino-cli-completion]
+inline = 'on_demand_completion "arduino-cli"'
+
+[plugins.docker-completion]
+inline = 'on_demand_completion "docker"'
+
+[plugins.deno-completion]
+inline = 'on_demand_completion "deno" "deno completions zsh"'
+
+[plugins.ast-grep-completion]
+inline = 'on_demand_completion "sg" "sg completions zsh"'
+
+[plugins.yq-completion]
+inline = 'on_demand_completion "yq" "yq shell-completion zsh"'
+
+[plugins.gh-completion]
+inline = 'on_demand_completion "gh" "gh completion -s zsh"'
+
+# =====================
+# additional zshrc
+# =====================
+
+[plugins.local-zsh]
+inline = 'zsh-defer source ${DOTFILES_DIR}/.zshrc.local'
