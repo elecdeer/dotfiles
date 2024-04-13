@@ -4,8 +4,6 @@
 source <(curl -sL init.zshell.dev); zzinit
 
 
-eval "$(sheldon source)"
-
 # ================================
 # env
 # ================================
@@ -36,6 +34,13 @@ DOTFILES_DIR="${HOME}/dotfiles"
 OS="$(get_os)"
 ARCH="$(get_arch)"
 
+
+eval "$(sheldon source)"
+
+export PATH="$(aqua root-dir)/bin:$PATH"
+export AQUA_GLOBAL_CONFIG="${DOTFILES_DIR}/config/aqua.yaml"
+export AQUA_PROGRESS_BAR=true
+
 # ================================
 # theme
 # ================================
@@ -43,11 +48,13 @@ ARCH="$(get_arch)"
 # DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-dark"
 # zi light pinelibg/dircolors-solarized-zsh
 
-export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
-zi ice as"command" from"gh-r" \
-    atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-    atpull"%atclone" src"init.zsh"
-zi light starship/starship
+# export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
+# zi ice as"command" from"gh-r" \
+#     atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+#     atpull"%atclone" src"init.zsh"
+# zi light starship/starship
+
+eval "$(starship init zsh)"
 
 # ================================
 # config
@@ -90,12 +97,12 @@ zstyle ':completion::complete:*' use-cache true # 補完候補をキャッシュ
 # zi wait lucid light-mode \
 #     for @asdf-vm/asdf
 
-zi from'gh-r' as'program' \
-    pick'mise/bin/mise' mv"mise* -> mise" \
-    atload'eval "$(mise activate zsh)"' \
-    atclone'echo "\$mise completion zsh > _mise"; ./mise completion zsh > _mise' \
-    atpull'%atclone' \
-    for @jdx/mise
+# zi from'gh-r' as'program' \
+#     pick'mise/bin/mise' mv"mise* -> mise" \
+#     atload'eval "$(mise activate zsh)"' \
+#     atclone'echo "\$mise completion zsh > _mise"; ./mise completion zsh > _mise' \
+#     atpull'%atclone' \
+#     for @jdx/mise
 alias asdf='mise'
 # asdfとの互換性を持たせる
 export MISE_ASDF_COMPAT=1
@@ -107,54 +114,54 @@ export MISE_NODE_DEFAULT_PACKAGES_FILE="${DOTFILES_DIR}/config/mise/.default-npm
 # zi wait lucid light-mode \
 #     for azu/ni.zsh
 
-zi wait lucid as"program" from"gh-r" mv"bat* -> bat" pick"bat/bat" light-mode \
-    atclone'cp -vf bat/autocomplete/bat.zsh bat/autocomplete/_bat' \
-    atpull'%atclone' \
-    for @sharkdp/bat
+# zi wait lucid as"program" from"gh-r" mv"bat* -> bat" pick"bat/bat" light-mode \
+#     atclone'cp -vf bat/autocomplete/bat.zsh bat/autocomplete/_bat' \
+#     atpull'%atclone' \
+#     for @sharkdp/bat
 alias cat='bat'
 
-zi wait lucid as"program" from"gh-r" mv"lsd* -> lsd" pick"lsd/lsd" light-mode \
-    for @lsd-rs/lsd
+# zi wait lucid as"program" from"gh-r" mv"lsd* -> lsd" pick"lsd/lsd" light-mode \
+#     for @lsd-rs/lsd
 alias ls='lsd'
 
-zi wait lucid as"program" from"gh-r" mv"fd* -> fd" pick"fd/fd" light-mode \
-    for @sharkdp/fd
+# zi wait lucid as"program" from"gh-r" mv"fd* -> fd" pick"fd/fd" light-mode \
+#     for @sharkdp/fd
 alias find='fd'
 
-zi wait lucid as"program" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg" light-mode \
-    for BurntSushi/ripgrep
+# zi wait lucid as"program" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg" light-mode \
+#     for BurntSushi/ripgrep
 alias grep='rg'
 
-zi wait lucid as"program" from"gh-r" mv"delta* -> delta" pick"delta/delta" light-mode \
-    for dandavison/delta
+# zi wait lucid as"program" from"gh-r" mv"delta* -> delta" pick"delta/delta" light-mode \
+#     for dandavison/delta
 
-zi wait lucid as"program" from"gh-r" mv"pastel* -> pastel" pick"pastel/pastel" light-mode \
-    for @sharkdp/pastel
+# zi wait lucid as"program" from"gh-r" mv"pastel* -> pastel" pick"pastel/pastel" light-mode \
+#     for @sharkdp/pastel
 
-zi wait lucid as"program" from"gh-r" mv"hexyl* -> hexyl" pick"hexyl/hexyl" light-mode \
-    for @sharkdp/hexyl
+# zi wait lucid as"program" from"gh-r" mv"hexyl* -> hexyl" pick"hexyl/hexyl" light-mode \
+#     for @sharkdp/hexyl
 
-zi wait lucid as"program" from"gh-r" mv"jq* -> jq" light-mode \
-    for @jqlang/jq
+# zi wait lucid as"program" from"gh-r" mv"jq* -> jq" light-mode \
+#     for @jqlang/jq
 
-zi wait lucid as"program" from"gh-r" mv"yq* -> yq" light-mode \
-    atclone'./yq shell-completion zsh > _yq' \
-    atpull'%atclone' run-atpull'%atclone'\
-    for @mikefarah/yq
+# zi wait lucid as"program" from"gh-r" mv"yq* -> yq" light-mode \
+#     atclone'./yq shell-completion zsh > _yq' \
+#     atpull'%atclone' run-atpull'%atclone'\
+#     for @mikefarah/yq
 
-zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
-    for zyedidia/micro
+# zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
+#     for zyedidia/micro
 
-zi wait lucid as"program" from"gh-r" light-mode \
-    atclone'./sg completions zsh > _sg' \
-    atpull'%atclone' run-atpull'%atclone'\
-    for @ast-grep/ast-grep
+# zi wait lucid as"program" from"gh-r" light-mode \
+#     atclone'./sg completions zsh > _sg' \
+#     atpull'%atclone' run-atpull'%atclone'\
+#     for @ast-grep/ast-grep
     
 # zi wait lucid light-mode \
 #     for rupa/z
 
-zi wait lucid from'gh-r' as'program' light-mode \
-    for junegunn/fzf
+# zi wait lucid from'gh-r' as'program' light-mode \
+#     for junegunn/fzf
 
 # zi light-mode \
 #     for Aloxaf/fzf-tab
@@ -176,10 +183,10 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 # zinit wait lucid depth"1" blockf for \
 #     yuki-yano/zeno.zsh
 
-zi wait lucid as"program" from"gh-r" mv"gh* -> gh" pick"gh/bin/gh" light-mode \
-    atclone'./gh/bin/gh completion --shell zsh > _gh' \
-    atpull'%atclone' run-atpull'%atclone'\
-    for cli/cli
+# zi wait lucid as"program" from"gh-r" mv"gh* -> gh" pick"gh/bin/gh" light-mode \
+#     atclone'./gh/bin/gh completion --shell zsh > _gh' \
+#     atpull'%atclone' run-atpull'%atclone'\
+#     for cli/cli
 
 # ================================
 # completions
