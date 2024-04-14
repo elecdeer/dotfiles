@@ -138,6 +138,38 @@ inline = 'on_demand_completion "yq" "yq shell-completion zsh"'
 [plugins.gh-completion]
 inline = 'on_demand_completion "gh" "gh completion -s zsh"'
 
+[plugins.zsh-better-npm-completion]
+github = 'lukechilds/zsh-better-npm-completion'
+# apply = ['defer']
+hooks.post = '''
+# required:  zsh-better-npm-completion
+# original: https://github.com/lukechilds/zsh-better-npm-completion/blob/master/zsh-better-npm-completion.plugin.zsh
+
+_zbnc_zsh_better_ni_completion() {
+  # Store custom completion status
+  local custom_completion=false
+
+  # Load custom completion commands
+  case "$(_zbnc_npm_command)" in
+    add)
+      _zbnc_npm_install_completion
+      ;;
+    remove)
+      _zbnc_npm_uninstall_completion
+      ;;
+    run)
+      _zbnc_npm_run_completion
+      ;;
+  esac
+
+  # Fall back to default completion if we haven't done a custom one
+  [[ $custom_completion = false ]] && _zbnc_default_npm_completion
+}
+
+zsh-defer compdef _zbnc_zsh_better_ni_completion ni
+'''
+
+
 # =====================
 # additional zshrc
 # =====================
