@@ -197,3 +197,5 @@ function sync_mise_node_version_with_volta() {
 if [ "$DO_PROFILE" = true ]; then
   zprof
 fi
+
+source /Users/elecdeer/.config/broot/launcher/bash/br
