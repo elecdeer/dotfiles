@@ -16,7 +16,7 @@ shell = "zsh"
 github = "romkatv/zsh-defer"
 
 [plugins.on-demand-completion]
-local = "~/dotfiles/plugins"
+local = "~/dotfiles/plugins/on-demand-completion"
 
 [templates]
 defer = "{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}"
@@ -81,6 +81,21 @@ github = 'zsh-users/zsh-completions'
 [plugins.zsh-autosuggestions]
 github = 'zsh-users/zsh-autosuggestions'
 # apply = ["defer"]
+
+[plugins.zsh-abbrev-alias]
+github = 'momo-lab/zsh-abbrev-alias'
+hooks.post = 'zsh-defer abbrev-alias --init'
+apply = ['defer']
+# usage: https://qiita.com/momo-lab/items/b1b1afee313e42ba687b
+
+# =====================
+# aliases
+# =====================
+
+# https://kapeli.com/cheat_sheets/Oh-My-Zsh_Git.docset/Contents/Resources/Documents/index
+[plugins.git-aliases]
+local = '~/dotfiles/plugins/ohmyzsh-git-abbrev-alias'
+apply = ['defer']
 
 
 # =====================
