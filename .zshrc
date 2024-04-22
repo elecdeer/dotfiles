@@ -198,4 +198,3 @@ if [ "$DO_PROFILE" = true ]; then
   zprof
 fi
 
-source /Users/elecdeer/.config/broot/launcher/bash/br
