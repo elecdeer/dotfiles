@@ -191,4 +191,4 @@ zsh-defer compdef _zbnc_zsh_better_ni_completion ni
 # =====================
 
 [plugins.local-zsh]
-inline = 'zsh-defer source ${DOTFILES_DIR}/.zshrc.local'
+inline = 'source ${DOTFILES_DIR}/.zshrc.local'
