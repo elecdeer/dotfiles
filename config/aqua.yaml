@@ -26,3 +26,4 @@ packages:
   - name: starship/starship@v1.18.2
   - name: sharkdp/hyperfine@v1.18.0
   - name: boyter/scc@v3.3.3
+  - name: k1LoW/gh-do@v0.4.0
