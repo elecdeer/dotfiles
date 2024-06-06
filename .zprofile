@@ -12,4 +12,4 @@ if [ -d "/Applications/Visual Studio Code.app" ] ; then
 fi
 
 # https://mise.jdx.dev/ide-integration.html#ide-integration
-export PATH="$HOME/.local/share/mise/shims:$PATH"
+eval "$(mise activate zsh --shims)"
