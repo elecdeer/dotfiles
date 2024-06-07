@@ -120,9 +120,6 @@ on_demand_completion "starship"
 
 [plugins.mise]
 inline = '''
-alias asdf='mise'
-# asdfとの互換性を持たせる
-export MISE_ASDF_COMPAT=1
 # Node.jsのインストール後にcorepack enableを自動でやる
 export MISE_NODE_COREPACK=1
 # Node.jsのインストール後に自動でインストールするパッケージを指定するファイルのパスを指定
