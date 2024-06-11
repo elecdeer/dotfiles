@@ -19,7 +19,7 @@ cd dotfiles
 
 ./deploy.sh
 
-aqua install --all
+# aqua install --all
 ```
 
 ### Ubuntu or some Linux
@@ -29,9 +29,9 @@ cd ~
 git clone https://github.com/elecdeer/dotfiles.git
 
 # https://aquaproj.github.io/docs/products/aqua-installer#shell-script
-curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v3.0.0/aqua-installer | bash
+# curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v3.0.0/aqua-installer | bash
 
-aqua install --all
+# aqua install --all
 
 ./deploy.sh
 ```
