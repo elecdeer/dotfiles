@@ -104,12 +104,12 @@ apply = ['defer']
 
 
 # star shipとmiseよりも先
-# [plugins.aqua]
-# inline = '''
-# export PATH="$(aqua root-dir)/bin:$PATH"
-# export AQUA_GLOBAL_CONFIG="${DOTFILES_DIR}/config/aqua.yaml"
-# on_demand_completion "aqua"
-# '''
+[plugins.aqua]
+inline = '''
+export PATH="$(aqua root-dir)/bin:$PATH"
+export AQUA_GLOBAL_CONFIG="${DOTFILES_DIR}/config/aqua.yaml"
+on_demand_completion "aqua"
+'''
 
 [plugins.starship]
 inline = '''

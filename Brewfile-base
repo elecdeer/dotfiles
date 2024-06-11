@@ -7,4 +7,4 @@ brew "zsh"
 brew "coreutils"
 brew "git"
 brew "git-lfs"
-
+brew "aquaproj/aqua/aqua"
