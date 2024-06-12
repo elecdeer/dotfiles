@@ -102,11 +102,14 @@ apply = ['defer']
 # tools from aqua activation
 # =====================
 
+# miseよりも先
 [plugins.aqua-pre]
 inline = '''
 export AQUA_GLOBAL_CONFIG="${DOTFILES_DIR}/config/aqua.yaml"
 '''
 
+# aquaよりも先にmiseを有効化
+# https://aquaproj.github.io/docs/reference/use-aqua-with-other-tools
 [plugins.mise]
 inline = '''
 # Node.jsのインストール後にcorepack enableを自動でやる
@@ -118,7 +121,6 @@ eval "$(aqua exec -- mise activate zsh)"
 on_demand_completion "mise"
 '''
 
-# star shipとmiseよりも先
 [plugins.aqua]
 inline = '''
 export PATH="$(aqua root-dir)/bin:$PATH"
