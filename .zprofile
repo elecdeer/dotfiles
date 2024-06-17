@@ -13,4 +13,4 @@ fi
 
 export AQUA_DISABLE_LAZY_INSTALL=true
 # https://mise.jdx.dev/ide-integration.html#ide-integration
-eval "$(mise activate zsh --shims)"
+eval "$(~/.local/bin/mise activate zsh --shims)"
