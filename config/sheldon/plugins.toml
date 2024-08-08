@@ -67,10 +67,10 @@ apply = ['defer']
 github = 'Aloxaf/fzf-tab'
 apply = ['defer']
 
-[plugins.zsh-iterm2]
-github = 'laggardkernel/zsh-iterm2'
-apply = ['defer']
-use = ['init.zsh']
+# [plugins.zsh-iterm2]
+# github = 'laggardkernel/zsh-iterm2'
+# apply = ['defer']
+# use = ['init.zsh']
 
 [plugins.zsh-history-substring-search]
 github = 'zsh-users/zsh-history-substring-search'
