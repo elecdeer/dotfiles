@@ -151,6 +151,13 @@ inline = 'on_demand_completion "yq" "yq shell-completion zsh"'
 [plugins.gh-completion]
 inline = 'on_demand_completion "gh" "gh completion -s zsh"'
 
+[plugins.pnpm-completion]
+inline = 'on_demand_completion "pnpm" "pnpm completion zsh"'
+
+# [plugins.pnpm-shell-completion]
+# github = "g-plane/pnpm-shell-completion"
+# apply = ['defer']
+
 [plugins.zsh-better-npm-completion]
 github = 'lukechilds/zsh-better-npm-completion'
 # apply = ['defer']
