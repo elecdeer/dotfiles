@@ -97,6 +97,11 @@ apply = ['defer']
 local = '~/dotfiles/plugins/ohmyzsh-git-abbrev-alias'
 apply = ['defer']
 
+[plugins.custom-aliases]
+inline = '''
+zsh-defer abbrev-alias -g relogin='exec $SHELL -l'
+'''
+
 
 # =====================
 # tools from aqua activation
