@@ -123,6 +123,7 @@ on_demand_completion "mise"
 [plugins.aqua]
 inline = '''
 export AQUA_GLOBAL_CONFIG="${DOTFILES_DIR}/config/aqua.yaml"
+export AQUA_POLICY_CONFIG="${DOTFILES_DIR}/config/aqua/aqua-policy.yaml"
 export PATH="$(aqua root-dir)/bin:$PATH"
 on_demand_completion "aqua"
 '''
@@ -155,6 +156,14 @@ inline = 'on_demand_completion "yq" "yq shell-completion zsh"'
 
 [plugins.gh-completion]
 inline = 'on_demand_completion "gh" "gh completion -s zsh"'
+
+[plugins.pnpm-shell-completion]
+inline = '''
+# インストール自体はaquaで行う
+local plugin_path_dir=$(dirname $(aqua which pnpm-shell-completion))
+local plugin_path="${plugin_path_dir}/pnpm-shell-completion.plugin.zsh"
+source $plugin_path
+'''
 
 [plugins.zsh-better-npm-completion]
 github = 'lukechilds/zsh-better-npm-completion'
