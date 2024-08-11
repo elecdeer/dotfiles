@@ -67,10 +67,10 @@ apply = ['defer']
 github = 'Aloxaf/fzf-tab'
 apply = ['defer']
 
-[plugins.zsh-iterm2]
-github = 'laggardkernel/zsh-iterm2'
-apply = ['defer']
-use = ['init.zsh']
+# [plugins.zsh-iterm2]
+# github = 'laggardkernel/zsh-iterm2'
+# apply = ['defer']
+# use = ['init.zsh']
 
 [plugins.zsh-history-substring-search]
 github = 'zsh-users/zsh-history-substring-search'
@@ -97,6 +97,11 @@ apply = ['defer']
 local = '~/dotfiles/plugins/ohmyzsh-git-abbrev-alias'
 apply = ['defer']
 
+[plugins.custom-aliases]
+inline = '''
+zsh-defer abbrev-alias -g relogin='exec $SHELL -l'
+'''
+
 
 # =====================
 # tools from aqua activation
@@ -118,6 +123,7 @@ on_demand_completion "mise"
 [plugins.aqua]
 inline = '''
 export AQUA_GLOBAL_CONFIG="${DOTFILES_DIR}/config/aqua.yaml"
+export AQUA_POLICY_CONFIG="${DOTFILES_DIR}/config/aqua/aqua-policy.yaml"
 export PATH="$(aqua root-dir)/bin:$PATH"
 on_demand_completion "aqua"
 '''
@@ -154,9 +160,13 @@ inline = 'on_demand_completion "gh" "gh completion -s zsh"'
 [plugins.pnpm-completion]
 inline = 'on_demand_completion "pnpm" "pnpm completion zsh"'
 
-# [plugins.pnpm-shell-completion]
-# github = "g-plane/pnpm-shell-completion"
-# apply = ['defer']
+[plugins.pnpm-shell-completion]
+inline = '''
+# インストール自体はaquaで行う
+local plugin_path_dir=$(dirname $(aqua which pnpm-shell-completion))
+local plugin_path="${plugin_path_dir}/pnpm-shell-completion.plugin.zsh"
+source $plugin_path
+'''
 
 [plugins.zsh-better-npm-completion]
 github = 'lukechilds/zsh-better-npm-completion'
