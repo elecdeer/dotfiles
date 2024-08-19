@@ -157,6 +157,9 @@ inline = 'on_demand_completion "yq" "yq shell-completion zsh"'
 [plugins.gh-completion]
 inline = 'on_demand_completion "gh" "gh completion -s zsh"'
 
+[plugins.pnpm-completion]
+inline = 'on_demand_completion "pnpm" "pnpm completion zsh"'
+
 [plugins.pnpm-shell-completion]
 inline = '''
 # インストール自体はaquaで行う
