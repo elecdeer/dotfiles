@@ -31,3 +31,4 @@ packages:
   - name: k1LoW/gh-do@v0.5.0
   - name: g-plane/pnpm-shell-completion@v0.5.4
   - name: abiosoft/colima@v0.7.5
+  - name: lima-vm/lima@v0.23.2
