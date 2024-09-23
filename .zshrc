@@ -69,45 +69,6 @@ zstyle ':completion::complete:*' use-cache true # 補完候補をキャッシュ
 # ================================
 
 
-# zi wait lucid as"program" from"gh-r" mv"bat* -> bat" pick"bat/bat" light-mode \
-#     atclone'cp -vf bat/autocomplete/bat.zsh bat/autocomplete/_bat' \
-#     atpull'%atclone' \
-#     for @sharkdp/bat
-alias cat='bat'
-
-# zi wait lucid as"program" from"gh-r" mv"lsd* -> lsd" pick"lsd/lsd" light-mode \
-#     for @lsd-rs/lsd
-alias ls='lsd'
-
-# zi wait lucid as"program" from"gh-r" mv"fd* -> fd" pick"fd/fd" light-mode \
-#     for @sharkdp/fd
-alias find='fd'
-
-# zi wait lucid as"program" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg" light-mode \
-#     for BurntSushi/ripgrep
-alias grep='rg'
-
-# zi wait lucid as"program" from"gh-r" mv"delta* -> delta" pick"delta/delta" light-mode \
-#     for dandavison/delta
-
-# zi wait lucid as"program" from"gh-r" mv"pastel* -> pastel" pick"pastel/pastel" light-mode \
-#     for @sharkdp/pastel
-
-# zi wait lucid as"program" from"gh-r" mv"hexyl* -> hexyl" pick"hexyl/hexyl" light-mode \
-#     for @sharkdp/hexyl
-
-# zi wait lucid as"program" from"gh-r" mv"jq* -> jq" light-mode \
-#     for @jqlang/jq
-
-# zi wait lucid as"program" from"gh-r" mv"micro* -> micro" pick"micro/micro" light-mode \
-#     for zyedidia/micro
-    
-# zi wait lucid light-mode \
-#     for rupa/z
-
-# zi wait lucid from'gh-r' as'program' light-mode \
-#     for junegunn/fzf
-
 
 # git補完でのa-zソートを無効化
 zstyle ':completion:*:git*:*' sort false
@@ -124,30 +85,20 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 # features
 # ================================
 
-# かつていたことのあるディレクトリに移動する
-# https://qiita.com/kamykn/items/aa9920f07487559c0c7e
-function fzf-z-search() {
-    local res=$(z | sort -rn | cut -c 12- | fzf --reverse --prompt="cd > ")
-    if [ -n "$res" ]; then
-        BUFFER+="cd $res"
-        zle accept-line
-    else
-        return 1
-    fi
-}
+# # かつていたことのあるディレクトリに移動する
+# # https://qiita.com/kamykn/items/aa9920f07487559c0c7e
+# function fzf-z-search() {
+#     local res=$(z | sort -rn | cut -c 12- | fzf --reverse --prompt="cd > ")
+#     if [ -n "$res" ]; then
+#         BUFFER+="cd $res"
+#         zle accept-line
+#     else
+#         return 1
+#     fi
+# }
 
-zle -N fzf-z-search
-bindkey '^z' fzf-z-search
-
-
-function select-history() {
-    BUFFER=$(history -n -r 1 | fzf --exact --reverse --query="$LBUFFER" --prompt="History > ")
-    CURSOR=${#BUFFER}
-}
-
-zle -N select-history
-bindkey '^r' select-history
-
+# zle -N fzf-z-search
+# bindkey '^z' fzf-z-search
 
 # ================================
 function sync_mise_node_version_with_volta() {

@@ -67,41 +67,10 @@ apply = ['defer']
 github = 'Aloxaf/fzf-tab'
 apply = ['defer']
 
-# [plugins.zsh-iterm2]
-# github = 'laggardkernel/zsh-iterm2'
-# apply = ['defer']
-# use = ['init.zsh']
 
-[plugins.zsh-history-substring-search]
-github = 'zsh-users/zsh-history-substring-search'
-
-[plugins.zsh-completions]
-github = 'zsh-users/zsh-completions'
-
-[plugins.zsh-autosuggestions]
-github = 'zsh-users/zsh-autosuggestions'
+# [plugins.zsh-autosuggestions]
+# github = 'zsh-users/zsh-autosuggestions'
 # apply = ["defer"]
-
-[plugins.zsh-abbrev-alias]
-github = 'momo-lab/zsh-abbrev-alias'
-hooks.post = 'zsh-defer abbrev-alias --init'
-apply = ['defer']
-# usage: https://qiita.com/momo-lab/items/b1b1afee313e42ba687b
-
-# =====================
-# aliases
-# =====================
-
-# https://kapeli.com/cheat_sheets/Oh-My-Zsh_Git.docset/Contents/Resources/Documents/index
-[plugins.git-aliases]
-local = '~/dotfiles/plugins/ohmyzsh-git-abbrev-alias'
-apply = ['defer']
-
-[plugins.custom-aliases]
-inline = '''
-zsh-defer abbrev-alias -g relogin='exec $SHELL -l'
-'''
-
 
 # =====================
 # tools from aqua activation
@@ -133,6 +102,48 @@ inline = '''
 export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
 eval "$(starship init zsh)"
 on_demand_completion "starship"
+'''
+
+
+[plugins.deno-zsh]
+github = 'yuki-yano/zeno.zsh'
+hooks.post = '''
+# https://github.com/yuki-yano/zeno.zsh?tab=readme-ov-file#completion-and-abbrev-snippet
+
+# Experimental: Use UNIX Domain Socket
+# export ZENO_ENABLE_SOCK=1
+
+# default
+export ZENO_GIT_CAT="bat --color=always"
+
+# default
+export ZENO_GIT_TREE="lsd --tree"
+
+if [[ -n $ZENO_LOADED ]]; then
+  bindkey ' ' zeno-auto-snippet
+
+  # fallback if snippet not matched (default: self-insert)
+  # export ZENO_AUTO_SNIPPET_FALLBACK=self-insert
+
+  # if you use zsh's incremental search
+  bindkey -M isearch ' ' self-insert
+
+  bindkey '^m' zeno-auto-snippet-and-accept-line
+
+  bindkey '^i' zeno-completion
+
+  bindkey '^x '  zeno-insert-space
+  bindkey '^x^m' accept-line
+  bindkey '^x^z' zeno-toggle-auto-snippet
+
+  # fallback if completion not matched
+  # (default: fzf-completion if exists; otherwise expand-or-complete)
+  # export ZENO_COMPLETION_FALLBACK=expand-or-complete
+
+  bindkey '^r'   zeno-history-selection
+  bindkey '^z' zeno-insert-snippet
+  # bindkey '^x^f' zeno-ghq-cd
+fi
 '''
 
 # =====================

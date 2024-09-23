@@ -1,0 +1,194 @@
+snippets:
+  - name: bat
+    keyword: cat
+    snippet: bat
+  - name: lsd
+    keyword: ls
+    snippet: lsd
+  - name: fd
+    keyword: find
+    snippet: fd
+  - name: rg
+    keyword: grep
+    snippet: rg
+
+  - name: relogin
+    keyword: relogin
+    snippet: "exec $SHELL -l"
+
+  - name: "pipe to null"
+    keyword: "tonull"
+    snippet: ">/dev/null 2>&1"
+    # auto expand condition
+    # If not defined, it is only valid at the beginning of a line.
+    context:
+      # buffer: ''
+      lbuffer: '.+\s'
+      # rbuffer: ''
+
+  - name: "pipe to code"
+    keyword: "tocode"
+    snippet: "| code -"
+    context:
+      lbuffer: '.+\s'
+
+  # ========================================================================
+  # Git aliases
+  # ========================================================================
+
+  - name: git add
+    keyword: ga
+    snippet: git add
+  - name: git am
+    keyword: gam
+    snippet: git am
+  - name: git apply
+    keyword: gap
+    snippet: git apply
+  - name: git bisect
+    keyword: gbs
+    snippet: git bisect
+  - name: git branch
+    keyword: gb
+    snippet: git branch
+  - name: git checkout
+    keyword: gco
+    snippet: git checkout
+  - name: git cherry-pick
+    keyword: gcp
+    snippet: git cherry-pick
+  - name: git cherry-pick continue
+    keyword: gcpc
+    snippet: git cherry-pick --continue
+  - name: git cherry-pick abort
+    keyword: gcpa
+    snippet: git cherry-pick --abort
+  - name: git commit
+    keyword: gc
+    snippet: git commit --verbose
+  - name: git commit amend
+    keyword: gc!
+    snippet: git commit --amend --verbose
+  - name: gd
+    keyword: gd
+    snippet: git diff
+  - name: gds
+    keyword: gds
+    snippet: git diff --staged
+  - name: git fetch
+    keyword: gf
+    snippet: git fetch
+  - name: git help
+    keyword: ghh
+    snippet: git help
+  # - name: git log
+  #   keyword: gl
+  #   snippet: git log
+  - name: gm
+    keyword: gm
+    snippet: git merge
+  - name: git merge continue
+    keyword: gmc
+    snippet: git merge --continue
+  - name: git merge abort
+    keyword: gma
+    snippet: git merge --abort
+  - name: git pull
+    keyword: gpl
+    snippet: git pull
+  - name: git push
+    keyword: gp
+    snippet: git push
+  - name: git rebase
+    keyword: grb
+    snippet: git rebase
+  - name: git rebase continue
+    keyword: grbc
+    snippet: git rebase --continue
+  - name: git rebase abort
+    keyword: grba
+    snippet: git rebase --abort
+  - name: git reset
+    keyword: gr
+    snippet: git reset
+  - name: git remote
+    keyword: gr
+    snippet: git remote
+  - name: git reset
+    keyword: grh
+    snippet: git reset
+  - name: git reset hard
+    keyword: grhh
+    snippet: git reset --hard
+  - name: git restore
+    keyword: grs
+    snippet: git restore
+  - name: git revert
+    keyword: grv
+    snippet: git revert
+  - name: git revert continue
+    keyword: grvc
+    snippet: git revert --continue
+  - name: git revert abort
+    keyword: grva
+    snippet: git revert --abort
+  - name: git rm
+    keyword: grm
+    snippet: git rm
+  - name: git show
+    keyword: gsh
+    snippet: git show
+  - name: git stash apply
+    keyword: gstaa
+    snippet: git stash apply
+  - name: git stash list
+    keyword: gstl
+    snippet: git stash list
+  - name: git stash pop
+    keyword: gstp
+    snippet: git stash pop
+  - name: git status
+    keyword: gst
+    snippet: git status
+  - name: git switch
+    keyword: gsw
+    snippet: git switch
+
+  # ========================================================================
+  # / Git aliases
+  # ========================================================================
+
+completions:
+  # simple sourceCommand, no callback
+  - name: kill signal
+    patterns:
+      - "^kill -s $"
+    sourceCommand: "kill -l | tr ' ' '\\n'"
+    options:
+      --prompt: "'Kill Signal> '"
+
+  # use excludePatterns and callback
+  - name: kill pid
+    patterns:
+      - "^kill( .*)? $"
+    excludePatterns:
+      # -l, -n or -s is followed by SIGNAL instead of PID
+      - " -[lns] $"
+    sourceCommand: "LANG=C ps -f | sed 1d"
+    options:
+      --multi: true
+      --prompt: "'Kill Process> '"
+    callback: "awk '{print $2}'"
+
+  # Use null (\0) termination Input / Output
+  - name: chdir
+    patterns:
+      - "^cd $"
+    sourceCommand: "find . -path '*/.git' -prune -o -maxdepth 5 -type d -print0"
+    options:
+      # Added --read0 if null termination is used in `sourceCommand` output.
+      --read0: true
+      --prompt: "'Chdir> '"
+      --preview: "cd {} && ls -a | sed '/^[.]*$/d'"
+    callback: "cut -c 3-"
+    callbackZero: true # null termination is used in `callback` I/O
