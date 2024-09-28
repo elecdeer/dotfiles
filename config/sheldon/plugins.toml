@@ -99,9 +99,16 @@ apply = ['defer']
 
 [plugins.custom-aliases]
 inline = '''
-zsh-defer abbrev-alias -g relogin='exec $SHELL -l'
-'''
+zsh-defer abbrev-alias -c cat='bat'
+zsh-defer abbrev-alias -c ls='lsd'
+zsh-defer abbrev-alias -c find='fd'
+zsh-defer abbrev-alias -c grep='rg'
 
+zsh-defer abbrev-alias -c relogin='exec $SHELL -l'
+
+zsh-defer abbrev-alias -g tocode='| code -'
+zsh-defer abbrev-alias -g tonull='> /dev/null'
+'''
 
 # =====================
 # tools from aqua activation
