@@ -82,11 +82,20 @@ github = 'zsh-users/zsh-completions'
 github = 'zsh-users/zsh-autosuggestions'
 # apply = ["defer"]
 
-[plugins.zsh-abbrev-alias]
-github = 'momo-lab/zsh-abbrev-alias'
-hooks.post = 'zsh-defer abbrev-alias --init'
-apply = ['defer']
+# [plugins.zsh-abbrev-alias]
+# github = 'momo-lab/zsh-abbrev-alias'
+# hooks.post = 'zsh-defer abbrev-alias --init'
+# apply = ['defer']
 # usage: https://qiita.com/momo-lab/items/b1b1afee313e42ba687b
+
+# Reminder機能を使いたいのでこっちにする
+[plugins.zsh-abbr]
+github = 'olets/zsh-abbr'
+hooks.post = '''
+ABBR_GET_AVAILABLE_ABBREVIATION=1
+ABBR_LOG_AVAILABLE_ABBREVIATION=1
+'''
+apply = ['defer']
 
 # =====================
 # aliases
@@ -94,20 +103,21 @@ apply = ['defer']
 
 # https://kapeli.com/cheat_sheets/Oh-My-Zsh_Git.docset/Contents/Resources/Documents/index
 [plugins.git-aliases]
-local = '~/dotfiles/plugins/ohmyzsh-git-abbrev-alias'
+# local = '~/dotfiles/plugins/ohmyzsh-git-abbrev-alias'
+local = '~/dotfiles/plugins/ohmyzsh-git-zsh-abbr-alias'
 apply = ['defer']
 
 [plugins.custom-aliases]
 inline = '''
-zsh-defer abbrev-alias -c cat='bat'
-zsh-defer abbrev-alias -c ls='lsd'
-zsh-defer abbrev-alias -c find='fd'
-zsh-defer abbrev-alias -c grep='rg'
+zsh-defer abbr cat='bat'
+zsh-defer abbr ls='lsd'
+zsh-defer abbr find='fd'
+zsh-defer abbr grep='rg'
 
-zsh-defer abbrev-alias -c relogin='exec $SHELL -l'
+zsh-defer abbr relogin='exec $SHELL -l'
 
-zsh-defer abbrev-alias -g tocode='| code -'
-zsh-defer abbrev-alias -g tonull='> /dev/null'
+zsh-defer abbr -g tocode='| code -'
+zsh-defer abbr -g tonull='> /dev/null'
 '''
 
 # =====================
