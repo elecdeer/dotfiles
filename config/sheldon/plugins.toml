@@ -98,6 +98,9 @@ abbr load
 local = '~/dotfiles/plugins/abbr-fast-syntax-highlighting'
 apply = ['defer']
 
+[plugins.zsh-z]
+github = 'agkozak/zsh-z'
+
 # =====================
 # aliases
 # =====================
