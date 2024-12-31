@@ -82,12 +82,6 @@ github = 'zsh-users/zsh-completions'
 github = 'zsh-users/zsh-autosuggestions'
 # apply = ["defer"]
 
-# [plugins.zsh-abbrev-alias]
-# github = 'momo-lab/zsh-abbrev-alias'
-# hooks.post = 'zsh-defer abbrev-alias --init'
-# apply = ['defer']
-# usage: https://qiita.com/momo-lab/items/b1b1afee313e42ba687b
-
 # Reminder機能を使いたいのでこっちにする
 [plugins.zsh-abbr]
 github = 'olets/zsh-abbr'
@@ -103,12 +97,12 @@ apply = ['defer']
 
 # https://kapeli.com/cheat_sheets/Oh-My-Zsh_Git.docset/Contents/Resources/Documents/index
 [plugins.git-aliases]
-# local = '~/dotfiles/plugins/ohmyzsh-git-abbrev-alias'
 local = '~/dotfiles/plugins/ohmyzsh-git-zsh-abbr-alias'
 apply = ['defer']
 
 [plugins.custom-aliases]
 inline = '''
+# 読み込み順の問題で、zsh-deferが必要
 zsh-defer abbr cat='bat'
 zsh-defer abbr ls='lsd'
 zsh-defer abbr find='fd'
