@@ -129,12 +129,9 @@ export PATH="$(aqua root-dir)/bin:$PATH"
 on_demand_completion "aqua"
 '''
 
-[plugins.starship]
-inline = '''
-export STARSHIP_CONFIG=${DOTFILES_DIR}/config/starship.toml
-eval "$(starship init zsh)"
-on_demand_completion "starship"
-'''
+[plugins.pure]
+github = "sindresorhus/pure"
+use = ["async.zsh", "pure.zsh"]
 
 # =====================
 # Completion of external commands
