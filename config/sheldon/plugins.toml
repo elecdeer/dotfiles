@@ -94,6 +94,10 @@ ABBR_AUTOLOAD=0
 abbr load
 '''
 
+[plugins.abbr-fast-syntax-highlighting]
+local = '~/dotfiles/plugins/abbr-fast-syntax-highlighting'
+apply = ['defer']
+
 # =====================
 # aliases
 # =====================
