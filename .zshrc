@@ -100,7 +100,7 @@ bindkey '^z' fzf-z-search
 
 
 function select-history() {
-    BUFFER=$(history -n -r 1 | fzf --exact --reverse --query="$LBUFFER" --prompt="History > ")
+    BUFFER=$(history -n -r 1 | fzf --no-sort --exact --reverse --query="$LBUFFER" --prompt="History > ")
     CURSOR=${#BUFFER}
 }
 
