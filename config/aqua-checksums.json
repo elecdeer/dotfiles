@@ -1,0 +1,54 @@
+{
+  "checksums": [
+    {
+      "id": "github_release/github.com/ast-grep/ast-grep/0.36.2/app-aarch64-apple-darwin.zip",
+      "checksum": "610FA318FC54D36057E24CE0738E748F525E045CA7901A6B1C0A257C65CC11DF",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/boyter/scc/v3.5.0/scc_Darwin_arm64.tar.gz",
+      "checksum": "0E967D77AD564FA77BC5ED157D4E04BC6B56C5619EDEF317E5C99B15C9FCA9D2",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/cli/cli/v2.69.0/gh_2.69.0_macOS_arm64.zip",
+      "checksum": "CC7E3F36F9F36F52867EA8203C198454DE09130A88E709D95EED89916132B53C",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/junegunn/fzf/v0.61.1/fzf-0.61.1-darwin_arm64.tar.gz",
+      "checksum": "ADDC2D9AF3281B09661223EA87887C69599D4CF7B7BC9219D7320DAADC8639A1",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/k1LoW/gh-do/v0.5.3/gh-do_v0.5.3_darwin_arm64.zip",
+      "checksum": "A1574C083D361E9AA34EED868C12ACFCB3D18969B5364E999B3BC4EB839BEEF9",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/lima-vm/lima/v1.0.7/lima-1.0.7-Darwin-arm64.tar.gz",
+      "checksum": "FA3836128E19920CA7113BBCC9908399C56F0665B4B04F294DD76AA02EF38905",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/lsd-rs/lsd/v1.1.5/lsd-v1.1.5-aarch64-apple-darwin.tar.gz",
+      "checksum": "D39006922BABB1A96806E8F3F3BC197276C807A625617091C43836D8924A0C07",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/pinact/v3.0.3/pinact_darwin_arm64.tar.gz",
+      "checksum": "A7357B9E7060F409F0F2A8CF3D965B31C119B854A99802A8B4D9292E5A56CA82",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/wagoodman/dive/v0.13.1/dive_0.13.1_darwin_amd64.tar.gz",
+      "checksum": "04E4C1BAC21BE3AEF99799CF0E470149A072EA4786BE50718AA846CD13746523",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.343.0/registry.yaml",
+      "checksum": "FC19EC8505C04C3190C5CC6F512D0C4566DEA84B72780BBF2C5C8210D20420F188DD0C1FBE6C73172341A2AEBBA1F4D266EDA305B2EBF29B5398C4299831CF6B",
+      "algorithm": "sha512"
+    }
+  ]
+}
