@@ -1,0 +1,6 @@
+aqua.yaml
+aqua-*.yaml
+LICENSE*
+*.md
+renovate.json
+hanger/
