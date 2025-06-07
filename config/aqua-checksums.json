@@ -1,6 +1,16 @@
 {
   "checksums": [
     {
+      "id": "github_release/github.com/BurntSushi/ripgrep/14.1.1/ripgrep-14.1.1-aarch64-apple-darwin.tar.gz",
+      "checksum": "24AD76777745FBFF131C8FBC466742B011F925BFA4FFFA2DED6DEF23B5B937BE",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/abiosoft/colima/v0.8.1/colima-Darwin-arm64",
+      "checksum": "C266FCB272B39221EF6152D2093BB02A1EBADC26042233AD359E1AE52D5D5922",
+      "algorithm": "sha256"
+    },
+    {
       "id": "github_release/github.com/ast-grep/ast-grep/0.36.2/app-aarch64-apple-darwin.zip",
       "checksum": "610FA318FC54D36057E24CE0738E748F525E045CA7901A6B1C0A257C65CC11DF",
       "algorithm": "sha256"
@@ -13,6 +23,21 @@
     {
       "id": "github_release/github.com/cli/cli/v2.69.0/gh_2.69.0_macOS_arm64.zip",
       "checksum": "CC7E3F36F9F36F52867EA8203C198454DE09130A88E709D95EED89916132B53C",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/dandavison/delta/0.18.2/delta-0.18.2-aarch64-apple-darwin.tar.gz",
+      "checksum": "6BA38DCE9F91EE1B9A24AA4AEDE1DB7195258FE176C3F8276AE2D4457D8170A0",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/g-plane/pnpm-shell-completion/v0.5.4/pnpm-shell-completion_aarch64-apple-darwin.tar.gz",
+      "checksum": "816F2BDD9ADC3C501939BC6D269C68FBDC2EF5241398E48EFDE853271031D6DE",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/jqlang/jq/jq-1.7.1/jq-macos-arm64",
+      "checksum": "0BBE619E663E0DE2C550BE2FE0D240D076799D6F8A652B70FA04AEA8A8362E8A",
       "algorithm": "sha256"
     },
     {
@@ -36,6 +61,41 @@
       "algorithm": "sha256"
     },
     {
+      "id": "github_release/github.com/mikefarah/yq/v4.45.1/yq_darwin_arm64",
+      "checksum": "83EDB55E254993F9043D01A1515205B54FFC2C7CE815A780573DA64AFAF2C71B",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/rossmacarthur/sheldon/0.8.1/sheldon-0.8.1-aarch64-apple-darwin.tar.gz",
+      "checksum": "EAF2B813E11B2ADA0444AA1317092F89644040C8714269044D0453230B954E16",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/sharkdp/bat/v0.25.0/bat-v0.25.0-aarch64-apple-darwin.tar.gz",
+      "checksum": "B3ED5A7515545445881F1036F0CC1B708C2B86CBCE01C1B4033F38E0CFCC7B3C",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/sharkdp/fd/v10.2.0/fd-v10.2.0-aarch64-apple-darwin.tar.gz",
+      "checksum": "AE6327BA8C9A487CD63EDD8BDDD97DA0207887A66D61E067DFE80C1430C5AE36",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/sharkdp/hyperfine/v1.19.0/hyperfine-v1.19.0-x86_64-apple-darwin.tar.gz",
+      "checksum": "80AD420C0A9A5D090F6CA0DDC9305A139D57BA6B6E8E7ADF22C800389BAF3AB6",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/sharkdp/pastel/v0.10.0/pastel-v0.10.0-x86_64-apple-darwin.tar.gz",
+      "checksum": "5410FADB9EE352339B6396A33D8F25906BFEAAA4E6DB4C18DB378B66D2956C28",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/starship/starship/v1.22.1/starship-aarch64-apple-darwin.tar.gz",
+      "checksum": "B73B2EF7995EAF07D18A806C3D3ADDABA7797D1FAB2DACEB875944BF038B97A9",
+      "algorithm": "sha256"
+    },
+    {
       "id": "github_release/github.com/suzuki-shunsuke/pinact/v3.0.3/pinact_darwin_arm64.tar.gz",
       "checksum": "A7357B9E7060F409F0F2A8CF3D965B31C119B854A99802A8B4D9292E5A56CA82",
       "algorithm": "sha256"
@@ -43,6 +103,11 @@
     {
       "id": "github_release/github.com/wagoodman/dive/v0.13.1/dive_0.13.1_darwin_amd64.tar.gz",
       "checksum": "04E4C1BAC21BE3AEF99799CF0E470149A072EA4786BE50718AA846CD13746523",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/zyedidia/micro/v2.0.14/micro-2.0.14-macos-arm64.tgz",
+      "checksum": "E96D99CD09BDE96DBA3EB93E044E649FBBCF62DEE63469510FBD054E1EE8F230",
       "algorithm": "sha256"
     },
     {
