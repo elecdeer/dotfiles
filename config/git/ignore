@@ -87,3 +87,4 @@ fabric.properties
 # MacOS
 
 .DS_Store
+**/.claude/settings.local.json
