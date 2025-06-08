@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+{{ if eq .chezmoi.os "darwin" -}}
+echo "🔧 Installing Xcode Command Line Tools..."
+
+# Check if Xcode Command Line Tools are already installed
+if xcode-select -p &> /dev/null; then
+    echo "⏩ Xcode Command Line Tools are already installed"
+    exit 0
+fi
+
+# Install Xcode Command Line Tools
+echo "📦 Installing Xcode Command Line Tools..."
+xcode-select --install
+
+# Wait for installation to complete
+echo "⏳ Waiting for Xcode Command Line Tools installation to complete..."
+until xcode-select -p &> /dev/null; do
+    sleep 5
+done
+
+echo "✅ Xcode Command Line Tools installation completed"
+{{- else -}}
+echo "ℹ️ Xcode Command Line Tools installation is only for macOS, skipping"
+{{- end }}

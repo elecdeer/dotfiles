@@ -1,37 +1,44 @@
 # dotfiles
-my dotfiles!
 
+chezmoi で管理する dotfiles 設定
 
-
-## Installation
-
-### MacOS
+## インストール
 
 ```zsh
-xcode-select --install
-
-cd ~
-git clone https://github.com/elecdeer/dotfiles.git
-
-cd dotfiles
-
-./install.sh
-
-./deploy.sh
-
-aqua install --all
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply elecdeer
 ```
 
-### Ubuntu or some Linux
+## アーキテクチャ
 
-```zsh
-cd ~
-git clone https://github.com/elecdeer/dotfiles.git
+### パッケージ管理層
 
-# https://aquaproj.github.io/docs/products/aqua-installer#shell-script
-curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v3.0.0/aqua-installer | bash
+1. **aqua** (`hanger/aqua/aqua.yaml`) - CLI ツール（bat, fd, ripgrep, fzf, starship 等）
+2. **mise** (`dot_config/mise/config.toml`) - ランタイム（Node.js, Deno, claude-code）
+3. **sheldon** (`dot_config/sheldon/plugins.toml.tmpl`) - zsh プラグイン（遅延ロード対応）
 
-aqua install --all
+## 使用方法
 
-./deploy.sh
+### dotfiles 管理
+
+```bash
+# dotfiles変更の適用
+chezmoi apply
+
+# 適用される変更の確認
+chezmoi diff
+
+# 他の端末での変更を反映
+chezmoi update
+```
+
+### パッケージ管理
+
+#### aqua（CLI ツール）
+
+```bash
+# パッケージ検索してhanger/aqua/aqua.yamlに追加
+aqua generate -g -i
+
+# インストール済みパッケージ一覧
+aqua list --installed
 ```

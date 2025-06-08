@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+echo "🔧 Installing development tools..."
+
+{{ if eq .chezmoi.os "darwin" -}}
+# macOS - Install via Homebrew
+if ! command -v brew >/dev/null 2>&1; then
+    echo "❌ Homebrew is not installed. Please install Homebrew first."
+    exit 1
+fi
+
+# Install mise
+if ! command -v mise >/dev/null 2>&1; then
+    echo "📦 Installing mise via Homebrew..."
+    brew install mise
+    echo "✅ mise installation completed"
+else
+    echo "⏩ mise is already installed"
+fi
+
+# Install aqua
+if ! command -v aqua >/dev/null 2>&1; then
+    echo "💧 Installing aqua via Homebrew..."
+    brew install aquaproj/aqua/aqua
+    echo "✅ aqua installation completed"
+else
+    echo "⏩ aqua is already installed"
+fi
+
+{{- else if eq .chezmoi.os "linux" -}}
+# Linux - Install via official scripts
+
+# Install mise
+if ! command -v mise >/dev/null 2>&1; then
+    echo "📦 Installing mise via official script..."
+    curl https://mise.run | sh
+    
+    # Add mise to PATH
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+    export PATH="$HOME/.local/bin:$PATH"
+else
+    echo "✅ mise is already installed"
+fi
+
+# Install aqua
+if ! command -v aqua >/dev/null 2>&1; then
+    echo "💧 Installing aqua via official script..."
+    curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v3.0.0/aqua-installer | bash
+    
+    # Add aqua to PATH
+    echo 'export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"' >> ~/.bashrc
+    export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+else
+    echo "✅ aqua is already installed"
+fi
+
+{{- else -}}
+echo "❌ Unsupported OS: {{ .chezmoi.os }}"
+exit 1
+{{- end }}
+
+echo "✅ Development tools installation completed"
