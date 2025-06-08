@@ -16,10 +16,10 @@ shell = "zsh"
 github = "romkatv/zsh-defer"
 
 [plugins.on-demand-completion]
-local = "~/dotfiles/plugins/on-demand-completion"
+local = "{{ .chezmoi.sourceDir }}/hanger/plugins/on-demand-completion"
 
 [templates]
-defer = "{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}"
+defer = "{{`{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}`}}"
 
 # =====================
 # Zsh Plugins
@@ -94,7 +94,8 @@ abbr load
 '''
 
 [plugins.abbr-fast-syntax-highlighting]
-local = '~/dotfiles/plugins/abbr-fast-syntax-highlighting'
+# ここで変数を使ってはいけない！
+local = '{{ .chezmoi.sourceDir }}/hanger/plugins/abbr-fast-syntax-highlighting'
 apply = ['defer']
 
 [plugins.zsh-z]
@@ -107,7 +108,7 @@ github = 'agkozak/zsh-z'
 # https://kapeli.com/cheat_sheets/Oh-My-Zsh_Git.docset/Contents/Resources/Documents/index
 
 [plugins.git-alias-fn]
-local = '~/dotfiles/plugins/ohmyzsh-git-fn'
+local = '{{ .chezmoi.sourceDir }}/hanger/plugins/ohmyzsh-git-fn'
 apply = ['defer']
 
 # =====================
@@ -120,19 +121,9 @@ apply = ['defer']
 inline = '''
 # Node.jsのインストール後にcorepack enableを自動でやる
 export MISE_NODE_COREPACK=1
-# Node.jsのインストール後に自動でインストールするパッケージを指定するファイルのパスを指定
-export MISE_NODE_DEFAULT_PACKAGES_FILE="${DOTFILES_DIR}/config/mise/.default-npm-packages"
 
 eval "$(~/.local/bin/mise activate zsh)"
 on_demand_completion "mise"
-'''
-
-[plugins.aqua]
-inline = '''
-export AQUA_GLOBAL_CONFIG="${DOTFILES_DIR}/config/aqua.yaml"
-export AQUA_POLICY_CONFIG="${DOTFILES_DIR}/config/aqua/aqua-policy.yaml"
-export PATH="$(aqua root-dir)/bin:$PATH"
-on_demand_completion "aqua"
 '''
 
 [plugins.pure]
@@ -142,6 +133,9 @@ use = ["async.zsh", "pure.zsh"]
 # =====================
 # Completion of external commands
 # =====================
+
+[plugins.aqua-completion]
+inline = 'on_demand_completion "aqua"'
 
 [plugins.arduino-cli-completion]
 inline = 'on_demand_completion "arduino-cli"'
@@ -209,4 +203,7 @@ zsh-defer compdef _zbnc_zsh_better_ni_completion ni
 # =====================
 
 [plugins.local-zsh]
-inline = 'source ${DOTFILES_DIR}/.zshrc.local'
+inline = '''
+# ある時だけ
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+'''

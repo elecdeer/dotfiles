@@ -5,7 +5,7 @@
 local DO_PROFILE=0
 
 if [ "$DO_PROFILE" = true ]; then
-  zmodload zsh/zprof
+    zmodload zsh/zprof
 fi
 
 
@@ -13,7 +13,7 @@ fi
 # env
 # ================================
 
-DOTFILES_DIR="${HOME}/dotfiles"
+DOTFILES_HANGER_DIR="{{ .chezmoi.sourceDir }}/hanger"
 
 # function source {
 #   ensure_zcompiled $1
@@ -28,17 +28,24 @@ DOTFILES_DIR="${HOME}/dotfiles"
 # }
 # ensure_zcompiled ~/.zshrc
 
+# aqua
+export AQUA_GLOBAL_CONFIG="$DOTFILES_HANGER_DIR/aqua/aqua.yaml"
+export AQUA_POLICY_CONFIG="$DOTFILES_HANGER_DIR/aqua/aqua-policy.yaml"
+export PATH="$(aqua root-dir)/bin:$PATH"
 
 # eval "$(sheldon source)"
 
-export SHELDON_CONFIG_DIR="${DOTFILES_DIR}/config/sheldon"
-sheldon_cache="$SHELDON_CONFIG_DIR/sheldon.zsh"
-sheldon_toml="$SHELDON_CONFIG_DIR/plugins.toml"
+cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
+sheldon_cache="$cache_dir/sheldon.zsh"
+sheldon_toml="$HOME/.config/sheldon/plugins.toml"
 if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
-  sheldon source > $sheldon_cache
+    echo "Regenerating sheldon cache..."
+    mkdir -p $cache_dir
+    sheldon source > $sheldon_cache
+    echo "Done. Cache file: $sheldon_cache"
 fi
 source "$sheldon_cache"
-unset sheldon_cache sheldon_toml
+unset cache_dir sheldon_cache sheldon_toml
 
 
 # ================================
