@@ -1,6 +1,6 @@
 # https://www.chezmoi.io/reference/special-files/chezmoiignore/
 
-LICENSE\*
+LICENSE*
 README.md
 renovate.json
-hanger/\*\*
+hanger/**
