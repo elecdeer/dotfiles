@@ -15,3 +15,5 @@ fi
 
 # https://mise.jdx.dev/ide-integration.html#ide-integration
 eval "$(~/.local/bin/mise activate zsh --shims)"
+
+export GITHUB_TOKEN=$(gh auth token)
