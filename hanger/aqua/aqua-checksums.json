@@ -6,6 +6,11 @@
       "algorithm": "sha256"
     },
     {
+      "id": "github_release/github.com/twpayne/chezmoi/v2.62.6/chezmoi_2.62.6_darwin_arm64.tar.gz",
+      "checksum": "2E14EC6C2F5131BBEC02358A413907BEB56BC5158159A84CDDDEAE13F6EAC6A5",
+      "algorithm": "sha256"
+    },
+    {
       "id": "http/download.docker.com/mac/static/stable/aarch64/docker-28.2.2.tgz",
       "checksum": "E0DC443DD52156A75195E1F06203E8CB24DFE6941F334EAFEC55CF1FCABC9975",
       "algorithm": "sha256"

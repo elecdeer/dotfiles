@@ -36,3 +36,4 @@ packages:
   - name: suzuki-shunsuke/pinact@v3.0.3
   - name: rossmacarthur/sheldon@0.8.1
   - name: docker/cli@v28.2.2
+  - name: twpayne/chezmoi@v2.62.6
