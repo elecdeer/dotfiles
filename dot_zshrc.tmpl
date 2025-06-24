@@ -164,3 +164,11 @@ if [ "$DO_PROFILE" = true ]; then
   zprof
 fi
 
+# automatically added by pnpm
+# pnpm
+export PNPM_HOME="/Users/elecdeer/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

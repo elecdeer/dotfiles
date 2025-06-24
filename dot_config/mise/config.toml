@@ -2,4 +2,5 @@
 deno = "latest"
 node = "23"
 "npm:@anthropic-ai/claude-code" = "latest"
+"npm:ccusage" = "latest"
 usage = "latest"

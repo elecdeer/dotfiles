@@ -2,7 +2,7 @@
   "permissions": {
     "allow": [
       "List(*)",
-      "WebFetch(https://*)",
+      "WebFetch(domain:*)",
       "Bash(ls:*)",
       "Bash(rg:*)",
       "Bash(mv:*)",
