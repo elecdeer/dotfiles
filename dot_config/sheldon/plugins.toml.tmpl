@@ -207,3 +207,39 @@ inline = '''
 # ある時だけ
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 '''
+
+# =====================
+# OS specific settings
+# =====================
+
+{{ if eq .chezmoi.os "darwin" }}
+
+[plugins.opr]
+inline = '''
+# original: https://efcl.info/2023/01/31/remove-secret-from-local/
+
+# opを使って環境変数を読み込む
+opr () {
+	who=$(op whoami)
+	if [[ $? != 0 ]]
+	then
+		eval $(op signin)
+	fi
+	if [[ -f "$PWD/.env" ]]
+	then
+		op run --env-file=$PWD/.env -- $@
+	else
+		op run --env-file={{ .chezmoi.sourceDir }}/hanger/.env.1password -- $@
+	fi
+}
+'''
+
+{{ else if eq .chezmoi.os "linux" }}
+
+# linux
+
+{{ else }}
+
+# other operating system
+
+{{ end }}
