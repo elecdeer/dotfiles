@@ -11,6 +11,11 @@
       "algorithm": "sha256"
     },
     {
+      "id": "http/cache.agilebits.com/dist/1P/op2/pkg/v2.31.1/op_darwin_arm64_v2.31.1.zip",
+      "checksum": "4E9538EE3AEAE9A04DB7FC59082DFF0ACC9A10292B68C9515436C15A87C4A7F9",
+      "algorithm": "sha256"
+    },
+    {
       "id": "http/download.docker.com/mac/static/stable/aarch64/docker-28.2.2.tgz",
       "checksum": "E0DC443DD52156A75195E1F06203E8CB24DFE6941F334EAFEC55CF1FCABC9975",
       "algorithm": "sha256"
