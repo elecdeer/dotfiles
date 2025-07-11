@@ -114,6 +114,10 @@ function select-history() {
 zle -N select-history
 bindkey '^r' select-history
 
+# for Alt + Arrow Keys
+bindkey '\e[1;3C' forward-word  # Alt + Right Arrow
+bindkey '\e[1;3D' backward-word # Alt + Left Arrow
+
 
 # ================================
 function sync_mise_node_version_with_volta() {
