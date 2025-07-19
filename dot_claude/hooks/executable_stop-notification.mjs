@@ -42,7 +42,7 @@ try {
     const script = `
           on run {notificationTitle, notificationMessage}
             try
-              display notification notificationMessage with title notificationTitle
+              display notification notificationMessage with title notificationTitle sound name "Crystal"
             end try
           end run
         `;
