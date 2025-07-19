@@ -1,7 +1,5 @@
 #!/usr/bin/env zx
 
-import { fs, path, os } from "zx";
-
 try {
   const input = JSON.parse(await fs.readFile(process.stdin.fd, "utf8"));
   console.log(input);
