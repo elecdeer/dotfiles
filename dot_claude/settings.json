@@ -1,26 +1,47 @@
 {
   "permissions": {
     "allow": [
-      "List(*)",
-      "WebFetch(domain:*)",
+      "Bash(npm:*)",
+      "Bash(yarn:*)",
+      "Bash(pnpm:*)",
+      "Bash(node:*)",
       "Bash(ls:*)",
+      "Bash(git:*)",
       "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(fd:*)",
       "Bash(mv:*)",
       "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(cat:*)",
+      "Bash(bat:*)",
+      "Bash(echo:*)",
       "Bash(cp:*)",
-      "Bash(chmod:*)",
-      "Bash(find:*)",
-      "Bash(git checkout:*)",
-      "Bash(git add:*)",
-      "Bash(git push:*)",
-      "Bash(git checkout:*)",
-      "Bash(git remote set-url:*)",
-      "Bash(git pull:*)",
-      "Bash(git reset:*)",
-      "Bash(git cherry-pick:*)"
+      "Bash(cd:*)",
+      "Bash(tree:*)",
+      "Bash(jq:*)",
+      "Grep(**)",
+      "WebFetch(domain:*)",
+      "WebSearch(*)",
+      "mcp__context7",
+      "mcp__grep"
     ]
   },
   "env": {
     "USE_BUILTIN_RIPGREP": 1
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-notification.mjs"
+          }
+        ]
+      }
+    ]
   }
 }
