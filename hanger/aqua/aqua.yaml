@@ -38,3 +38,4 @@ packages:
   - name: docker/cli@v28.2.2
   - name: twpayne/chezmoi@v2.62.6
   - name: 1password/cli@v2.31.1
+  - name: ymtdzzz/otel-tui@v0.5.3
