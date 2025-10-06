@@ -39,3 +39,7 @@ packages:
   - name: twpayne/chezmoi@v2.62.6
   - name: 1password/cli@v2.31.1
   - name: ymtdzzz/otel-tui@v0.5.3
+  - name: rhysd/actionlint@v1.7.7
+  - name: docker/compose@v2.39.4
+  - name: docker/cli@v28.4.0
+  - name: docker/buildx@v0.29.1

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec aqua exec -- docker-cli-plugin-docker-compose "$@"
