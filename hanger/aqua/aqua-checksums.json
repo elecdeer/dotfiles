@@ -1,6 +1,21 @@
 {
   "checksums": [
     {
+      "id": "github_release/github.com/docker/buildx/v0.29.1/buildx-v0.29.1.darwin-arm64",
+      "checksum": "7E65F23FB86C4CF4EBDCEEC89C741F8A0363100B255CAD353A64E24701DD00BA",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/docker/compose/v2.39.4/docker-compose-darwin-aarch64",
+      "checksum": "718D09670F2017CDB7BFABCCEBDBF00B3F971A7E560AFC13512B4334796E3CF0",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/rhysd/actionlint/v1.7.7/actionlint_1.7.7_darwin_arm64.tar.gz",
+      "checksum": "2693315B9093AEACB4EBD91A993FEA54FC215057BF0DA2659056B4BC033873DB",
+      "algorithm": "sha256"
+    },
+    {
       "id": "github_release/github.com/rossmacarthur/sheldon/0.8.1/sheldon-0.8.1-aarch64-apple-darwin.tar.gz",
       "checksum": "EAF2B813E11B2ADA0444AA1317092F89644040C8714269044D0453230B954E16",
       "algorithm": "sha256"
@@ -11,6 +26,11 @@
       "algorithm": "sha256"
     },
     {
+      "id": "github_release/github.com/ymtdzzz/otel-tui/v0.5.3/otel-tui_Darwin_arm64.tar.gz",
+      "checksum": "D25D600B1540B72C8E5AFAB36C1CAF95D79F36044584E89955D316C7C0EB0AA6",
+      "algorithm": "sha256"
+    },
+    {
       "id": "http/cache.agilebits.com/dist/1P/op2/pkg/v2.31.1/op_darwin_arm64_v2.31.1.zip",
       "checksum": "4E9538EE3AEAE9A04DB7FC59082DFF0ACC9A10292B68C9515436C15A87C4A7F9",
       "algorithm": "sha256"
@@ -18,6 +38,11 @@
     {
       "id": "http/download.docker.com/mac/static/stable/aarch64/docker-28.2.2.tgz",
       "checksum": "E0DC443DD52156A75195E1F06203E8CB24DFE6941F334EAFEC55CF1FCABC9975",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/download.docker.com/mac/static/stable/aarch64/docker-28.4.0.tgz",
+      "checksum": "DAC48CEB08DF1DBB0A042830B379A6EA30C6BD8EE4B602A8C72851987637CF23",
       "algorithm": "sha256"
     }
   ]
