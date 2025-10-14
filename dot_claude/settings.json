@@ -23,22 +23,33 @@
       "Bash(jq:*)",
       "Grep(**)",
       "WebFetch(domain:*)",
-      "WebSearch(*)",
       "mcp__context7",
       "mcp__grep"
     ]
   },
   "env": {
-    "USE_BUILTIN_RIPGREP": 1
+    "USE_BUILTIN_RIPGREP": "1",
+    "DISABLE_MICROCOMPACT": "1",
+    "DISABLE_AUTOUPDATER": "1"
   },
   "hooks": {
     "Stop": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/stop-notification.mjs"
+            "command": "~/.claude/hooks/stop-notification.ts"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-tool-use-lint.ts"
           }
         ]
       }
