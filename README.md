@@ -41,4 +41,7 @@ aqua generate -g -i
 
 # インストール済みパッケージ一覧
 aqua list --installed
+
+# アップデート
+aqua update -c $AQUA_GLOBAL_CONFIG
 ```
