@@ -93,7 +93,7 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 # かつていたことのあるディレクトリに移動する
 # https://qiita.com/kamykn/items/aa9920f07487559c0c7e
 function fzf-z-search() {
-    local res=$(z | sort -rn | cut -c 12- | fzf --reverse --prompt="cd > ")
+    local res=$(z | sort -rn | cut -c 12- | sed "s|^$HOME|~|" | fzf --reverse --prompt="cd > " --preview 'dir={}; dir=${dir/#\~/$HOME}; lsd -1 --icon=always --color=always "$dir"' --preview-window=right:50%)
     if [ -n "$res" ]; then
         BUFFER+="cd $res"
         zle accept-line
@@ -105,14 +105,11 @@ function fzf-z-search() {
 zle -N fzf-z-search
 bindkey '^z' fzf-z-search
 
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_OPTS='--no-height'
+export FZF_CTRL_R_OPTS='--reverse --prompt="history > " --preview="echo {} | bat --paging=never -l bash --color=always --style=plain" --preview-window=down:3:wrap'
+source <(fzf --zsh)
 
-function select-history() {
-    BUFFER=$(history -n -r 1 | fzf --no-sort --exact --reverse --query="$LBUFFER" --prompt="History > ")
-    CURSOR=${#BUFFER}
-}
-
-zle -N select-history
-bindkey '^r' select-history
 
 # for Alt + Arrow Keys
 bindkey '\e[1;3C' forward-word  # Alt + Right Arrow
