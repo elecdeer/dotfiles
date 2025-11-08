@@ -1,6 +1,7 @@
 [tools]
+bun = "1.3.1"
 deno = "latest"
-node = "23"
+node = "24"
 "npm:@anthropic-ai/claude-code" = "latest"
 "npm:@mizchi/lsmcp" = "latest"
 "npm:ccusage" = "latest"
