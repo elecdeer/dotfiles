@@ -13,8 +13,6 @@ fi
 # env
 # ================================
 
-DOTFILES_HANGER_DIR="{{ .chezmoi.sourceDir }}/hanger"
-
 # function source {
 #   ensure_zcompiled $1
 #   builtin source $1
@@ -28,9 +26,6 @@ DOTFILES_HANGER_DIR="{{ .chezmoi.sourceDir }}/hanger"
 # }
 # ensure_zcompiled ~/.zshrc
 
-# aqua
-export AQUA_GLOBAL_CONFIG="$DOTFILES_HANGER_DIR/aqua/aqua.yaml"
-export AQUA_POLICY_CONFIG="$DOTFILES_HANGER_DIR/aqua/aqua-policy.yaml"
 export PATH="$(aqua root-dir)/bin:$PATH"
 
 # eval "$(sheldon source)"

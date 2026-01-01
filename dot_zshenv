@@ -6,3 +6,10 @@ export XDG_CONFIG_HOME="$HOME"/.config
 export XDG_CACHE_HOME="$HOME"/.cache
 export XDG_DATA_HOME="$HOME"/.local/share
 export XDG_STATE_HOME="$HOME"/.local/state
+
+# Dotfiles管理
+export DOTFILES_HANGER_DIR="$HOME/.local/share/chezmoi/hanger"
+
+# aqua
+export AQUA_GLOBAL_CONFIG="$HOME/.local/share/chezmoi/hanger/aqua/aqua.yaml"
+export AQUA_POLICY_CONFIG="$HOME/.local/share/chezmoi/hanger/aqua/aqua-policy.yaml"
