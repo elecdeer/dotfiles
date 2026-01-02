@@ -20,15 +20,6 @@ else
     echo "⏩ mise is already installed"
 fi
 
-# Install aqua
-if ! command -v aqua >/dev/null 2>&1; then
-    echo "💧 Installing aqua via Homebrew..."
-    brew install aquaproj/aqua/aqua
-    echo "✅ aqua installation completed"
-else
-    echo "⏩ aqua is already installed"
-fi
-
 {{- else if eq .chezmoi.os "linux" -}}
 # Linux - Install via official scripts
 
@@ -42,18 +33,6 @@ if ! command -v mise >/dev/null 2>&1; then
     export PATH="$HOME/.local/bin:$PATH"
 else
     echo "✅ mise is already installed"
-fi
-
-# Install aqua
-if ! command -v aqua >/dev/null 2>&1; then
-    echo "💧 Installing aqua via official script..."
-    curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v3.0.0/aqua-installer | bash
-    
-    # Add aqua to PATH
-    echo 'export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"' >> ~/.bashrc
-    export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-else
-    echo "✅ aqua is already installed"
 fi
 
 {{- else -}}

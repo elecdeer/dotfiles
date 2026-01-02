@@ -112,11 +112,9 @@ local = '{{ .chezmoi.sourceDir }}/hanger/plugins/ohmyzsh-git-fn'
 apply = ['defer']
 
 # =====================
-# tools from aqua activation
+# tools
 # =====================
 
-# aquaよりも先にmiseを有効化
-# https://aquaproj.github.io/docs/reference/use-aqua-with-other-tools
 [plugins.mise]
 inline = '''
 # Node.jsのインストール後にcorepack enableを自動でやる
@@ -133,9 +131,6 @@ use = ["async.zsh", "pure.zsh"]
 # =====================
 # Completion of external commands
 # =====================
-
-[plugins.aqua-completion]
-inline = 'on_demand_completion "aqua"'
 
 [plugins.arduino-cli-completion]
 inline = 'on_demand_completion "arduino-cli"'
@@ -163,10 +158,7 @@ inline = 'on_demand_completion "turbo" "turbo completion zsh"'
 
 [plugins.pnpm-shell-completion]
 inline = '''
-# インストール自体はaquaで行う
-local plugin_path_dir=$(dirname $(aqua which pnpm-shell-completion))
-local plugin_path="${plugin_path_dir}/pnpm-shell-completion.plugin.zsh"
-source $plugin_path
+pnpm-shell-completion
 '''
 
 [plugins.zsh-better-npm-completion]
