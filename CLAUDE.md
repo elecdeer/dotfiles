@@ -4,21 +4,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a chezmoi-managed dotfiles repository that uses a three-tier package management system: aqua for CLI tools, mise for runtime environments, and sheldon for zsh plugins. The configuration emphasizes performance optimization and modular architecture.
+This is a chezmoi-managed dotfiles repository that uses a two-tier package management system: mise for CLI tools and runtime environments, and sheldon for zsh plugins. The configuration emphasizes performance optimization and modular architecture.
 
 ## Common Commands
 
 ### Package Management
 ```bash
-# Install all aqua-managed tools
-aqua install --all
+# Install all mise-managed tools
+mise install
 
-# Add new CLI tool to aqua
-# Edit hanger/aqua/aqua.yaml, then:
-aqua install
+# Add new tool or runtime to mise
+# Edit dot_config/mise/config.toml, then:
+mise install
 
-# Add runtime version to mise
-# Edit dot_config/mise/config.toml, mise auto-detects changes
+# Update all tools
+mise upgrade
+
+# List installed tools
+mise list
 
 # Regenerate sheldon plugin cache (if manual regeneration needed)
 sheldon lock --update
@@ -45,11 +48,11 @@ chezmoi apply --force
 xcode-select --install
 ./install.sh
 ./deploy.sh
-aqua install --all
+mise install
 
 # Full installation (Linux)
-# Install aqua first, then:
-aqua install --all
+# Install mise first, then:
+mise install
 ./deploy.sh
 ```
 
@@ -61,9 +64,8 @@ aqua install --all
 - `dot_config/sheldon/plugins.toml.tmpl` - Plugin configuration with source directory references
 
 ### Package Management Layers
-1. **aqua** (`hanger/aqua/aqua.yaml`) - CLI tools (38 packages including bat, fd, ripgrep, fzf, starship)
-2. **mise** (`dot_config/mise/config.toml`) - Runtimes (Node.js 23, Deno latest, claude-code)
-3. **sheldon** (`dot_config/sheldon/plugins.toml.tmpl`) - Zsh plugins with deferred loading
+1. **mise** (`dot_config/mise/config.toml`) - CLI tools and runtimes (38 packages including bat, fd, ripgrep, fzf, gh, Node.js, Deno, Bun)
+2. **sheldon** (`dot_config/sheldon/plugins.toml.tmpl`) - Zsh plugins with deferred loading
 
 ### Custom Plugins
 Located in `hanger/plugins/`:

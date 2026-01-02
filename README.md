@@ -12,9 +12,8 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply elecdeer
 
 ### パッケージ管理層
 
-1. **aqua** (`hanger/aqua/aqua.yaml`) - CLI ツール（bat, fd, ripgrep, fzf, starship 等）
-2. **mise** (`dot_config/mise/config.toml`) - ランタイム（Node.js, Deno, claude-code）
-3. **sheldon** (`dot_config/sheldon/plugins.toml.tmpl`) - zsh プラグイン（遅延ロード対応）
+1. **mise** (`dot_config/mise/config.toml`) - CLI ツールとランタイム（bat, fd, ripgrep, fzf, gh, Node.js, Deno, Bun 等 38 パッケージ）
+2. **sheldon** (`dot_config/sheldon/plugins.toml.tmpl`) - zsh プラグイン（遅延ロード対応）
 
 ## 使用方法
 
@@ -33,15 +32,29 @@ chezmoi update
 
 ### パッケージ管理
 
-#### aqua（CLI ツール）
+#### mise（CLI ツール・ランタイム）
 
 ```bash
-# パッケージ検索してhanger/aqua/aqua.yamlに追加
-aqua generate -g -i
+# 全ツールのインストール
+mise install
 
-# インストール済みパッケージ一覧
-aqua list --installed
+# 新しいツールやランタイムの追加
+# dot_config/mise/config.tomlを編集してから：
+mise use -g <tool-name>
 
-# アップデート
-aqua update -c $AQUA_GLOBAL_CONFIG
+# インストール済みツール一覧
+mise list
+```
+
+##### ツールのアップデート手順
+
+```bash
+# 1. 全ツールを最新バージョンにアップデート
+mise upgrade
+
+# 2. 更新された設定ファイルをchezmoiに反映
+chezmoi add ~/.config/mise/config.toml ~/.config/mise/mise.lock
+
+# 3. 変更をコミット
+git commit
 ```
