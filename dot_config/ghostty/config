@@ -67,6 +67,9 @@ keybind = super+backslash=goto_split:next
 
 keybind = option+¥=text:\\
 
+# claude code
+keybind = shift+enter=text:\x1b\r
+
 maximize
 macos-window-buttons = hidden
 
