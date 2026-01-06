@@ -51,7 +51,6 @@
       "Bash(cd:*)",
       "Bash(tree:*)",
       "Bash(jq:*)",
-      "Bash(rm:*)",
       "Grep(**)",
       "WebFetch(domain:*)",
       "mcp__context7",
