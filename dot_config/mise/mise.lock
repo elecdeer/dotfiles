@@ -52,7 +52,7 @@ backend = "aqua:docker/cli"
 "platforms.linux-x64-baseline" = { url = "https://download.docker.com/linux/static/stable/x86_64/docker-29.1.3.tgz"}
 "platforms.linux-x64-musl" = { url = "https://download.docker.com/linux/static/stable/x86_64/docker-29.1.3.tgz"}
 "platforms.linux-x64-musl-baseline" = { url = "https://download.docker.com/linux/static/stable/x86_64/docker-29.1.3.tgz"}
-"platforms.macos-arm64" = { url = "https://download.docker.com/mac/static/stable/aarch64/docker-29.1.3.tgz"}
+"platforms.macos-arm64" = { checksum = "blake3:412d148e0a64b4523a2e02e8b002726352932a27b7f2a8a46e48d792a69f419b", url = "https://download.docker.com/mac/static/stable/aarch64/docker-29.1.3.tgz"}
 "platforms.macos-x64" = { url = "https://download.docker.com/mac/static/stable/x86_64/docker-29.1.3.tgz"}
 "platforms.macos-x64-baseline" = { url = "https://download.docker.com/mac/static/stable/x86_64/docker-29.1.3.tgz"}
 "platforms.windows-x64" = { url = "https://download.docker.com/win/static/stable/x86_64/docker-29.1.3.zip"}
@@ -224,7 +224,7 @@ backend = "aqua:dandavison/delta"
 "platforms.linux-x64-baseline" = { url = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-unknown-linux-musl.tar.gz"}
 "platforms.linux-x64-musl" = { url = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-unknown-linux-musl.tar.gz"}
 "platforms.linux-x64-musl-baseline" = { url = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-unknown-linux-musl.tar.gz"}
-"platforms.macos-arm64" = { url = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-aarch64-apple-darwin.tar.gz"}
+"platforms.macos-arm64" = { checksum = "blake3:906240593a91488ed036652a41b7b6df4852484e5bcd69e3c0a15e63dea66f89", url = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-aarch64-apple-darwin.tar.gz"}
 "platforms.macos-x64" = { url = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-apple-darwin.tar.gz"}
 "platforms.macos-x64-baseline" = { url = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-apple-darwin.tar.gz"}
 "platforms.windows-x64" = { url = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-pc-windows-msvc.zip"}
@@ -305,6 +305,10 @@ backend = "aqua:cli/cli"
 "platforms.windows-x64" = { checksum = "sha256:b95bf2d953e3bf497bb2c0aed97ffcc5ed8471b80f0920d663a92a6111f05135", url = "https://github.com/cli/cli/releases/download/v2.83.2/gh_2.83.2_windows_amd64.zip"}
 "platforms.windows-x64-baseline" = { checksum = "sha256:b95bf2d953e3bf497bb2c0aed97ffcc5ed8471b80f0920d663a92a6111f05135", url = "https://github.com/cli/cli/releases/download/v2.83.2/gh_2.83.2_windows_amd64.zip"}
 
+[[tools.ghq]]
+version = "1.8.0"
+backend = "aqua:x-motemen/ghq"
+
 [[tools."github:zyedidia/micro"]]
 version = "2.0.15"
 backend = "github:zyedidia/micro"
@@ -379,19 +383,8 @@ backend = "aqua:lsd-rs/lsd"
 "platforms.windows-x64-baseline" = { checksum = "sha256:a65b9f457153934a7ce1f7e0fe1c4922a95bb2822222126e4fbaa6ee9c0d78e5", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-x86_64-pc-windows-msvc.zip"}
 
 [[tools.node]]
-version = "24.12.0"
+version = "24.6.0"
 backend = "core:node"
-"platforms.linux-arm64" = { checksum = "sha256:9b2a2eeb98a8eb37361224e2a1d060300ad2dd143af58dfdb16de785df0f1228", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-arm64.tar.gz"}
-"platforms.linux-arm64-musl" = { checksum = "sha256:9b2a2eeb98a8eb37361224e2a1d060300ad2dd143af58dfdb16de785df0f1228", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:6159227e0af7d7c3c6bb2fa900452b04a6cb8841a702a79acc613209d70b04d0", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-x64.tar.gz"}
-"platforms.linux-x64-baseline" = { checksum = "sha256:6159227e0af7d7c3c6bb2fa900452b04a6cb8841a702a79acc613209d70b04d0", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-x64.tar.gz"}
-"platforms.linux-x64-musl" = { checksum = "sha256:6159227e0af7d7c3c6bb2fa900452b04a6cb8841a702a79acc613209d70b04d0", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-x64.tar.gz"}
-"platforms.linux-x64-musl-baseline" = { checksum = "sha256:6159227e0af7d7c3c6bb2fa900452b04a6cb8841a702a79acc613209d70b04d0", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-x64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:319f221adc5e44ff0ed57e8a441b2284f02b8dc6fc87b8eb92a6a93643fd8080", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-darwin-arm64.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:b82ea4c62fd08e250cab59d625e75d77cc5b0a3d60c6698ebee4545c88a169c5", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-darwin-x64.tar.gz"}
-"platforms.macos-x64-baseline" = { checksum = "sha256:b82ea4c62fd08e250cab59d625e75d77cc5b0a3d60c6698ebee4545c88a169c5", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-darwin-x64.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:9c125f61ae947b52e779095830f9cac267846a043ef7192183c84016aaad2812", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-x64.zip"}
-"platforms.windows-x64-baseline" = { checksum = "sha256:9c125f61ae947b52e779095830f9cac267846a043ef7192183c84016aaad2812", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-x64.zip"}
 
 [[tools."npm:@anthropic-ai/claude-code"]]
 version = "2.0.76"
