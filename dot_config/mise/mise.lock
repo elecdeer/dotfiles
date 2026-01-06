@@ -309,6 +309,11 @@ backend = "aqua:cli/cli"
 version = "1.8.0"
 backend = "aqua:x-motemen/ghq"
 
+[[tools."github:k1LoW/git-wt"]]
+version = "0.11.0"
+backend = "github:k1LoW/git-wt"
+"platforms.macos-arm64" = { checksum = "sha256:355668acb7fca8027437890c0885bec568eb425913db6f5ec2295bd3bcb68703", url = "https://github.com/k1LoW/git-wt/releases/download/v0.11.0/git-wt_v0.11.0_darwin_arm64.zip", url_api = "https://api.github.com/repos/k1LoW/git-wt/releases/assets/336964198"}
+
 [[tools."github:zyedidia/micro"]]
 version = "2.0.15"
 backend = "github:zyedidia/micro"
