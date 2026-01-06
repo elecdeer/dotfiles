@@ -1,9 +1,6 @@
 abbr -g "tocode"="| code -"
 abbr -g "noansi"="| sed -E \"s/\\x1B\\[[0-9;]*[mK]//g\""
 abbr -g "tonull"="> /dev/null"
-abbr "cat"="bat"
-abbr "find"="fd"
-abbr "grep"="rg"
 abbr "ls"="lsd"
 abbr "relogin"="exec \$SHELL -l"
 
