@@ -23,3 +23,5 @@
   helper = !/opt/homebrew/bin/gh auth git-credential
 [push]
   autoSetupRemote = true
+[ghq]
+	root = ~/dev
