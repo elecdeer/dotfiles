@@ -85,11 +85,31 @@ function fzf-z-search() {
 zle -N fzf-z-search
 bindkey '^z' fzf-z-search
 
+# ghqで管理しているリポジトリに移動する
+function fzf-ghq-search() {
+    local ghq_root=$(ghq root)
+    local repo=$(ghq list | fzf --reverse --prompt="repository > " \
+        --preview "[ -f $ghq_root/{}/README.md ] && bat --color=always --style=numbers $ghq_root/{}/README.md || lsd -1 --icon=always --color=always $ghq_root/{}" \
+        --preview-window=right:50%)
+    if [ -n "$repo" ]; then
+        BUFFER+="cd $ghq_root/$repo"
+        zle accept-line
+    else
+        return 1
+    fi
+}
+
+zle -N fzf-ghq-search
+bindkey '^q' fzf-ghq-search
+
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS='--no-height'
 export FZF_CTRL_R_OPTS='--reverse --prompt="history > " --preview="echo {} | bat --paging=never -l bash --color=always --style=plain" --preview-window=down:3:wrap'
 source <(fzf --zsh)
 
+
+# Ctrl+Q/Ctrl+Sを使えるようにフロー制御を無効化
+stty -ixon
 
 # for Alt + Arrow Keys
 bindkey '\e[1;3C' forward-word  # Alt + Right Arrow
