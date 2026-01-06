@@ -4,6 +4,8 @@ abbr -g "tonull"="> /dev/null"
 abbr "ls"="lsd"
 abbr "relogin"="exec \$SHELL -l"
 
+abbr "nr"="ni run"
+
 abbr "g"="git"
 abbr "ga"="git add"
 abbr "gaa"="git add --all"
