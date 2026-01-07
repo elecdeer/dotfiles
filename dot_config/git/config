@@ -25,3 +25,5 @@
   autoSetupRemote = true
 [ghq]
 	root = ~/dev
+[wt]
+	basedir = ".wt"
