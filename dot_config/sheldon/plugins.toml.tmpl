@@ -157,9 +157,8 @@ inline = 'on_demand_completion "pnpm" "pnpm completion zsh"'
 inline = 'on_demand_completion "turbo" "turbo completion zsh"'
 
 [plugins.pnpm-shell-completion]
-inline = '''
-pnpm-shell-completion
-'''
+inline = 'source pnpm-shell-completion.plugin.zsh'
+apply = ['defer']
 
 [plugins.zsh-better-npm-completion]
 github = 'lukechilds/zsh-better-npm-completion'
