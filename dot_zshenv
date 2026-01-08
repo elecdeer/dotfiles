@@ -9,3 +9,5 @@ export XDG_STATE_HOME="$HOME"/.local/state
 
 # Dotfiles管理
 export DOTFILES_HANGER_DIR="$HOME/.local/share/chezmoi/hanger"
+
+export EDITOR="micro"
