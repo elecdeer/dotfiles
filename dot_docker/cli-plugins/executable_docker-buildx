@@ -1,2 +1,2 @@
 #!/bin/sh
-exec aqua exec -- docker-cli-plugin-docker-buildx "$@"
+docker-cli-plugin-docker-buildx "$@"

@@ -1,0 +1,58 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "(!menu || (!Editor && !Terminal))",
+    "bindings": {
+      "ctrl-w shift-l": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "right", "focus": true },
+      ],
+      "ctrl-shift-w ctrl-shift-l": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "right", "focus": true },
+      ],
+      "ctrl-w shift-j": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "down", "focus": true },
+      ],
+      "ctrl-shift-w ctrl-shift-j": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "down", "focus": true },
+      ],
+      "ctrl-w shift-k": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "up", "focus": true },
+      ],
+      "ctrl-shift-w ctrl-shift-k": [
+        "workspace::MoveItemToPaneInDirection",
+        {
+          "direction": "up",
+          "focus": true,
+        },
+      ],
+      "ctrl-w shift-h": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "left", "focus": true },
+      ],
+      "ctrl-shift-w ctrl-shift-h": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "left", "focus": true },
+      ],
+      "ctrl-w shift-m": "workspace::ToggleZoom",
+      "ctrl-w ctrl-shift-m": "workspace::ToggleZoom",
+    },
+  },
+  {
+    "context": "(Editor && (showing_code_actions || showing_completions))",
+    "bindings": {
+      "ctrl-n": "editor::ContextMenuNext",
+      "ctrl-p": "editor::ContextMenuPrevious"
+    }
+  }
+]
