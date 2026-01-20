@@ -15,19 +15,16 @@ Follow these fundamental patterns when writing Vitest tests:
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 ```
 
-**Test Structure**: Use `test()` instead of `it()`. Organize with `describe()` blocks (max 4 levels). Structure tests using the Given-When-Then pattern:
+**Test Structure**: Use `test()` instead of `it()`. Organize with `describe()` blocks (max 4 levels). Structure tests using the Given-When-Then pattern (setup, execution, assertion) but **do not write Given/When/Then comments in the actual code**:
 
 ```typescript
 describe("ComponentName", () => {
   describe("method name", () => {
     test("does something specific", () => {
-      // Given: Setup test data and preconditions
       const input = createTestData();
 
-      // When: Execute the action being tested
       const result = methodName(input);
 
-      // Then: Assert the expected outcome
       expect(result).toStrictEqual(expected);
     });
   });
