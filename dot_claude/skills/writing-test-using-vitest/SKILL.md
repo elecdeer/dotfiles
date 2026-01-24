@@ -15,19 +15,16 @@ Follow these fundamental patterns when writing Vitest tests:
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 ```
 
-**Test Structure**: Use `test()` instead of `it()`. Organize with `describe()` blocks (max 4 levels). Structure tests using the Given-When-Then pattern:
+**Test Structure**: Use `test()` instead of `it()`. Organize with `describe()` blocks (max 4 levels). Structure tests using the Given-When-Then pattern (setup, execution, assertion) but **do not write Given/When/Then comments in the actual code**:
 
 ```typescript
 describe("ComponentName", () => {
   describe("method name", () => {
     test("does something specific", () => {
-      // Given: Setup test data and preconditions
       const input = createTestData();
 
-      // When: Execute the action being tested
       const result = methodName(input);
 
-      // Then: Assert the expected outcome
       expect(result).toStrictEqual(expected);
     });
   });
@@ -104,10 +101,10 @@ describe("async function", () => {
 
 ### Type Narrowing with Discriminated Unions
 
-Use `expect.unreachable()` to narrow types safely with early return pattern:
+Use `assert()` to narrow types safely:
 
 ```typescript
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, assert } from "vitest";
 
 type Result =
   | { type: "success"; data: string }
@@ -115,22 +112,16 @@ type Result =
 
 describe("handleResult", () => {
   test("handles success case", () => {
-    // Given
     const result: Result = getResult();
 
-    // When/Then: Check for unexpected case first
-    if (result.type !== "success") {
-      expect.unreachable("Expected success result");
-      return;
-    }
+    assert(result.type === "success");
 
-    // Now TypeScript knows result.type === "success"
     expect(result.data).toBe("expected");
   });
 });
 ```
 
-**Critical**: Never use conditional assertions without type narrowing. Always use `expect.unreachable()` with early return for discriminated union branches.
+**Critical**: Never use conditional assertions without type narrowing. Always use `assert()` for discriminated union branches to enable type narrowing.
 
 ### Mocking
 
@@ -143,13 +134,10 @@ import { describe, test, expect, vi } from "vitest";
 
 describe("with mocks", () => {
   test("mocks function call", () => {
-    // Given
     const mockFn = vi.fn();
 
-    // When
     mockFn("arg");
 
-    // Then
     expect(mockFn).toHaveBeenCalledWith("arg");
   });
 });
@@ -179,18 +167,14 @@ import { UserGreeting } from "./UserGreeting";
 
 describe("UserGreeting", () => {
   test("renders greeting with user name", async () => {
-    // Given
     await render(<UserGreeting name="Alice" />);
 
-    // Then
     await expect.element(page.getByText("Hello, Alice!")).toBeInTheDocument();
   });
 
   test("renders default greeting when no name provided", async () => {
-    // Given
     await render(<UserGreeting />);
 
-    // Then
     await expect.element(page.getByText("Hello, Guest!")).toBeInTheDocument();
   });
 });
@@ -205,14 +189,11 @@ import { page, userEvent } from "vitest/browser";
 
 describe("Counter", () => {
   test("increments count on button click", async () => {
-    // Given
     await render(<Counter initialCount={0} />);
     await expect.element(page.getByText("Count: 0")).toBeInTheDocument();
 
-    // When
     await userEvent.click(page.getByRole("button", { name: "Increment" }));
 
-    // Then
     await expect.element(page.getByText("Count: 1")).toBeInTheDocument();
   });
 });
@@ -227,15 +208,12 @@ import { page, userEvent } from "vitest/browser";
 
 describe("LoginForm", () => {
   test("submits with user input", async () => {
-    // Given
     await render(<LoginForm />);
 
-    // When
     await userEvent.fill(page.getByLabelText("Username"), "testuser");
     await userEvent.fill(page.getByLabelText("Password"), "password123");
     await userEvent.click(page.getByRole("button", { name: "Submit" }));
 
-    // Then
     await expect
       .element(page.getByText("Welcome testuser"))
       .toBeInTheDocument();
@@ -326,13 +304,10 @@ interface Fixtures {
 
 const test = base.extend<Fixtures>({
   testData: async ({}, use) => {
-    // Setup
     const data = createTestData();
 
-    // Provide to test
     await use(data);
 
-    // Teardown
     cleanup(data);
   },
 });
@@ -342,6 +317,24 @@ describe("with fixtures", () => {
     expect(testData).toBeDefined();
   });
 });
+```
+
+## Test Execution
+
+**Prefer npm scripts over direct CLI execution.** Vitest CLI runs in interactive mode by default, which is problematic for automated execution.
+
+When running tests directly via CLI, always use the `--run` option to disable interactive mode:
+
+```bash
+vitest --run
+```
+
+For CI/CD or automated workflows, use npm scripts defined in package.json:
+
+```bash
+npm test
+# or
+npm run test
 ```
 
 ## Lint Error Resolution
