@@ -9,44 +9,29 @@
   {
     "context": "(!menu || (!Editor && !Terminal))",
     "bindings": {
-      "ctrl-w shift-l": [
+      "ctrl-shift-w ctrl-shift-f": [
         "workspace::MoveItemToPaneInDirection",
-        { "direction": "right", "focus": true },
+        { "direction": "right", "focus": true }
       ],
-      "ctrl-shift-w ctrl-shift-l": [
+      "ctrl-w ctrl-f": "workspace::ActivatePaneRight",
+      "ctrl-shift-w ctrl-shift-b": [
         "workspace::MoveItemToPaneInDirection",
-        { "direction": "right", "focus": true },
+        { "direction": "left", "focus": true }
       ],
-      "ctrl-w shift-j": [
+      "ctrl-w ctrl-b": "workspace::ActivatePaneLeft",
+      "ctrl-shift-w ctrl-shift-p": [
         "workspace::MoveItemToPaneInDirection",
-        { "direction": "down", "focus": true },
+        { "direction": "up", "focus": true }
       ],
-      "ctrl-shift-w ctrl-shift-j": [
+      "ctrl-w ctrl-p": "workspace::ActivatePaneUp",
+      "ctrl-shift-w ctrl-shift-n": [
         "workspace::MoveItemToPaneInDirection",
-        { "direction": "down", "focus": true },
+        { "direction": "down", "focus": true }
       ],
-      "ctrl-w shift-k": [
-        "workspace::MoveItemToPaneInDirection",
-        { "direction": "up", "focus": true },
-      ],
-      "ctrl-shift-w ctrl-shift-k": [
-        "workspace::MoveItemToPaneInDirection",
-        {
-          "direction": "up",
-          "focus": true,
-        },
-      ],
-      "ctrl-w shift-h": [
-        "workspace::MoveItemToPaneInDirection",
-        { "direction": "left", "focus": true },
-      ],
-      "ctrl-shift-w ctrl-shift-h": [
-        "workspace::MoveItemToPaneInDirection",
-        { "direction": "left", "focus": true },
-      ],
+      "ctrl-w ctrl-n": "workspace::ActivatePaneDown",
       "ctrl-w shift-m": "workspace::ToggleZoom",
-      "ctrl-w ctrl-shift-m": "workspace::ToggleZoom",
-    },
+      "ctrl-w ctrl-shift-m": "workspace::ToggleZoom"
+    }
   },
   {
     "context": "(Editor && (showing_code_actions || showing_completions))",

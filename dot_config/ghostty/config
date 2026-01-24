@@ -49,7 +49,7 @@
 # resize-overlay-duration = 4s 200ms
 
 theme = Iceberg Dark
-background-opacity = 0.92
+background-opacity = 0.85
 
 font-family = "FiraCode Nerd Font"
 font-family = "Hiragino Kaku Gothic ProN"
