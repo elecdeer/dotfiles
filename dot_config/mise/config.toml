@@ -38,6 +38,7 @@ pinact = "latest"
 ripgrep = "latest"
 usage = "latest"
 yq = "latest"
+"npm:oxfmt" = "latest"
 
 [settings]
 lockfile = true
