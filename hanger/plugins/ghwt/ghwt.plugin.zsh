@@ -4,7 +4,9 @@ function ghwt() {
   local worktrees=$(git worktree list --porcelain | grep -E '^branch' | sed 's|branch refs/heads/||')
   local current_user=$(gh api user --jq '.login')
   
-  local selected_item=$(gh pr list --json number,title,headRefName,statusCheckRollup,createdAt,author,reviewRequests \
+  local pr_list=$(gh pr list --json number,title,headRefName,statusCheckRollup,createdAt,author,reviewRequests)
+  
+  local selected_pr=$(echo "$pr_list" \
     | jq -jr --arg worktrees "$worktrees" --arg current_user "$current_user" '
       .[] | 
       .headRefName as $branch | 
@@ -41,7 +43,12 @@ function ghwt() {
       --preview 'pr_num=$(echo {1} | sed "s/#//"); gh pr view $pr_num --json additions,deletions,changedFiles | jq -r "\"\\u001b[33m+\" + (.additions | tostring) + \"\\u001b[0m \\u001b[31m-\" + (.deletions | tostring) + \"\\u001b[0m \\u001b[90m(\" + (.changedFiles | tostring) + \" files)\\u001b[0m\n\""; gh pr view $pr_num --json body --jq ".body" | bat --paging=never -l markdown --color=always --style=plain' \
       --preview-window 'right:30%:wrap' \
     | head -1 \
-    | awk '{print $3}')
+    | sed 's/\x1b\[[0-9;]*m//g' \
+    | awk '{print $1}' \
+    | sed 's/#//')
   
-  [[ -n "$selected_item" ]] && git wt "$selected_item"
+  if [[ -n "$selected_pr" ]]; then
+    local branch_name=$(echo "$pr_list" | jq -r --arg pr_num "$selected_pr" '.[] | select(.number == ($pr_num | tonumber)) | .headRefName')
+    git wt "$branch_name"
+  fi
 }
