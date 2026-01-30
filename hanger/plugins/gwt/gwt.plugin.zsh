@@ -1,0 +1,31 @@
+#!/usr/bin/env zsh
+
+function gwt() {
+  local selected_worktree
+  selected_worktree=$(git-wt | tail -n +2 | sed 's/^[ *]*//' | awk '{
+    path = $1
+    branch = $2
+    hash = $3
+    
+    # Get push/pull status
+    cmd = "git -C " path " rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
+    cmd | getline result
+    close(cmd)
+    
+    arrows = ""
+    if (result != "") {
+      split(result, counts, " ")
+      behind = counts[1]
+      ahead = counts[2]
+      if (ahead > 0) arrows = arrows "\033[33m⇡\033[0m"
+      if (behind > 0) arrows = arrows "\033[31m⇣\033[0m"
+    }
+    
+    # 色分け: path=緑, branch=青, hash=グレー
+    printf "\033[32m%s\033[0m\t\033[34m%s\033[0m\t\033[90m%s\033[0m\t%s\n", path, branch, hash, arrows
+  }' | column -t -s $'\t' | fzf --ansi --with-nth 2,3,4 --header "Select Worktree" --height 40% --border --reverse | awk '{print $2}')
+
+  if [[ -n "$selected_worktree" ]]; then
+    git wt "$selected_worktree"
+  fi
+}
