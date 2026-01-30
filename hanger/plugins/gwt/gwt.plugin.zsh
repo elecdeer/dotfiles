@@ -26,6 +26,7 @@ function gwt() {
   }' | column -t -s $'\t' | fzf --with-nth 2,3,4 --header "Select Worktree" | awk '{print $2}')
 
   if [[ -n "$selected_worktree" ]]; then
+    print -s "git wt \"$selected_worktree\""
     git wt "$selected_worktree"
   fi
 }

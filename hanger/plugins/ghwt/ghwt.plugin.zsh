@@ -49,6 +49,7 @@ function ghwt() {
   
   if [[ -n "$selected_pr" ]]; then
     local branch_name=$(echo "$pr_list" | jq -r --arg pr_num "$selected_pr" '.[] | select(.number == ($pr_num | tonumber)) | .headRefName')
+    print -s "git wt \"$branch_name\""
     git wt "$branch_name"
   fi
 }
