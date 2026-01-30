@@ -27,3 +27,5 @@
 	root = ~/dev
 [wt]
 	basedir = ".wt"
+	copy = **/node_modules
+	hook = "[ -f package.json ] && ni"
