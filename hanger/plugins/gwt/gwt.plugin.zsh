@@ -23,7 +23,7 @@ function gwt() {
     
     # 色分け: path=緑, branch=青, hash=グレー
     printf "\033[32m%s\033[0m\t\033[34m%s\033[0m\t\033[90m%s\033[0m\t%s\n", path, branch, hash, arrows
-  }' | column -t -s $'\t' | fzf --ansi --with-nth 2,3,4 --header "Select Worktree" --height 40% --border --reverse | awk '{print $2}')
+  }' | column -t -s $'\t' | fzf --with-nth 2,3,4 --header "Select Worktree" | awk '{print $2}')
 
   if [[ -n "$selected_worktree" ]]; then
     git wt "$selected_worktree"

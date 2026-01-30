@@ -36,8 +36,8 @@ function ghwt() {
       "\u001b[90m" + $relative + "\u001b[0m " + 
       "\u001b[35m" + .author.login + "\u001b[0m" + 
       "\n  " + .title + "\u0000"' \
-    | fzf --read0 --ansi --gap \
-      --header "Select PR" --height 40% --border --reverse \
+    | fzf --read0 --gap \
+      --header "Select PR" \
       --preview 'pr_num=$(echo {1} | sed "s/#//"); gh pr view $pr_num --json additions,deletions,changedFiles | jq -r "\"\\u001b[33m+\" + (.additions | tostring) + \"\\u001b[0m \\u001b[31m-\" + (.deletions | tostring) + \"\\u001b[0m \\u001b[90m(\" + (.changedFiles | tostring) + \" files)\\u001b[0m\n\""; gh pr view $pr_num --json body --jq ".body" | bat --paging=never -l markdown --color=always --style=plain' \
       --preview-window 'right:30%:wrap' \
     | head -1 \
