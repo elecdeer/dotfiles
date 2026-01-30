@@ -27,4 +27,4 @@
 	root = ~/dev
 [wt]
 	basedir = ".wt"
-	hook = "[ -f package.json ] && ni"
+	hook = "zsh -c '[ -f package.json ] && ni'"
