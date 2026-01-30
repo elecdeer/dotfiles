@@ -27,4 +27,4 @@
 	root = ~/dev
 [wt]
 	basedir = ".wt"
-	hook = "zsh -c '[ -f package.json ] && ni'"
+	hook = "if [ -f pnpm-lock.yaml ]; then pnpm install; elif [ -f package-lock.json ]; then npm install; fi"
