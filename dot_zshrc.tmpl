@@ -75,9 +75,12 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 function fzf-z-search() {
     local res=$(z | sort -rn | cut -c 12- | sed "s|^$HOME|~|" | fzf --reverse --prompt="cd > " --preview 'dir={}; dir=${dir/#\~/$HOME}; lsd -1 --icon=always --color=always "$dir"' --preview-window=right:50%)
     if [ -n "$res" ]; then
+        # historyに残したいのでcdで打ったことにする
         BUFFER+="cd $res"
         zle accept-line
     else
+        # プロンプト消えちゃう対策
+        zle redisplay
         return 1
     fi
 }
@@ -95,6 +98,7 @@ function fzf-ghq-search() {
         BUFFER+="cd $ghq_root/$repo"
         zle accept-line
     else
+        zle redisplay
         return 1
     fi
 }
