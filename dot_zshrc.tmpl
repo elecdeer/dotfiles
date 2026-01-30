@@ -90,10 +90,37 @@ bindkey '^z' fzf-z-search
 
 # ghqで管理しているリポジトリに移動する
 function fzf-ghq-search() {
+    setopt local_options
+    unsetopt xtrace
+    
     local ghq_root=$(ghq root)
-    local repo=$(ghq list | fzf --prompt="repository > " \
-        --preview "[ -f $ghq_root/{}/README.md ] && bat --color=always --style=numbers $ghq_root/{}/README.md || lsd -1 --icon=always --color=always $ghq_root/{}" \
-        --preview-window=right:50%)
+    local now=$(date +%s)
+    local repo=$(ghq list | while read -r repo; do
+        local mtime=$(stat -f "%m" "$ghq_root/$repo" 2>/dev/null)
+        if [ -n "$mtime" ]; then
+            local diff=$((now - mtime))
+            local relative_time=""
+            
+            if [ $diff -lt 60 ]; then
+                relative_time="${diff}s"
+            elif [ $diff -lt 3600 ]; then
+                relative_time="$((diff / 60))m"
+            elif [ $diff -lt 86400 ]; then
+                relative_time="$((diff / 3600))h"
+            elif [ $diff -lt 2592000 ]; then
+                relative_time="$((diff / 86400))d"
+            else
+                relative_time="$((diff / 2592000))mo"
+            fi
+            
+            printf "%-60s\t\033[2m%5s ago\033[0m\n" "$repo" "$relative_time"
+        fi
+    done 2>/dev/null | fzf --prompt="repository > " --ansi \
+        --delimiter '\t' \
+        --with-nth 1,2 \
+        --nth 1 \
+        --preview "[ -f $ghq_root/{1}/README.md ] && bat --color=always --style=numbers $ghq_root/{1}/README.md || lsd -1 --icon=always --color=always $ghq_root/{1}" \
+        --preview-window=right:50% | cut -f1 | sed 's/[[:space:]]*$//')
     if [ -n "$repo" ]; then
         BUFFER+="cd $ghq_root/$repo"
         zle accept-line
