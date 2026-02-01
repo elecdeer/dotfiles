@@ -6,6 +6,9 @@ abbr "relogin"="exec \$SHELL -l"
 
 abbr "nr"="ni run"
 
+abbr "oc"="code -r ."
+abbr "opr"="gh repo view --web"
+
 abbr "g"="git"
 abbr "ga"="git add"
 abbr "gaa"="git add --all"
