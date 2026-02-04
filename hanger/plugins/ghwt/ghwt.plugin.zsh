@@ -1,5 +1,13 @@
 #!/usr/bin/env zsh
 
+# セッション単位でキャッシュするグローバル変数
+typeset -g _GHWT_CURRENT_USER
+
+# バックグラウンドでユーザー名を取得（zshrcの読み込みをブロックしない）
+{
+  _GHWT_CURRENT_USER=$(gh api user --jq '.login' 2>/dev/null)
+} &!
+
 function ghwt() {
   # 引数が渡された場合は直接処理
   if [[ $# -gt 0 ]]; then
@@ -21,7 +29,9 @@ function ghwt() {
   fi
 
   local worktrees=$(git worktree list --porcelain | grep -E '^branch' | sed 's|branch refs/heads/||')
-  local current_user=$(gh api user --jq '.login')
+  
+  # セッションキャッシュを使用（まだ取得されていない場合はその場で取得）
+  local current_user="${_GHWT_CURRENT_USER:-$(gh api user --jq '.login')}"
   
   local pr_list=$(gh pr list --json number,title,headRefName,statusCheckRollup,createdAt,author,reviewRequests)
   
