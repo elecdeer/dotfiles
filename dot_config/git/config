@@ -9,8 +9,6 @@
 	smudge = git-lfs smudge -- %f
 [core]
 	autocrlf = input
-[pull]
-	rebase = false
 [gpg]
 	format = ssh
 [gpg "ssh"]
@@ -24,8 +22,10 @@
 	prune = true
 [pull]
   ff = only
+	rebase = false
 [rebase]
 	autoStash = true
+	autoSquash = true
 
 [url "https://github.com/"]
 	insteadOf = git@github.com:
