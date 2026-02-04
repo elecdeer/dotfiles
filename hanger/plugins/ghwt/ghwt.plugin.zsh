@@ -3,10 +3,7 @@
 # セッション単位でキャッシュするグローバル変数
 typeset -g _GHWT_CURRENT_USER
 
-# バックグラウンドでユーザー名を取得（zshrcの読み込みをブロックしない）
-{
-  _GHWT_CURRENT_USER=$(gh api user --jq '.login' 2>/dev/null)
-} &!
+zsh-defer +12 -c "_GHWT_CURRENT_USER=$(gh api user --jq '.login')"
 
 function ghwt() {
   # 引数が渡された場合は直接処理
