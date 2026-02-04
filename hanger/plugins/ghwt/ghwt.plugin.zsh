@@ -1,6 +1,25 @@
 #!/usr/bin/env zsh
 
 function ghwt() {
+  # 引数が渡された場合は直接処理
+  if [[ $# -gt 0 ]]; then
+    local arg="$1"
+    # 全て数字ならPR番号として扱う
+    if [[ "$arg" =~ ^[0-9]+$ ]]; then
+      local branch_name=$(gh pr view "$arg" --json headRefName --jq '.headRefName')
+      if [[ -n "$branch_name" ]]; then
+        git wt "$branch_name"
+      else
+        echo "PR #$arg not found"
+        return 1
+      fi
+    else
+      # ブランチ名として扱う
+      git wt "$arg"
+    fi
+    return
+  fi
+
   local worktrees=$(git worktree list --porcelain | grep -E '^branch' | sed 's|branch refs/heads/||')
   local current_user=$(gh api user --jq '.login')
   

@@ -1,6 +1,13 @@
 #!/usr/bin/env zsh
 
 function gwt() {
+  # 引数が渡された場合は直接git wtを実行
+  if [[ $# -gt 0 ]]; then
+    print -s "git wt \"$@\""
+    git wt "$@"
+    return
+  fi
+
   local selected_worktree
   selected_worktree=$(git-wt | tail -n +2 | sed 's/^[ *]*//' | awk '{
     path = $1
