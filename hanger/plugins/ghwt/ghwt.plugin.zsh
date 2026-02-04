@@ -30,9 +30,7 @@ function ghwt() {
   # セッションキャッシュを使用（まだ取得されていない場合はその場で取得）
   local current_user="${_GHWT_CURRENT_USER:-$(gh api user --jq '.login')}"
   
-  local pr_list=$(gh pr list --json number,title,headRefName,statusCheckRollup,createdAt,author,reviewRequests)
-  
-  local selected_pr=$(echo "$pr_list" \
+  local selected_pr=$(gh pr list --json number,title,headRefName,statusCheckRollup,createdAt,author,reviewRequests \
     | jq -jr --arg worktrees "$worktrees" --arg current_user "$current_user" '
       .[] | 
       .headRefName as $branch | 
@@ -74,7 +72,7 @@ function ghwt() {
     | sed 's/#//')
   
   if [[ -n "$selected_pr" ]]; then
-    local branch_name=$(echo "$pr_list" | jq -r --arg pr_num "$selected_pr" '.[] | select(.number == ($pr_num | tonumber)) | .headRefName')
+    local branch_name=$(gh pr view "$selected_pr" --json headRefName --jq '.headRefName')
     print -s "git wt \"$branch_name\""
     git wt "$branch_name"
   fi
