@@ -7,3 +7,43 @@
     stripComponents = 3
     include = ["*/skills/playwright-cli/**"]
     refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/skill-creator"]
+    type = "archive"
+    url = "https://github.com/anthropics/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/skill-creator/**"]
+    refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/vitest"]
+    type = "archive"
+    url = "https://github.com/antfu/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/vitest/**"]
+    refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/pnpm"]
+    type = "archive"
+    url = "https://github.com/antfu/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/pnpm/**"]
+    refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/tsdown"]
+    type = "archive"
+    url = "https://github.com/rolldown/tsdown/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/tsdown/**"]
+    refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/composition-patterns"]
+    type = "archive"
+    url = "https://github.com/vercel-labs/agent-skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/composition-patterns/**"]
+    refreshPeriod = "168h"  # 1 week
