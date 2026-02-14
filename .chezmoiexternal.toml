@@ -1,0 +1,9 @@
+# External resources managed by chezmoi
+
+[".claude/skills/playwright-cli"]
+    type = "archive"
+    url = "https://github.com/microsoft/playwright-cli/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/playwright-cli/**"]
+    refreshPeriod = "168h"  # 1 week

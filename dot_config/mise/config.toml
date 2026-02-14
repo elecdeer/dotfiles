@@ -39,6 +39,7 @@ ripgrep = "latest"
 usage = "latest"
 yq = "latest"
 "npm:oxfmt" = "latest"
+"npm:@playwright/cli" = "latest"
 
 [settings]
 lockfile = true

@@ -385,7 +385,7 @@ backend = "aqua:lsd-rs/lsd"
 "platforms.windows-x64-baseline" = { checksum = "sha256:a65b9f457153934a7ce1f7e0fe1c4922a95bb2822222126e4fbaa6ee9c0d78e5", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-x86_64-pc-windows-msvc.zip"}
 
 [[tools.node]]
-version = "24.13.0"
+version = "24.6.0"
 backend = "core:node"
 
 [[tools."npm:@anthropic-ai/claude-code"]]
@@ -395,6 +395,10 @@ backend = "npm:@anthropic-ai/claude-code"
 [[tools."npm:@mizchi/lsmcp"]]
 version = "0.10.0"
 backend = "npm:@mizchi/lsmcp"
+
+[[tools."npm:@playwright/cli"]]
+version = "0.1.0"
+backend = "npm:@playwright/cli"
 
 [[tools."npm:ccusage"]]
 version = "17.2.0"
