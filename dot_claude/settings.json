@@ -1,7 +1,8 @@
 {
   "env": {
     "USE_BUILTIN_RIPGREP": "1",
-    "DISABLE_MICROCOMPACT": "1"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-5-20251101",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-5-20250929"
   },
   "permissions": {
     "allow": [
@@ -62,6 +63,7 @@
       "mcp__grep"
     ]
   },
+  "model": "opusplan",
   "hooks": {
     "Stop": [
       {
@@ -90,10 +92,10 @@
     "command": "bun x ccusage@17.1.3 statusline",
     "padding": 0
   },
-  "alwaysThinkingEnabled": true,
   "enabledPlugins": {
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "context7@claude-plugins-official": true
   },
   "language": "日本語",
-  "model": "opusplan"
+  "alwaysThinkingEnabled": true
 }
