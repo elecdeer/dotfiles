@@ -1,2 +1,2 @@
 #!/bin/sh
-exec aqua exec -- docker-cli-plugin-docker-compose "$@"
+exec mise exec aqua:docker/compose -- docker-cli-plugin-docker-compose "$@"
