@@ -14,6 +14,7 @@ This skill includes helper scripts in `scripts/`:
 - **analyze_branch_changes.sh** - Analyzes branch information, determines base branch using decoration-based method, lists changed files with diff stats, and shows commit log
 - **verify_remote_branch.sh** - Verifies remote branch status and provides human-readable status report
 - **create_pr_draft.sh** - Creates empty temporary file for PR content
+- **create_pr_from_draft.sh** - Creates PR using gh CLI from draft file with YAML frontmatter
 
 ## Workflow
 
@@ -147,16 +148,19 @@ Based on the script output:
 
 ### 9. Create PR with gh CLI
 
-Use gh CLI to create PR:
+Use `scripts/create_pr_from_draft.sh` to create PR from the user-confirmed draft file:
 
-1. Prepare PR title and body content from user-confirmed file
-2. Parse the frontmatter to extract title, base, and head branches
-3. Create PR using:
-   ```bash
-   gh pr create --base "<base-branch>" --head "<head-branch>" --title "<title>" --body "<body>"
-   ```
-4. If base branch cannot be determined, use default branch as fallback
-5. The `--body` can accept multi-line content or read from file using `--body-file`
+```bash
+./scripts/create_pr_from_draft.sh <draft-file-path>
+```
+
+The script will:
+
+1. Parse YAML frontmatter to extract `title`, `base`, and `head` fields
+2. Extract body content (everything after frontmatter)
+3. Validate required fields are present
+4. Create PR using `gh pr create` with parsed metadata and body
+5. Display PR creation status and URL
 
 ## Important Guidelines
 
