@@ -13,7 +13,7 @@ This skill includes helper scripts in `scripts/`:
 
 - **analyze_branch_changes.sh** - Analyzes branch information, determines base branch using decoration-based method, lists changed files with diff stats, and shows commit log
 - **verify_remote_branch.sh** - Verifies remote branch status and provides human-readable status report
-- **create_pr_draft.sh** - Creates temporary file with PR content in YAML frontmatter format
+- **create_pr_draft.sh** - Creates empty temporary file for PR content
 
 ## Workflow
 
@@ -79,13 +79,15 @@ If a base branch PR was found in Step 3 (stacked PR scenario):
 
 Allow user to review and edit PR content before creation:
 
-1. Use `scripts/create_pr_draft.sh` to create temporary file with PR content:
+1. Use `scripts/create_pr_draft.sh` to create empty temporary file:
 
    ```bash
-   ./scripts/create_pr_draft.sh "<title>" "<base-branch>" "<head-branch>" "<body>"
+   ./scripts/create_pr_draft.sh
    ```
 
-   Script outputs the temporary file path with YAML frontmatter format:
+   Script outputs the temporary file path.
+
+2. Write PR content to the file with YAML frontmatter format using builtin tool:
 
    ```markdown
    ---
@@ -97,17 +99,17 @@ Allow user to review and edit PR content before creation:
    <proposed PR body content>
    ```
 
-2. Present the temporary file path to the user and open it for review
-3. Use the `ask_questions` tool to prompt user confirmation:
+3. Present the temporary file path to the user
+4. Use the `ask_questions` tool to prompt user confirmation:
    - Ask: "PR draft has been created at `<file-path>`. Please review and edit the file as needed. Have you finished editing?"
    - Provide options like "Finished editing", "Cancel PR creation"
    - Wait for user response
-4. If user selects "Cancel PR creation", stop the PR creation process
-5. If user confirms they finished editing, read the edited content from temporary file
-6. Parse frontmatter to extract title, base, and head branch
-7. Verify the file still contains content (non-empty PR description)
-8. If valid, proceed with PR creation using parsed metadata and body
-9. Do NOT delete temporary file - leave it for user reference
+5. If user selects "Cancel PR creation", stop the PR creation process
+6. If user confirms they finished editing, read the edited content from temporary file
+7. Parse frontmatter to extract title, base, and head branch
+8. Verify the file still contains content (non-empty PR description)
+9. If valid, proceed with PR creation using parsed metadata and body
+10. Do NOT delete temporary file - leave it for user reference
 
 ### 8. Verify Remote Push
 
