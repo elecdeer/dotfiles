@@ -326,6 +326,10 @@ backend = "github:zyedidia/micro"
 "platforms.windows-x64" = { checksum = "sha256:0001be61d9751af4b1f370cc4422dd62894a3285b91d43a50ccf5d6c607f7668", url = "https://github.com/zyedidia/micro/releases/download/v2.0.15/micro-2.0.15-win32.zip", url_api = "https://api.github.com/repos/zyedidia/micro/releases/assets/334842962"}
 "platforms.windows-x64-baseline" = { checksum = "sha256:0001be61d9751af4b1f370cc4422dd62894a3285b91d43a50ccf5d6c607f7668", url = "https://github.com/zyedidia/micro/releases/download/v2.0.15/micro-2.0.15-win32.zip", url_api = "https://api.github.com/repos/zyedidia/micro/releases/assets/334842962"}
 
+[[tools.go]]
+version = "1.24.2"
+backend = "core:go"
+
 [[tools.hyperfine]]
 version = "1.20.0"
 backend = "aqua:sharkdp/hyperfine"
@@ -385,8 +389,9 @@ backend = "aqua:lsd-rs/lsd"
 "platforms.windows-x64-baseline" = { checksum = "sha256:a65b9f457153934a7ce1f7e0fe1c4922a95bb2822222126e4fbaa6ee9c0d78e5", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-x86_64-pc-windows-msvc.zip"}
 
 [[tools.node]]
-version = "24.6.0"
+version = "24.13.1"
 backend = "core:node"
+"platforms.macos-arm64" = { checksum = "sha256:8c039d59f2fec6195e4281ad5b0d02b9a940897b4df7b849c6fb48be6787bba6", url = "https://nodejs.org/dist/v24.13.1/node-v24.13.1-darwin-arm64.tar.gz"}
 
 [[tools."npm:@anthropic-ai/claude-code"]]
 version = "2.0.76"
