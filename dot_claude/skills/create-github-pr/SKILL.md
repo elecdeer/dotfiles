@@ -9,7 +9,14 @@ This skill provides a comprehensive workflow for creating GitHub Pull Requests u
 
 ## Bundled Scripts
 
-This skill includes helper scripts in `scripts/`:
+This skill includes helper scripts in `scripts/` subdirectory alongside this SKILL.md file.
+
+When this skill is loaded, the path of this SKILL.md file is known. Derive the scripts directory from it:
+
+- SKILL.md path example: `/path/to/.claude/skills/create-github-pr/SKILL.md`
+- Scripts directory: `/path/to/.claude/skills/create-github-pr/scripts/`
+
+In the steps below, `<SKILL_DIR>` refers to the directory containing this SKILL.md file.
 
 - **analyze_branch_changes.sh** - Analyzes branch information, determines base branch using decoration-based method, lists changed files with diff stats, and shows commit log
 - **verify_remote_branch.sh** - Verifies remote branch status and provides human-readable status report
@@ -20,10 +27,10 @@ This skill includes helper scripts in `scripts/`:
 
 ### 1. Analyze Changes
 
-Run `scripts/analyze_branch_changes.sh` to collect branch information:
+Run `analyze_branch_changes.sh` to collect branch information:
 
 ```bash
-./scripts/analyze_branch_changes.sh
+<SKILL_DIR>/scripts/analyze_branch_changes.sh
 ```
 
 This outputs:
@@ -80,10 +87,10 @@ If a base branch PR was found in Step 3 (stacked PR scenario):
 
 Allow user to review and edit PR content before creation:
 
-1. Use `scripts/create_pr_draft.sh` to create empty temporary file:
+1. Use `create_pr_draft.sh` to create empty temporary file:
 
    ```bash
-   ./scripts/create_pr_draft.sh
+   <SKILL_DIR>/scripts/create_pr_draft.sh
    ```
 
    Script outputs the temporary file path.
@@ -114,10 +121,10 @@ Allow user to review and edit PR content before creation:
 
 ### 8. Verify Remote Push
 
-Before creating PR, verify head branch is pushed to remote using `scripts/verify_remote_branch.sh`:
+Before creating PR, verify head branch is pushed to remote using `verify_remote_branch.sh`:
 
 ```bash
-./scripts/verify_remote_branch.sh <head-branch>
+<SKILL_DIR>/scripts/verify_remote_branch.sh <head-branch>
 ```
 
 Script outputs human-readable status report including:
@@ -148,10 +155,10 @@ Based on the script output:
 
 ### 9. Create PR with gh CLI
 
-Use `scripts/create_pr_from_draft.sh` to create PR from the user-confirmed draft file:
+Use `create_pr_from_draft.sh` to create PR from the user-confirmed draft file:
 
 ```bash
-./scripts/create_pr_from_draft.sh <draft-file-path>
+<SKILL_DIR>/scripts/create_pr_from_draft.sh <draft-file-path>
 ```
 
 The script will:
