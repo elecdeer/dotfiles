@@ -88,3 +88,6 @@ fabric.properties
 
 .DS_Store
 **/.claude/settings.local.json
+
+# gwt git workspace
+.wt/**
