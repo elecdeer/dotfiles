@@ -68,7 +68,7 @@ github = 'Aloxaf/fzf-tab'
 apply = ['defer']
 
 [plugins.git-wt]
-inline = 'eval "$(git wt --init zsh)"'
+inline = 'zsh-defer eval "$(git wt --init zsh)"'
 
 [plugins.gwt]
 local = '{{ .chezmoi.sourceDir }}/hanger/plugins/gwt'
@@ -94,7 +94,7 @@ ABBR_GET_AVAILABLE_ABBREVIATION=1
 ABBR_LOG_AVAILABLE_ABBREVIATION=1
 ABBR_AUTOLOAD=0
 
-abbr load
+zsh-defer abbr load
 '''
 
 [plugins.abbr-fast-syntax-highlighting]
