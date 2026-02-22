@@ -72,12 +72,15 @@ inline = 'zsh-defer eval "$(git wt --init zsh)"'
 
 [plugins.gwt]
 local = '{{ .chezmoi.sourceDir }}/hanger/plugins/gwt'
+apply = ['defer']
 
 [plugins.ghwt]
 local = '{{ .chezmoi.sourceDir }}/hanger/plugins/ghwt'
+apply = ['defer']
 
 [plugins.zsh-history-substring-search]
 github = 'zsh-users/zsh-history-substring-search'
+apply = ['defer']
 
 [plugins.zsh-completions]
 github = 'zsh-users/zsh-completions'
@@ -104,6 +107,7 @@ apply = ['defer']
 
 [plugins.zsh-z]
 github = 'agkozak/zsh-z'
+apply = ['defer']
 
 # =====================
 # aliases
