@@ -67,6 +67,9 @@ apply = ['defer']
 github = 'Aloxaf/fzf-tab'
 apply = ['defer']
 
+[plugins.fzf-zsh]
+inline = 'zsh-defer source <(fzf --zsh)'
+
 [plugins.git-wt]
 inline = 'zsh-defer eval "$(git wt --init zsh)"'
 
