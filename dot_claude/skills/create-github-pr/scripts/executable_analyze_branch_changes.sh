@@ -1,7 +1,26 @@
 #!/usr/bin/env bash
 # Analyze branch changes and output branch info, base branch, changed files, and commit log
+#
+# Usage: analyze_branch_changes.sh [--base <base-branch>]
+#   --base, -b <base-branch>  Explicitly specify the base branch (skips auto-detection)
 
 set -euo pipefail
+
+# Parse arguments
+explicit_base_branch=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --base | -b)
+      explicit_base_branch="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      echo "Usage: $0 [--base <base-branch>]" >&2
+      exit 1
+      ;;
+  esac
+done
 
 # Get current branch name
 current_branch=$(git branch --show-current)
@@ -9,16 +28,64 @@ current_branch=$(git branch --show-current)
 # Get default branch from remote
 default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
 
-# Determine base branch using decoration-based method
-base_branch_line=$(git log HEAD --remotes --simplify-by-decoration --pretty=format:"%h %D" | grep "origin/" | grep -v "origin/$(git branch --show-current)" | head -n 1 || true)
-if [[ -n "$base_branch_line" ]]; then
-  # Extract branch name from decoration
-  base_branch=$(echo "$base_branch_line" | grep -o "origin/[^,[:space:]]*" | head -n 1 | sed 's@origin/@@' || echo "")
-fi
+# Try to update the default branch before determining base branch
+echo "=== Updating Default Branch ($default_branch) ===" >&2
+# Find the worktree that has the default branch checked out
+default_branch_worktree=$(git worktree list --porcelain | awk '
+  /^worktree / { wt = substr($0, 10) }
+  $0 == "branch refs/heads/'"$default_branch"'" { print wt }
+' | head -n 1)
 
-# If base_branch is still empty, fallback to default branch
-if [[ -z "${base_branch:-}" ]]; then
-  base_branch="$default_branch"
+if [[ -n "$default_branch_worktree" ]]; then
+  echo "Pulling $default_branch in worktree: $default_branch_worktree" >&2
+  if git -C "$default_branch_worktree" pull --ff-only 2>&1 >&2; then
+    echo "Successfully updated $default_branch." >&2
+  else
+    echo "" >&2
+    echo "⚠ WARNING: Failed to update $default_branch." >&2
+    echo "  Worktree: $default_branch_worktree" >&2
+    echo "  The base branch may be outdated. Please take one of the following actions:" >&2
+    echo "    1. Run: git -C \"$default_branch_worktree\" pull" >&2
+    echo "    2. Verify there are no local changes or merge conflicts on $default_branch." >&2
+    echo "  Then re-run this script to ensure the PR is created against the correct base." >&2
+    echo "" >&2
+    echo "  ‼ Action required: Manually confirm $default_branch is up to date before proceeding." >&2
+  fi
+else
+  # No worktree has the default branch checked out; update via fetch
+  echo "No worktree found with $default_branch checked out. Fetching via git fetch..." >&2
+  if git fetch origin "$default_branch:$default_branch" 2>&1 >&2; then
+    echo "Successfully updated $default_branch." >&2
+  else
+    echo "" >&2
+    echo "⚠ WARNING: Failed to fetch $default_branch from origin." >&2
+    echo "  The base branch may be outdated. Please take one of the following actions:" >&2
+    echo "    1. Run: git fetch origin $default_branch:$default_branch" >&2
+    echo "    2. Verify network connectivity and remote access." >&2
+    echo "  Then re-run this script to ensure the PR is created against the correct base." >&2
+    echo "" >&2
+    echo "  ‼ Action required: Manually confirm $default_branch is up to date before proceeding." >&2
+  fi
+fi
+echo "" >&2
+
+# Determine base branch
+if [[ -n "$explicit_base_branch" ]]; then
+  # Use explicitly specified base branch (skip auto-detection)
+  base_branch="$explicit_base_branch"
+  echo "Using explicitly specified base branch: $base_branch" >&2
+else
+  # Auto-detect base branch using decoration-based method
+  base_branch_line=$(git log HEAD --remotes --simplify-by-decoration --pretty=format:"%h %D" | grep "origin/" | grep -v "origin/$(git branch --show-current)" | head -n 1 || true)
+  if [[ -n "$base_branch_line" ]]; then
+    # Extract branch name from decoration
+    base_branch=$(echo "$base_branch_line" | grep -o "origin/[^,[:space:]]*" | head -n 1 | sed 's@origin/@@' || echo "")
+  fi
+
+  # If base_branch is still empty, fallback to default branch
+  if [[ -z "${base_branch:-}" ]]; then
+    base_branch="$default_branch"
+  fi
 fi
 
 # Check if branch exists on remote

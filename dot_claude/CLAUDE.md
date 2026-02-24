@@ -80,3 +80,15 @@ This is global guidance for Claude Code.
 ### Changesets
 
 - YOU MUST always add a changeset before pushing for repositories using changesets.
+
+## Skills Guidelines
+
+### Bundled Scripts Convention
+
+- Skills may include helper scripts in a `scripts/` subdirectory alongside the SKILL.md file.
+- When a skill is loaded, derive the scripts directory from the known SKILL.md path.
+  - Example: If SKILL.md is at `/path/to/.claude/skills/my-skill/SKILL.md`, scripts are at `/path/to/.claude/skills/my-skill/scripts/`.
+- In skill documents, `<SKILL_DIR>` refers to the directory containing the SKILL.md file.
+- When the script path contains the home directory, use `~` instead of the absolute home directory path.
+  - Correct: `~/.claude/skills/my-skill/scripts/my-script.sh`
+  - Incorrect: `/Users/username/.claude/skills/my-skill/scripts/my-script.sh`

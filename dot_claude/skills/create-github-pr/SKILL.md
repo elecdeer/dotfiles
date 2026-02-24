@@ -9,16 +9,7 @@ This skill provides a comprehensive workflow for creating GitHub Pull Requests u
 
 ## Bundled Scripts
 
-This skill includes helper scripts in `scripts/` subdirectory alongside this SKILL.md file.
-
-When this skill is loaded, the path of this SKILL.md file is known. Derive the scripts directory from it:
-
-- SKILL.md path example: `/path/to/.claude/skills/create-github-pr/SKILL.md`
-- Scripts directory: `/path/to/.claude/skills/create-github-pr/scripts/`
-
-In the steps below, `<SKILL_DIR>` refers to the directory containing this SKILL.md file.
-
-- **analyze_branch_changes.sh** - Analyzes branch information, determines base branch using decoration-based method, lists changed files with diff stats, and shows commit log
+- **analyze_branch_changes.sh** - Analyzes branch information, determines base branch using decoration-based method (or uses explicitly specified base branch), lists changed files with diff stats, and shows commit log
 - **verify_remote_branch.sh** - Verifies remote branch status and provides human-readable status report
 - **create_pr_draft.sh** - Creates empty temporary file for PR content
 - **create_pr_from_draft.sh** - Creates PR using gh CLI from draft file with YAML frontmatter
@@ -30,8 +21,14 @@ In the steps below, `<SKILL_DIR>` refers to the directory containing this SKILL.
 Run `analyze_branch_changes.sh` to collect branch information:
 
 ```bash
+# Auto-detect base branch
 <SKILL_DIR>/scripts/analyze_branch_changes.sh
+
+# Explicitly specify base branch (skips auto-detection)
+<SKILL_DIR>/scripts/analyze_branch_changes.sh --base <base-branch>
 ```
+
+The `--base` (or `-b`) option skips automatic base branch detection and uses the specified branch directly. Use this when the auto-detected base branch is incorrect or when you know the target branch in advance.
 
 This outputs:
 
