@@ -202,6 +202,11 @@ backend = "aqua:twpayne/chezmoi"
 "platforms.windows-x64" = { checksum = "sha256:a48169627572aeeaf7a46ab0d30906f3786ab84235adf5819850c65762aef3b1", url = "https://github.com/twpayne/chezmoi/releases/download/v2.68.1/chezmoi_2.68.1_windows_amd64.zip"}
 "platforms.windows-x64-baseline" = { checksum = "sha256:a48169627572aeeaf7a46ab0d30906f3786ab84235adf5819850c65762aef3b1", url = "https://github.com/twpayne/chezmoi/releases/download/v2.68.1/chezmoi_2.68.1_windows_amd64.zip"}
 
+[[tools.cloudflared]]
+version = "2026.2.0"
+backend = "aqua:cloudflare/cloudflared"
+"platforms.macos-arm64" = { checksum = "sha256:685688a260c324eb8d9c9434ca22f0ce4f504fd6acd0706787c4833de8d6eb17", url = "https://github.com/cloudflare/cloudflared/releases/download/2026.2.0/cloudflared-darwin-amd64.tgz"}
+
 [[tools.colima]]
 version = "0.9.1"
 backend = "aqua:abiosoft/colima"
@@ -389,9 +394,8 @@ backend = "aqua:lsd-rs/lsd"
 "platforms.windows-x64-baseline" = { checksum = "sha256:a65b9f457153934a7ce1f7e0fe1c4922a95bb2822222126e4fbaa6ee9c0d78e5", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-x86_64-pc-windows-msvc.zip"}
 
 [[tools.node]]
-version = "24.13.1"
+version = "24.6.0"
 backend = "core:node"
-"platforms.macos-arm64" = { checksum = "sha256:8c039d59f2fec6195e4281ad5b0d02b9a940897b4df7b849c6fb48be6787bba6", url = "https://nodejs.org/dist/v24.13.1/node-v24.13.1-darwin-arm64.tar.gz"}
 
 [[tools."npm:@anthropic-ai/claude-code"]]
 version = "2.0.76"

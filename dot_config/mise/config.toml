@@ -41,6 +41,7 @@ yq = "latest"
 "npm:oxfmt" = "latest"
 "npm:@playwright/cli" = "latest"
 go = "latest"
+cloudflared = "latest"
 
 [settings]
 lockfile = true
