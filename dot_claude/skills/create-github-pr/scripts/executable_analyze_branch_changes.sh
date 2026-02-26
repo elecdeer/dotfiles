@@ -76,7 +76,9 @@ if [[ -n "$explicit_base_branch" ]]; then
   echo "Using explicitly specified base branch: $base_branch" >&2
 else
   # Auto-detect base branch using decoration-based method
-  base_branch_line=$(git log HEAD --remotes --simplify-by-decoration --pretty=format:"%h %D" | grep "origin/" | grep -v "origin/$(git branch --show-current)" | head -n 1 || true)
+  # NOTE: Do NOT pass --remotes here; it includes commits reachable from remote branches
+  # (not just HEAD ancestors), which can produce incorrect results.
+  base_branch_line=$(git log HEAD --simplify-by-decoration --pretty=format:"%h %D" | grep "origin/" | grep -v "origin/$(git branch --show-current)" | head -n 1 || true)
   if [[ -n "$base_branch_line" ]]; then
     # Extract branch name from decoration
     base_branch=$(echo "$base_branch_line" | grep -o "origin/[^,[:space:]]*" | head -n 1 | sed 's@origin/@@' || echo "")
