@@ -396,6 +396,7 @@ backend = "aqua:lsd-rs/lsd"
 [[tools.node]]
 version = "24.6.0"
 backend = "core:node"
+"platforms.macos-arm64" = { checksum = "sha256:768f14952403e3025fed8e2887500dfa63eeb55628a9b203e4b8ebb0fb09c7eb", url = "https://nodejs.org/dist/v24.6.0/node-v24.6.0-darwin-arm64.tar.gz"}
 
 [[tools."npm:@anthropic-ai/claude-code"]]
 version = "2.0.76"
