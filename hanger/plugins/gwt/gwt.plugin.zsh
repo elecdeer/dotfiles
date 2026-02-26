@@ -13,7 +13,10 @@ function gwt() {
     path = $1
     branch = $2
     hash = $3
-    
+
+    # bareリポジトリやBRANCHが空の行はスキップ
+    if (branch == "" || branch == "(bare)") next
+
     # Get push/pull status
     cmd = "git -C " path " rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
     cmd | getline result
