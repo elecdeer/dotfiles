@@ -91,3 +91,6 @@ fabric.properties
 
 # gwt git workspace
 .wt/**
+
+# playwright-cli
+.playwright-cli/
