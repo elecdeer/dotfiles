@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+# Usage: cmux-splits <path>
+# cmuxが使える場合、1ペインのときのみ右に分割しさらに上下に分割してcdする
+
+local target_path="$1"
+
+cmux ping &>/dev/null || exit 0
+
+local list_panes_json
+list_panes_json=$(cmux --json list-panes 2>/dev/null)
+
+[[ $(echo "$list_panes_json" | jq '.panes | length') == "1" ]] || exit 0
+
+local right_split_json right_surface_ref down_split_json down_surface_ref
+right_split_json=$(cmux --json new-split right 2>/dev/null)
+right_surface_ref=$(echo "$right_split_json" | jq -r '.surface_ref')
+down_split_json=$(cmux --json new-split down --surface "$right_surface_ref" 2>/dev/null)
+down_surface_ref=$(echo "$down_split_json" | jq -r '.surface_ref')
+
+# cmux send --surface "$right_surface_ref" "cd '${target_path}'" &>/dev/null
+# cmux send-key --surface "$right_surface_ref" enter &>/dev/null
+# cmux send --surface "$down_surface_ref" "cd '${target_path}'" &>/dev/null
+# cmux send-key --surface "$down_surface_ref" enter &>/dev/null
+

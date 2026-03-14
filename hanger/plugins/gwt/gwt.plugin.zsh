@@ -8,8 +8,8 @@ function gwt() {
     return
   fi
 
-  local selected_worktree
-  selected_worktree=$(git-wt | tail -n +2 | sed 's/^[ *]*//' | awk -v now="$(date +%s)" '
+  local selected
+  selected=$(git-wt | tail -n +2 | sed 's/^[ *]*//' | awk -v now="$(date +%s)" '
     {
       path = $1
       branch = $2
@@ -46,19 +46,29 @@ function gwt() {
       }
       close(cmd)
 
-      printf "%s\t%s\t\033[34m%-45s\033[0m\t\033[90m%-8s\033[0m\t\033[2m%6s ago\033[0m\t%s\n",
-        mtime, branch, branch, hash, relative_time, arrows
+      printf "%s\t%s\t%s\t\033[34m%-45s\033[0m\t\033[90m%-8s\033[0m\t\033[2m%6s ago\033[0m\t%s\n",
+        mtime, branch, path, branch, hash, relative_time, arrows
     }
   ' | sort -t $'\t' -k1 -rn | cut -f2- \
     | fzf --ansi \
         --delimiter $'\t' \
-        --with-nth 2,3,4,5 \
+        --with-nth 3,4,5,6 \
         --nth 1,2 \
-        --header "Select Worktree" \
-    | cut -f1)
+        --header "Select Worktree")
 
-  if [[ -n "$selected_worktree" ]]; then
-    print -s "git wt \"$selected_worktree\""
-    git wt "$selected_worktree"
+  if [[ -z "$selected" ]]; then
+    return
   fi
+
+  local selected_worktree selected_path
+  selected_worktree=$(echo "$selected" | cut -f1)
+  selected_path=$(echo "$selected" | cut -f2)
+
+  print -s "git wt \"$selected_worktree\""
+  git wt "$selected_worktree"
+
+  # cmuxが使える場合、1ペインのときのみ左右に分割してcdする
+  cmux-splits "$selected_path"
+  cmux ping &>/dev/null && cmux rename-workspace "$selected_worktree" &>/dev/null
+
 }
