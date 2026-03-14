@@ -55,12 +55,28 @@ if [[ -n "$query" ]]; then
   default_branch="${default_branch:-main}"
   current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
+  # local mainとorigin/mainに差分がある場合はorigin/mainの選択肢も追加する
+  local local_hash remote_hash origin_entry=""
+  local_hash=$(git rev-parse "refs/heads/$default_branch" 2>/dev/null)
+  remote_hash=$(git rev-parse "refs/remotes/origin/$default_branch" 2>/dev/null)
+  if [[ -n "$remote_hash" && "$local_hash" != "$remote_hash" ]]; then
+    origin_entry="origin/$default_branch"
+  fi
+
   if [[ "$default_branch" != "$current_branch" ]]; then
     printf "%s\t__BASE__:%s\t\033[32m* create branch from %s\033[0m\t\033[2m%s\033[0m\t\t\n" \
       "$query" "$default_branch" "$default_branch" "$query"
+    if [[ -n "$origin_entry" ]]; then
+      printf "%s\t__BASE__:%s\t\033[32m* create branch from %s\033[0m\t\033[2m%s\033[0m\t\t\n" \
+        "$query" "$origin_entry" "$origin_entry" "$query"
+    fi
     printf "%s\t__BASE__:\t\033[32m* create branch from %s\033[0m\t\033[2m%s\033[0m\t\t\n" \
       "$query" "$current_branch" "$query"
   else
+    if [[ -n "$origin_entry" ]]; then
+      printf "%s\t__BASE__:%s\t\033[32m* create branch from %s\033[0m\t\033[2m%s\033[0m\t\t\n" \
+        "$query" "$origin_entry" "$origin_entry" "$query"
+    fi
     printf "%s\t__BASE__:\t\033[32m* create branch\033[0m\t\033[2m%s\033[0m\t\t\n" \
       "$query" "$query"
   fi
