@@ -119,7 +119,14 @@ function fzf-ghq-search() {
 }
 
 zle -N fzf-ghq-search
-bindkey '^q' fzf-ghq-search
+bindkey $'\e[113;6u' fzf-ghq-search
+
+function zle-gwt() {
+    gwt
+    zle reset-prompt
+}
+zle -N zle-gwt
+bindkey '^q' zle-gwt
 
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS='--height 50% --reverse --border --ansi'
