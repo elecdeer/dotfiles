@@ -117,5 +117,6 @@
     "context7@claude-plugins-official": true
   },
   "language": "日本語",
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "voiceEnabled": true
 }
