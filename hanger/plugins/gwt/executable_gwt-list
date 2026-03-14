@@ -1,0 +1,67 @@
+#!/usr/bin/env zsh
+
+# worktreeのリストを生成する
+# 引数: [query] - クエリが指定された場合、末尾に "⊕ create: {query}" エントリを追加する
+
+local query="${1:-}"
+
+git-wt | tail -n +2 | sed 's/^[ *]*//' | awk -v now="$(date +%s)" '
+  {
+    path = $1
+    branch = $2
+    hash = $3
+
+    if (branch == "" || branch == "(bare)") next
+
+    mtime = 0
+    cmd = "stat -f \"%m\" \"" path "\" 2>/dev/null"
+    if ((cmd | getline result) > 0) mtime = result + 0
+    close(cmd)
+
+    diff = now - mtime
+    if (diff < 60) {
+      relative_time = diff "s"
+    } else if (diff < 3600) {
+      relative_time = int(diff / 60) "m"
+    } else if (diff < 86400) {
+      relative_time = int(diff / 3600) "h"
+    } else if (diff < 2592000) {
+      relative_time = int(diff / 86400) "d"
+    } else {
+      relative_time = int(diff / 2592000) "mo"
+    }
+
+    arrows = ""
+    cmd = "git -C \"" path "\" rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
+    if ((cmd | getline result) > 0) {
+      split(result, counts, " ")
+      behind = counts[1] + 0
+      ahead = counts[2] + 0
+      if (ahead > 0) arrows = arrows "\033[33m⇡\033[0m"
+      if (behind > 0) arrows = arrows "\033[31m⇣\033[0m"
+    }
+    close(cmd)
+
+    printf "%s\t%s\t%s\t\033[34m%-45s\033[0m\t\033[90m%-8s\033[0m\t\033[2m%6s ago\033[0m\t%s\n",
+      mtime, branch, path, branch, hash, relative_time, arrows
+  }
+' | sort -t $'\t' -k1 -rn | cut -f2-
+
+# クエリがある場合、分岐元ごとのcreateエントリを末尾に追加
+# f2に "__BASE__:{base_branch}" を埋め込み、gwt側で分岐元を判別する
+if [[ -n "$query" ]]; then
+  local default_branch current_branch
+  default_branch=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | cut -d/ -f2-)
+  default_branch="${default_branch:-main}"
+  current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+  if [[ "$default_branch" != "$current_branch" ]]; then
+    printf "%s\t__BASE__:%s\t\033[32m* create branch from %s\033[0m\t\033[2m%s\033[0m\t\t\n" \
+      "$query" "$default_branch" "$default_branch" "$query"
+    printf "%s\t__BASE__:\t\033[32m* create branch from %s\033[0m\t\033[2m%s\033[0m\t\t\n" \
+      "$query" "$current_branch" "$query"
+  else
+    printf "%s\t__BASE__:\t\033[32m* create branch\033[0m\t\033[2m%s\033[0m\t\t\n" \
+      "$query" "$query"
+  fi
+fi
