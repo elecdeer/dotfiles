@@ -9,10 +9,15 @@
 	smudge = git-lfs smudge -- %f
 [core]
 	autocrlf = input
+	quotepath = false
 [gpg]
 	format = ssh
 [gpg "ssh"]
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+
+[i18n]
+	logOutputEncoding = utf-8
+	commitEncoding = utf-8
 
 [commit]
 	gpgsign = true
