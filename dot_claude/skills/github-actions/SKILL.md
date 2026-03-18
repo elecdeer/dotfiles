@@ -45,11 +45,13 @@ pinact run --check
 ```
 
 **新規ワークフローを書く場合のフロー:**
+
 1. まずタグ参照（`@v4` 等）でワークフローを書く
 2. `pinact run -u <file>` で最新バージョンに更新しつつ SHA にピン留め
 3. メジャーバージョンが上がっていた場合は changelog を確認して使い方の変更がないか確認する
 
 **既存ワークフローをピン留め漏れなく管理するには:**
+
 - `pinact run --diff` で現状を確認してからレビューに使える
 - `pinact run --check` を CI に組み込んでピン留め漏れを防ぐことも可能
 
@@ -155,8 +157,8 @@ organization internal なパッケージ（`@your-org/package-name` 等）を Gi
   uses: actions/setup-node@<SHA> # vX.X.X
   with:
     cache: pnpm
-    registry-url: 'https://npm.pkg.github.com'
-    scope: '@your-org'  # パッケージの organization スコープ
+    registry-url: "https://npm.pkg.github.com"
+    scope: "@your-org" # パッケージの organization スコープ
     node-version-file: package.json
 
 - name: Install dependencies
@@ -186,7 +188,35 @@ runs:
       run: pnpm install --frozen-lockfile  # shell: が無いとエラー
 ```
 
-### 8. コメントで処理の意図を残す
+### 8. jq で値を取得する際の null 文字列問題
+
+`jq` でフィールドを取り出すとき、**フィールドが存在しない・値が null の場合に文字列 `"null"` が出力される**。
+これをシェル変数に格納すると `-n "$VAR"` チェックが真になり、`null` を含む値をそのまま後続処理に渡してバグを引き起こす。
+`gh --jq`・`jq` 単体・`actions/github-script` の出力を `$GITHUB_OUTPUT` 経由で受け渡すケースすべてに当てはまる。
+
+**対処法: jq 側で `// empty` を使う**
+
+`// empty` を使うと jq が null のときに何も出力しないため、変数が空文字になる。
+
+```bash
+# ✅ 良い例: null を空文字に変換する
+BRANCH=$(gh pr list --search "..." --jq '.[0].headRefName // empty')
+if [ -n "$BRANCH" ]; then
+  echo "Found: $BRANCH"
+fi
+
+# ✅ jq 単体でも同様
+VALUE=$(echo "$JSON" | jq -r '.some.field // empty')
+
+# ❌ 悪い例: null 文字列がそのまま入ってしまう
+BRANCH=$(gh pr list --search "..." --jq '.[0].headRefName')
+if [ -n "$BRANCH" ]; then
+  # $BRANCH が "null" になっていても真になってしまう
+  git checkout "$BRANCH"  # => fatal: "null" という名前のブランチは存在しない
+fi
+```
+
+### 9. コメントで処理の意図を残す
 
 - ジョブ・ステップの目的が自明でない場合はコメントを書く
 - 特に「なぜこの順番で実行するか」「なぜこの値を使っているか」が分かりにくい箇所にコメントを入れる
@@ -217,6 +247,7 @@ runs:
 - [ ] `timeout-minutes` を全ジョブに設定（目安: lint/test 15〜30 分、build 30 分、deploy 60 分）
 - [ ] `concurrency` でダブル実行を防止
 - [ ] `$GITHUB_OUTPUT` を使う（非推奨の `set-output` は使わない）
+- [ ] jq の出力は `// empty` を使うか `!= "null"` チェックを追加して null 文字列を防ぐ
 - [ ] 処理の意図がわかるコメントを書く
 
 ### 効率化・UX
@@ -245,7 +276,7 @@ name: PR Check
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
     types: [opened, synchronize, reopened]
   merge_group:
@@ -361,16 +392,16 @@ jobs:
 
 ```yaml
 # .github/actions/setup-node-pnpm/action.yml
-name: 'Setup Node.js with pnpm'
-description: 'pnpm と Node.js のセットアップ、および internal パッケージの認証'
+name: "Setup Node.js with pnpm"
+description: "pnpm と Node.js のセットアップ、および internal パッケージの認証"
 
 inputs:
   node-auth-token:
-    description: 'GitHub Packages 認証用トークン（@org スコープのパッケージに必要）'
+    description: "GitHub Packages 認証用トークン（@org スコープのパッケージに必要）"
     required: true
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Install pnpm
       uses: pnpm/action-setup@<SHA> # vX.X.X
@@ -380,8 +411,8 @@ runs:
       uses: actions/setup-node@<SHA> # vX.X.X
       with:
         cache: pnpm
-        registry-url: 'https://npm.pkg.github.com'
-        scope: '@your-org'
+        registry-url: "https://npm.pkg.github.com"
+        scope: "@your-org"
         node-version-file: package.json
 
     - name: Install dependencies
@@ -392,6 +423,7 @@ runs:
 ```
 
 呼び出し元:
+
 ```yaml
 - uses: ./.github/actions/setup-node-pnpm
   with:
@@ -424,8 +456,8 @@ runs:
 ```yaml
 on:
   schedule:
-    - cron: '0 9 * * 1-5'  # 平日9時(UTC) = 日本時間18時
-  workflow_dispatch:  # 手動実行も可能にしておく
+    - cron: "0 9 * * 1-5" # 平日9時(UTC) = 日本時間18時
+  workflow_dispatch: # 手動実行も可能にしておく
 ```
 
 ---
@@ -444,11 +476,12 @@ on:
 
 ## よくある失敗パターンと対処法
 
-| 問題 | 原因 | 対処 |
-|------|------|------|
-| `Context access might be invalid` | 存在しない context キー | `github.event.pull_request` の `pull_request` イベント限定フィールドを他のトリガーでも使っている |
-| ビルドが毎回キャッシュミス | `cache-dependency-path` の指定ミス | `pnpm-lock.yaml` のパスを正確に指定 |
-| `set-output` の警告 | 非推奨コマンド | `$GITHUB_OUTPUT` に移行 |
-| fork PR でシークレットが使えない | セキュリティ制限 | `pull_request_target` + 明示的チェックアウト or Environments を使う |
-| ワークフローが終わらない | `timeout-minutes` 未設定 | タイムアウトを設定する |
-| GitHub Packages のインストール失敗 | 認証未設定 | `setup-node` で `registry-url` と `scope` を設定し、`NODE_AUTH_TOKEN` を `env:` で渡す |
+| 問題                                                | 原因                                                         | 対処                                                                                                      |
+| --------------------------------------------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `Context access might be invalid`                   | 存在しない context キー                                      | `github.event.pull_request` の `pull_request` イベント限定フィールドを他のトリガーでも使っている          |
+| ビルドが毎回キャッシュミス                          | `cache-dependency-path` の指定ミス                           | `pnpm-lock.yaml` のパスを正確に指定                                                                       |
+| `set-output` の警告                                 | 非推奨コマンド                                               | `$GITHUB_OUTPUT` に移行                                                                                   |
+| fork PR でシークレットが使えない                    | セキュリティ制限                                             | `pull_request_target` + 明示的チェックアウト or Environments を使う                                       |
+| ワークフローが終わらない                            | `timeout-minutes` 未設定                                     | タイムアウトを設定する                                                                                    |
+| GitHub Packages のインストール失敗                  | 認証未設定                                                   | `setup-node` で `registry-url` と `scope` を設定し、`NODE_AUTH_TOKEN` を `env:` で渡す                    |
+| jq の結果が `"null"` 文字列になり後続処理が失敗する | フィールドが null/存在しない場合に jq が `"null"` を出力する | jq フィルタに `// empty` を付けて空文字に変換するか、シェル側で `[ "$VAR" != "null" ]` を追加チェックする |
