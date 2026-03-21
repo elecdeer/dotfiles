@@ -74,7 +74,7 @@ function fzf-z-search() {
 }
 
 zle -N fzf-z-search
-bindkey '^z' fzf-z-search
+bindkey '^o' fzf-z-search
 
 # ghqで管理しているリポジトリに移動する
 function fzf-ghq-search() {
@@ -139,6 +139,8 @@ stty -ixon
 # for Alt + Arrow Keys
 bindkey '\e[1;3C' forward-word  # Alt + Right Arrow
 bindkey '\e[1;3D' backward-word # Alt + Left Arrow
+
+# Ctrl+Option+Right: ghostty-stash-pane（Ghostty keybindで処理）
 
 
 # ================================
