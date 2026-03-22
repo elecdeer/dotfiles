@@ -71,6 +71,49 @@ keybind = option+¥=text:\\
 # claude code
 keybind = shift+enter=text:\x1b\r
 
-maximize
-macos-window-buttons = hidden
+
+## Zellij用に無効化
+# cmd+[,] pane間の移動用
+keybind = super+bracket_left=unbind
+keybind = super+bracket_right=unbind
+# cmd+t,w tabを開閉
+keybind = super+t=unbind
+keybind = super+w=unbind
+# cmd+d, shift+d paneを開く
+keybind = super+d=unbind
+keybind = super+shift+d=unbind
+# cmd+1,...,9 tab間の移動
+keybind = super+1=unbind
+keybind = super+2=unbind
+keybind = super+3=unbind
+keybind = super+4=unbind
+keybind = super+5=unbind
+keybind = super+6=unbind
+keybind = super+7=unbind
+keybind = super+8=unbind
+keybind = super+9=unbind
+keybind = super+digit_1=unbind
+keybind = super+digit_2=unbind
+keybind = super+digit_3=unbind
+keybind = super+digit_4=unbind
+keybind = super+digit_5=unbind
+keybind = super+digit_6=unbind
+keybind = super+digit_7=unbind
+keybind = super+digit_8=unbind
+keybind = super+digit_9=unbind
+
+## Zellij用にoptをaltとして扱う
+macos-option-as-alt = true
+
+keybind = global:ctrl+bracket_left=toggle_quick_terminal
+quick-terminal-position = "bottom"
+quick-terminal-screen = "main"
+quick-terminal-autohide = false
+quick-terminal-size = 100%,100%
+quick-terminal-animation-duration = 0
+window-padding-x = 2
+window-padding-y = 2
+
+# maximize
+# macos-window-buttons = hidden
 
