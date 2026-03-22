@@ -42,6 +42,7 @@ yq = "latest"
 "npm:@playwright/cli" = "latest"
 go = "latest"
 cloudflared = "latest"
+zellij = "latest"
 
 [settings]
 lockfile = true
