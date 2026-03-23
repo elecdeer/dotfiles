@@ -4,48 +4,76 @@
 # 引数: [query] - クエリが指定された場合、末尾に "⊕ create: {query}" エントリを追加する
 
 local query="${1:-}"
+local now
+now=$(date +%s)
 
-git-wt | tail -n +2 | sed 's/^[ *]*//' | awk -v now="$(date +%s)" '
-  {
-    path = $1
-    branch = $2
-    hash = $3
+function _gwt_relative_time() {
+  local diff="$1"
 
-    if (branch == "" || branch == "(bare)") next
+  if (( diff < 60 )); then
+    print -r -- "${diff}s"
+  elif (( diff < 3600 )); then
+    print -r -- "$(( diff / 60 ))m"
+  elif (( diff < 86400 )); then
+    print -r -- "$(( diff / 3600 ))h"
+  elif (( diff < 2592000 )); then
+    print -r -- "$(( diff / 86400 ))d"
+  else
+    print -r -- "$(( diff / 2592000 ))mo"
+  fi
+}
 
-    mtime = 0
-    cmd = "stat -f \"%m\" \"" path "\" 2>/dev/null"
-    if ((cmd | getline result) > 0) mtime = result + 0
-    close(cmd)
+function _gwt_tracking_arrows() {
+  local trackshort="$1"
 
-    diff = now - mtime
-    if (diff < 60) {
-      relative_time = diff "s"
-    } else if (diff < 3600) {
-      relative_time = int(diff / 60) "m"
-    } else if (diff < 86400) {
-      relative_time = int(diff / 3600) "h"
-    } else if (diff < 2592000) {
-      relative_time = int(diff / 86400) "d"
-    } else {
-      relative_time = int(diff / 2592000) "mo"
-    }
+  case "$trackshort" in
+    '>')
+      print -r -- $'\033[33m⇡\033[0m'
+      ;;
+    '<')
+      print -r -- $'\033[31m⇣\033[0m'
+      ;;
+    '<>')
+      print -r -- $'\033[33m⇡\033[0m\033[31m⇣\033[0m'
+      ;;
+    *)
+      print -r -- ""
+      ;;
+  esac
+}
 
-    arrows = ""
-    cmd = "git -C \"" path "\" rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
-    if ((cmd | getline result) > 0) {
-      split(result, counts, " ")
-      behind = counts[1] + 0
-      ahead = counts[2] + 0
-      if (ahead > 0) arrows = arrows "\033[33m⇡\033[0m"
-      if (behind > 0) arrows = arrows "\033[31m⇣\033[0m"
-    }
-    close(cmd)
+typeset -A branch_arrows=()
+typeset -A branch_commit_times=()
 
-    printf "%s\t%s\t%s\t\033[34m%-45s\033[0m\t\033[90m%-8s\033[0m\t\033[2m%6s ago\033[0m\t%s\n",
-      mtime, branch, path, branch, hash, relative_time, arrows
-  }
-' | sort -t $'\t' -k1 -rn | cut -f2-
+while IFS=$'\t' read -r branch trackshort commit_time; do
+  [[ -z "$branch" ]] && continue
+  branch_arrows[$branch]="$(_gwt_tracking_arrows "$trackshort")"
+  branch_commit_times[$branch]="${commit_time:-0}"
+done < <(git branch --format=$'%(refname:short)\t%(upstream:trackshort)\t%(committerdate:unix)')
+
+git-wt | tail -n +2 | sed 's/^[ *]*//' | while IFS= read -r line; do
+  wt_path=""
+  branch=""
+  hash=""
+  _rest=""
+  commit_time=0
+  diff=0
+  relative_time=""
+  arrows=""
+
+  read -r wt_path branch hash _rest <<< "$line"
+
+  [[ -z "$branch" || "$branch" == "(bare)" ]] && continue
+
+  commit_time="${branch_commit_times[$branch]:-0}"
+
+  (( diff = now - commit_time ))
+  relative_time="$(_gwt_relative_time "$diff")"
+  arrows="${branch_arrows[$branch]:-}"
+
+  printf "%s\t%s\t%s\t\033[34m%-45s\033[0m\t\033[90m%-8s\033[0m\t\033[2m%6s ago\033[0m\t%s\n" \
+    "$commit_time" "$branch" "$wt_path" "$branch" "$hash" "$relative_time" "$arrows"
+done | sort -t $'\t' -k1 -rn | cut -f2-
 
 # クエリがある場合、分岐元ごとのcreateエントリを末尾に追加
 # f2に "__BASE__:{base_branch}" を埋め込み、gwt側で分岐元を判別する
