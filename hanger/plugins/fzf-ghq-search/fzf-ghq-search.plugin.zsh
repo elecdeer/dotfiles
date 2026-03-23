@@ -10,10 +10,11 @@ function fzf-ghq-search() {
   ghq_root=$(ghq root) || return 1
 
   repo=$(
-    GHQ_ROOT="$ghq_root" "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-list" "$ghq_root" \
+    export GHQ_ROOT="$ghq_root"
+    "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-list" "$ghq_root" \
       | fzf --prompt="repository > " --ansi \
           --delimiter $'\t' \
-          --with-nth 2,3 \
+          --with-nth 3,4 \
           --nth 1 \
           --preview 'if [[ -f "$GHQ_ROOT"/{2}/README.md ]]; then bat --color=always --style=numbers "$GHQ_ROOT"/{2}/README.md; else lsd -1 --icon=always --color=always "$GHQ_ROOT"/{2}; fi' \
           --preview-window=right:50% \
