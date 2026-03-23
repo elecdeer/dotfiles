@@ -1,6 +1,11 @@
 # .zshrc
 # インタラクティブシェルでのみ読み込まれるファイル
 
+# Ghosttyで起動時にzellijを自動起動
+if [[ "$TERM_PROGRAM" == "ghostty" ]] && [[ -z "$ZELLIJ" ]]; then
+    exec zellij
+fi
+
 # 起動速度のプロファイリング
 local DO_PROFILE=0
 

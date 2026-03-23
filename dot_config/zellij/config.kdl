@@ -15,10 +15,16 @@ keybinds clear-defaults=true {
         bind "Super 7" { GoToTab 7; }
         bind "Super 8" { GoToTab 8; }
         bind "Super 9" { GoToTab 9; }
+        bind "Alt f" { ToggleFloatingPanes; }
+        bind "Super f" { SwitchToMode "entersearch"; SearchInput 0; }
     }
 
     locked {
         bind "Ctrl g" { SwitchToMode "normal"; }
+        // ctrl-shift-qをpaneに転送する
+        // zellijはlocked modeでもctrl-shift-qをctrl-qに正規化してしまうため、
+        // KKPのエスケープシーケンス(\e[113;6u)を明示的に書き込むことで回避する
+        bind "Ctrl Shift q" { WriteChars "\u{1b}[113;6u"; }
     }
     pane {
         bind "left" { MoveFocus "left"; }
@@ -161,7 +167,6 @@ keybinds clear-defaults=true {
         bind "Alt =" { Resize "Increase"; }
         bind "Alt [" { PreviousSwapLayout; }
         bind "Alt ]" { NextSwapLayout; }
-        bind "Alt f" { ToggleFloatingPanes; }
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Alt h" { MoveFocusOrTab "left"; }
         bind "Alt i" { MoveTab "left"; }
