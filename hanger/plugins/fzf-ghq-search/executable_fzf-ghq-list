@@ -1,0 +1,40 @@
+#!/usr/bin/env zsh
+
+zmodload zsh/stat || exit 1
+
+local ghq_root="${1:-$(ghq root)}"
+local now
+now=$(date +%s)
+
+function _fzf_ghq_relative_time() {
+  local diff="$1"
+
+  if (( diff < 60 )); then
+    print -r -- "${diff}s"
+  elif (( diff < 3600 )); then
+    print -r -- "$(( diff / 60 ))m"
+  elif (( diff < 86400 )); then
+    print -r -- "$(( diff / 3600 ))h"
+  elif (( diff < 2592000 )); then
+    print -r -- "$(( diff / 86400 ))d"
+  else
+    print -r -- "$(( diff / 2592000 ))mo"
+  fi
+}
+
+while IFS= read -r repo; do
+  [[ -z "$repo" ]] && continue
+
+  local repo_path="$ghq_root/$repo"
+  local mtime relative_time
+  typeset -A stat=()
+
+  if ! zstat -H stat -- "$repo_path" 2>/dev/null; then
+    continue
+  fi
+
+  mtime=${stat[mtime]}
+  relative_time="$(_fzf_ghq_relative_time "$(( now - mtime ))")"
+
+  printf "%s\t%s\t\033[2m%5s ago\033[0m\n" "$mtime" "$repo" "$relative_time"
+done < <(ghq list) | sort -t $'\t' -k1 -rn
