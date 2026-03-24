@@ -28,7 +28,8 @@ function gwt() {
     _wt_name=$(echo "$_result" | cut -f1)
     _wt_path=$(echo "$_result" | cut -f2)
     [[ -z "$_wt_path" ]] && return
-    zellij action new-tab --cwd "$_wt_path" --name "$_wt_name"
+    local _tab_index=$(( $(zellij action query-tab-names 2>/dev/null | wc -l | tr -d ' ') + 1 ))
+    zellij action new-tab --cwd "$_wt_path" --name "#${_tab_index} ${_wt_name}"
     return
   fi
 
