@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+# fzfでworktreeを選択するUI（zellij / 非zellij 共通）
+# Usage: executable_gwt-select <cwd>
+# stdout: 選択行（タブ区切り: worktree_name\tpath\t...）
+# exit 0: 選択あり, exit 1: キャンセル
+
+local cwd="${1:-$PWD}"
+cd "$cwd" || exit 1
+
+local script_dir="${0:A:h}"
+local gwt_list_script="$script_dir/executable_gwt-list"
+
+local fzf_output
+fzf_output=$(
+  export GWT_LIST_SCRIPT="$gwt_list_script"
+  "$gwt_list_script" \
+  | fzf --ansi \
+      --reverse \
+      --height 100% \
+      --delimiter $'\t' \
+      --with-nth 3,4,5,6 \
+      --nth 1,2 \
+      --print-query \
+      --bind 'change:reload("$GWT_LIST_SCRIPT" {q})' \
+      --header "Select Worktree"
+)
+
+local query selected_line
+query=$(echo "$fzf_output" | head -1)
+selected_line=$(echo "$fzf_output" | sed -n '2p')
+
+[[ -z "$query" && -z "$selected_line" ]] && exit 1
+
+if [[ -n "$selected_line" ]]; then
+  printf '%s\n' "$selected_line"
+else
+  # クエリのみで確定した場合: path は空
+  printf '%s\t\n' "$query"
+fi

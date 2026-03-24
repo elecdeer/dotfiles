@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+# zellijのfloating pane用: worktree選択し結果をnamed pipeに書き込む
+# Usage: executable_gwt-floating <cwd> <result_pipe>
+# result_pipe に "name\tpath" を書き込んで終了する（キャンセル時は空行）
+
+local cwd="${1:-$PWD}"
+local result_pipe="${2:-}"
+cd "$cwd" || { [[ -n "$result_pipe" ]] && printf '\n' > "$result_pipe"; exit 1; }
+
+local script_dir="${0:A:h}"
+
+# fzf選択
+local selected_line
+selected_line=$("$script_dir/executable_gwt-select" "$cwd")
+if [[ $? -ne 0 ]]; then
+  [[ -n "$result_pipe" ]] && printf '\n' > "$result_pipe"
+  exit 0
+fi
+
+local selected_worktree selected_path
+selected_worktree=$(echo "$selected_line" | cut -f1)
+selected_path=$(echo "$selected_line" | cut -f2)
+
+# worktreeを作成/解決してパスを取得
+local resolved_path
+resolved_path=$("$script_dir/executable_gwt-create" "$selected_worktree" "$selected_path")
+if [[ $? -ne 0 || -z "$resolved_path" ]]; then
+  [[ -n "$result_pipe" ]] && printf '\n' > "$result_pipe"
+  exit 1
+fi
+
+# 結果をnamed pipeに書き込む（gwt側でnew-tabを開く）
+[[ -n "$result_pipe" ]] && printf '%s\t%s\n' "$selected_worktree" "$resolved_path" > "$result_pipe"
