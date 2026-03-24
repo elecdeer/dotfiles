@@ -20,15 +20,17 @@ function gwt() {
     mkfifo "$_tmpfifo"
     zellij run --floating --close-on-exit --name "gwt" --width 80% --height 50% --x 10% --y 25% \
       -- "$_gwt_plugin_dir/executable_gwt-floating" "$PWD" "$_tmpfifo"
-    local _result
+    local _result _wt_name _wt_path
     _result=$(cat "$_tmpfifo")
     rm -f "$_tmpfifo"
     [[ -z "$_result" ]] && return
-    local _wt_name _wt_path
-    _wt_name=$(echo "$_result" | cut -f1)
-    _wt_path=$(echo "$_result" | cut -f2)
+    # パイプの結果は必ず1行: "name\tpath"
+    _wt_name=$(printf '%s' "$_result" | head -1 | cut -f1)
+    _wt_path=$(printf '%s' "$_result" | head -1 | cut -f2)
     [[ -z "$_wt_path" ]] && return
-    local _tab_index=$(( $(zellij action query-tab-names 2>/dev/null | wc -l | tr -d ' ') + 1 ))
+    local _tab_count _tab_index
+    _tab_count=$(zellij action query-tab-names 2>/dev/null | grep -c .)
+    _tab_index=$(( _tab_count + 1 ))
     zellij action new-tab --cwd "$_wt_path" --name "#${_tab_index} ${_wt_name}"
     return
   fi
