@@ -85,6 +85,7 @@ keybind = super+]=unbind
 # cmd+t,w tabを開閉
 keybind = super+t=unbind
 keybind = super+w=unbind
+keybind = super+shift+w=unbind
 # cmd+d, shift+d paneを開く
 keybind = super+d=unbind
 keybind = super+shift+d=unbind

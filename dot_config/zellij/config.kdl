@@ -2,6 +2,7 @@ keybinds clear-defaults=true {
     shared {
         bind "Super t" { NewTab; }
         bind "Super w" { CloseFocus; }
+        bind "Super Shift w" { CloseTab; }
         bind "Super [" { FocusPreviousPane; }
         bind "Super ]" { FocusNextPane; }
         bind "Super Shift [" { GoToPreviousTab; }
