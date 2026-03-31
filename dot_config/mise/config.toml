@@ -46,4 +46,3 @@ zellij = "latest"
 
 [settings]
 lockfile = true
-experimental = true
