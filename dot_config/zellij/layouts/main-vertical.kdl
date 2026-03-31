@@ -16,9 +16,8 @@ layout {
             pane size="60%"
             pane split_direction="horizontal" {
                 pane
-                pane
-                pane
-                pane
+                lazy_shell {}
+                lazy_shell {}
             }
         }
         pane size=2 borderless=true {
@@ -30,10 +29,10 @@ layout {
             pane size="60%"
             pane split_direction="horizontal" {
                 pane
-                pane
-                pane
-                pane
+                lazy_shell {}
+                lazy_shell {}
             }
         }
     }
+    pane_template name="lazy_shell" command="zsh" start_suspended=true
 }
