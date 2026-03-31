@@ -3,7 +3,7 @@
 
 # Ghosttyで起動時にzellijを自動起動
 if [[ "$TERM_PROGRAM" == "ghostty" ]] && [[ -z "$ZELLIJ" ]]; then
-    exec zellij
+    exec zellij attach --create
 fi
 
 # 起動速度のプロファイリング
