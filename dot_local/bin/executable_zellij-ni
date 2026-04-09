@@ -1,0 +1,5 @@
+#!/bin/zsh -i
+if [ ! -f package.json ]; then
+    exec zsh
+fi
+ni run "$1"
