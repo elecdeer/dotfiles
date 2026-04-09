@@ -11,3 +11,6 @@ export XDG_STATE_HOME="$HOME"/.local/state
 export DOTFILES_HANGER_DIR="$HOME/.local/share/chezmoi/hanger"
 
 export EDITOR="micro"
+# https://github.com/yyx990803/launch-editor
+export LAUNCH_EDITOR="code"
+
