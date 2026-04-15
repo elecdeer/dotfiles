@@ -112,6 +112,10 @@ keybind = super+digit_9=unbind
 ## Zellij用にoptをaltとして扱う
 macos-option-as-alt = true
 
+# Option+Arrow は単語移動を維持しつつ、Alt+f / Alt+b には化けさせない
+keybind = option+right=csi:1;3C
+keybind = option+left=csi:1;3D
+
 keybind = global:ctrl+bracket_left=toggle_quick_terminal
 quick-terminal-position = "bottom"
 quick-terminal-screen = "mouse"
@@ -123,4 +127,3 @@ window-padding-y = 2
 
 # maximize
 # macos-window-buttons = hidden
-
