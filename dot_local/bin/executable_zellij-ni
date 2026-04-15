@@ -2,4 +2,117 @@
 if [ ! -f package.json ]; then
     exec zsh
 fi
-ni run "$1"
+
+script_name="$1"
+initial_title="$script_name"
+
+rename_pane_title() {
+    local title="$1"
+
+    if [[ -z "$ZELLIJ" ]] || [[ -z "$title" ]]; then
+        return
+    fi
+
+    zellij action rename-pane "$title" >/dev/null 2>&1 || true
+}
+
+collect_descendant_pids() {
+    local root_pid="$1"
+    local pid="$root_pid"
+    local child_pid=""
+    local -a queue=("$root_pid")
+    local -a discovered=("$root_pid")
+    local -A seen=()
+
+    seen[$root_pid]=1
+
+    while ((${#queue[@]} > 0)); do
+        pid="${queue[1]}"
+        queue=("${queue[@]:1}")
+
+        while IFS= read -r child_pid; do
+            [[ -z "$child_pid" ]] && continue
+            [[ -n "${seen[$child_pid]}" ]] && continue
+
+            seen[$child_pid]=1
+            discovered+=("$child_pid")
+            queue+=("$child_pid")
+        done < <(pgrep -P "$pid" 2>/dev/null)
+    done
+
+    printf '%s\n' "${discovered[@]}"
+}
+
+collect_listen_ports() {
+    local pid_csv="$1"
+
+    [[ -z "$pid_csv" ]] && return
+    command -v lsof >/dev/null 2>&1 || return
+
+    lsof -Pan -iTCP -sTCP:LISTEN -p "$pid_csv" -Fn 2>/dev/null \
+        | awk '
+            /^n/ {
+                value = substr($0, 2)
+                sub(/^.*:/, "", value)
+                sub(/[^0-9].*$/, "", value)
+                if (value ~ /^[0-9]+$/) {
+                    print value
+                }
+            }
+        ' \
+        | sort -nu
+}
+
+watch_ports_and_rename() {
+    local target_pid="$1"
+    local base_title="$2"
+    local pid_list=""
+    local pid_csv=""
+    local ports=""
+    local ports_csv=""
+    local next_title=""
+    local last_title="$base_title"
+
+    rename_pane_title "$base_title"
+
+    while kill -0 "$target_pid" >/dev/null 2>&1; do
+        pid_list=$(collect_descendant_pids "$target_pid")
+        pid_csv=$(printf '%s\n' "$pid_list" | paste -sd, -)
+        ports=$(collect_listen_ports "$pid_csv")
+        ports_csv=$(printf '%s\n' "$ports" | paste -sd, -)
+
+        if [[ -n "$ports_csv" ]]; then
+            next_title="$base_title :$ports_csv"
+        else
+            next_title="$base_title"
+        fi
+
+        if [[ "$next_title" != "$last_title" ]]; then
+            rename_pane_title "$next_title"
+            last_title="$next_title"
+        fi
+
+        sleep 1
+    done
+}
+
+if ! command -v ni >/dev/null 2>&1; then
+    ni_plugin="${XDG_DATA_HOME:-$HOME/.local/share}/sheldon/repos/github.com/azu/ni.zsh/ni.plugin.zsh"
+    if [ -f "$ni_plugin" ]; then
+        source "$ni_plugin"
+    fi
+fi
+
+ni run "$script_name" &
+runner_pid=$!
+
+watch_ports_and_rename "$runner_pid" "$initial_title" &
+watcher_pid=$!
+
+wait "$runner_pid"
+exit_code=$?
+
+kill "$watcher_pid" >/dev/null 2>&1 || true
+wait "$watcher_pid" 2>/dev/null || true
+
+exit "$exit_code"
