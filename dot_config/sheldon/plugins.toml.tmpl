@@ -212,6 +212,9 @@ _zbnc_zsh_better_ni_completion() {
 zsh-defer compdef _zbnc_zsh_better_ni_completion ni
 '''
 
+[plugins.zellij-completion]
+inline = 'on_demand_completion "zellij" "zellij setup --generate-completion zsh"'
+
 
 # =====================
 # additional zshrc
