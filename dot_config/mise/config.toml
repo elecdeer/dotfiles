@@ -43,6 +43,7 @@ yq = "latest"
 go = "latest"
 cloudflared = "latest"
 zellij = "latest"
+viteplus = "latest"
 
 [settings]
 lockfile = true
