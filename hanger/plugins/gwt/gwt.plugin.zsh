@@ -4,6 +4,10 @@
 # （関数内では$0がfunction名になるため、source時に取得する必要がある）
 _gwt_plugin_dir="${0:A:h}"
 
+function gwa() {
+  "$_gwt_plugin_dir/executable_gwa" "$@"
+}
+
 function gwt() {
   # 引数が渡された場合は直接git wtを実行
   if [[ $# -gt 0 ]]; then

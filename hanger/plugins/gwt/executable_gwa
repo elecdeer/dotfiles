@@ -1,0 +1,84 @@
+#!/usr/bin/env zsh
+# gwa - git worktree apply
+# 現在のworktreeの状態をmain worktreeに反映する
+# - コミット済みの変更: git checkout --detach HEAD
+# - 未コミットの変更: rsync (git-ignoredファイルはmain worktree側を維持)
+# Usage: gwa [--dry-run|-n] [--verbose|-v]
+
+local dry_run=0 verbose=0
+
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run|-n) dry_run=1 ;;
+    --verbose|-v) verbose=1 ;;
+    *)
+      print -u2 "gwa: unknown option: $arg"
+      print -u2 "Usage: gwa [--dry-run|-n] [--verbose|-v]"
+      exit 1
+      ;;
+  esac
+done
+
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  print -u2 "gwa: not a git repository"
+  exit 1
+fi
+
+local main_worktree
+main_worktree=$(git worktree list --porcelain | awk 'NR==1 && /^worktree / { print substr($0, 10) }')
+
+if [[ -z "$main_worktree" ]]; then
+  print -u2 "gwa: failed to find main worktree"
+  exit 1
+fi
+
+local current_worktree
+current_worktree=$(git rev-parse --show-toplevel)
+
+if [[ "$main_worktree" == "$current_worktree" ]]; then
+  print -u2 "gwa: already in main worktree"
+  exit 1
+fi
+
+local current_head current_branch
+current_head=$(git rev-parse HEAD)
+current_branch=$(git branch --show-current 2>/dev/null)
+
+print "gwa: ${current_branch:-${current_head:0:7}} → $main_worktree"
+
+# rsync用オプション構築
+# --filter=':- .gitignore': ソースの各ディレクトリの.gitignoreをexcludeルールとして適用
+# --delete: ソースにないファイルを削除（excludeされたファイルは保護される）
+local rsync_opts=(-a --delete --exclude='.git' --filter=':- .gitignore')
+(( verbose )) && rsync_opts+=(-v)
+
+# global gitignoreがあれば追加
+local global_excludes
+global_excludes=$(git config --global core.excludesfile 2>/dev/null)
+if [[ -n "$global_excludes" ]]; then
+  global_excludes="${global_excludes/#\~/$HOME}"
+  [[ -f "$global_excludes" ]] && rsync_opts+=(--filter=":- $global_excludes")
+fi
+
+if (( dry_run )); then
+  print "gwa: [dry-run] would checkout $current_head in main worktree"
+  print "gwa: [dry-run] rsync diff:"
+  rsync "${rsync_opts[@]}" --dry-run "$current_worktree/" "$main_worktree/"
+  exit 0
+fi
+
+# Step 1: コミット済みの状態をmain worktreeに反映
+print "gwa: [1/2] checkout committed state..."
+git -C "$main_worktree" checkout --detach "$current_head" || {
+  print -u2 "gwa: checkout failed"
+  exit 1
+}
+
+# Step 2: 未コミットの変更をrsyncで反映
+print "gwa: [2/2] syncing working directory..."
+rsync "${rsync_opts[@]}" "$current_worktree/" "$main_worktree/" || {
+  print -u2 "gwa: rsync failed"
+  exit 1
+}
+
+print "gwa: done"
