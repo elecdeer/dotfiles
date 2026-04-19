@@ -18,20 +18,17 @@ function gwt() {
     local _tmpfifo
     _tmpfifo=$(mktemp -u /tmp/gwt-XXXXXX)
     mkfifo "$_tmpfifo"
+    # zellij run --floating は non-blocking なので、cat "$_tmpfifo" でブロックして結果を待つ
     zellij run --floating --close-on-exit --name "gwt" --width 80% --height 50% --x 10% --y 25% \
       -- "$_gwt_plugin_dir/executable_gwt-floating" "$PWD" "$_tmpfifo"
     local _result _wt_name _wt_path
     _result=$(cat "$_tmpfifo")
     rm -f "$_tmpfifo"
     [[ -z "$_result" ]] && return
-    # パイプの結果は必ず1行: "name\tpath"
     _wt_name=$(printf '%s' "$_result" | head -1 | cut -f1)
     _wt_path=$(printf '%s' "$_result" | head -1 | cut -f2)
     [[ -z "$_wt_path" ]] && return
-    # 既に同名タブが開いていれば移動、なければ新規タブを開く
-    if ! zellij action go-to-tab-name "${_wt_name}" 2>/dev/null; then
-      zellij action new-tab --cwd "$_wt_path" --name "${_wt_name}"
-    fi
+    zellij action new-tab --cwd "$_wt_path" --name "${_wt_name}"
     return
   fi
 
