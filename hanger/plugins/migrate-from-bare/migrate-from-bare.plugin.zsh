@@ -28,21 +28,29 @@ _cp_clone_from_bare() {
   cp -rP "$1" "$2"
 }
 
-# ワーキングツリーをコピー（.git と node_modules を除外）
+# ワーキングツリーをコピー（node_modules を除外）
 # rsync が使えれば全階層の node_modules を除外、なければトップレベルのみ除外
+#
+# exclude_git=true の場合は .git も除外する。
+# - メインのワーキングツリーコピー時に使用（後で .git ディレクトリを作成するため）
+# - 他のworktreeコピー時は false にして .git ファイルを保持する（worktree repair に必要）
 _copy_worktree() {
   local src="$1"
   local dst="$2"
+  local exclude_git="${3:-false}"
   mkdir -p "$dst"
   if command -v rsync &>/dev/null; then
-    rsync -a --exclude='.git' --exclude='node_modules/' "${src}/" "${dst}/"
+    local -a excludes=('--exclude=node_modules/')
+    [[ "$exclude_git" == "true" ]] && excludes+=('--exclude=.git')
+    rsync -a "${excludes[@]}" "${src}/" "${dst}/"
     return $?
   fi
-  # フォールバック: トップレベルの .git と node_modules のみ除外
+  # フォールバック: トップレベルの node_modules（と必要なら .git）のみ除外
   local item item_name
   for item in "${src}"/*(D); do
     item_name="${item:t}"
-    [[ "$item_name" == ".git" || "$item_name" == "node_modules" ]] && continue
+    [[ "$item_name" == "node_modules" ]] && continue
+    [[ "$exclude_git" == "true" && "$item_name" == ".git" ]] && continue
     _cp_clone_from_bare "$item" "${dst}/${item_name}"
   done
 }
@@ -148,7 +156,8 @@ migrate_from_bare() {
   # [1/4] メインのワーキングツリーを作成
   print "[1/4] メインのワーキングツリーを作成中..."
   if [[ -d "$main_wt_src" ]]; then
-    _copy_worktree "${main_wt_src}" "${main_repo_path}"
+    # exclude_git=true: 後で .git ディレクトリを作成するためファイルの .git は不要
+    _copy_worktree "${main_wt_src}" "${main_repo_path}" true
     print "  コピー元: ${main_wt_src}"
   else
     mkdir -p "$main_repo_path"
@@ -199,8 +208,12 @@ migrate_from_bare() {
   # bare_dir 側のファイルは一切変更されない。
   print "[4/4] worktreeの参照を修復中..."
   if [[ ${#new_wt_paths[@]} -gt 0 ]]; then
-    git -C "$main_repo_path" worktree repair "${new_wt_paths[@]}" 2>/dev/null || true
-    print "  ✓ 参照修復完了"
+    if git -C "$main_repo_path" worktree repair "${new_wt_paths[@]}"; then
+      print "  ✓ 参照修復完了"
+    else
+      print -u2 "  ⚠ worktree repair が失敗しました。手動で確認してください:"
+      print -u2 "    git -C '${main_repo_path}' worktree repair ${new_wt_paths[*]}"
+    fi
   else
     print "  スキップ（worktreeなし）"
   fi
