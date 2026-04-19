@@ -6,6 +6,11 @@ while IFS= read -r repo; do
   [[ -z "$repo" ]] && continue
 
   local repo_path="$ghq_root/$repo"
+
+  # .git がファイルの場合は linked worktree なので除外する
+  # （bare構造: my-project/feature-alpha/ のような worktree ディレクトリが対象）
+  [[ -f "$repo_path/.git" ]] && continue
+
   local git_time_info mtime relative_time
 
   git_time_info=$(git -C "$repo_path" log -1 --format=$'%ct\t%cr' HEAD 2>/dev/null)
