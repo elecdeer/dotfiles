@@ -45,6 +45,8 @@ cloudflared = "latest"
 zellij = "latest"
 viteplus = "latest"
 "aqua:codeberg.org/mergiraf/mergiraf" = "0.16.3"
+"github:babarot/gomi" = "latest"
+wrangler = "latest"
 
 [settings]
 lockfile = true
