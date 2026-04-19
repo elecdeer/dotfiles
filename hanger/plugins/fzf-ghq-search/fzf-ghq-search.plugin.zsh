@@ -12,14 +12,13 @@ function fzf-ghq-search() {
   # zellijセッション内ではfloating paneでUIを表示する
   # named pipeで同期し、floatingが閉じてからcdする
   if [[ -n "$ZELLIJ" ]]; then
-    local _tmpfifo
-    _tmpfifo=$(mktemp -u /tmp/fzf-ghq-XXXXXX)
-    mkfifo "$_tmpfifo"
+    local _tmpfile
+    _tmpfile=$(mktemp /tmp/fzf-ghq-XXXXXX)
     zellij run --floating --close-on-exit --name "ghq" --width 80% --height 50% --x 10% --y 25% \
-      -- "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-floating" "$ghq_root" "$_tmpfifo"
+      -- "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-floating" "$ghq_root" "$_tmpfile"
     local repo
-    repo=$(cat "$_tmpfifo")
-    rm -f "$_tmpfifo"
+    repo=$(cat "$_tmpfile")
+    rm -f "$_tmpfile"
     if [[ -z "$repo" ]]; then
       zle redisplay
       return 1
