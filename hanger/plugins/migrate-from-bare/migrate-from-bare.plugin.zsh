@@ -20,11 +20,12 @@
 #   rm -rf myrepo.git/
 
 # APFS clonefile (CoW) が使えれば高速コピー、なければ通常コピーにフォールバック
+# -P: シンボリックリンクを解決せずそのままコピー（node_modules等の壊れたリンクを避ける）
 _cp_clone_from_bare() {
-  if cp -rc "$1" "$2" 2>/dev/null; then
+  if cp -rcP "$1" "$2" 2>/dev/null; then
     return 0
   fi
-  cp -r "$1" "$2"
+  cp -rP "$1" "$2"
 }
 
 migrate_from_bare() {
@@ -168,6 +169,8 @@ migrate_from_bare() {
     for wt_p in "${other_wt_paths[@]}"; do
       local wt_rel="${wt_p#${bare_dir}/.wt/}"
       local new_wt_p="${output_dir}/${wt_rel}"
+      # claude/feature のようにサブディレクトリがある場合は親を先に作成
+      mkdir -p "$(dirname "$new_wt_p")"
       _cp_clone_from_bare "$wt_p" "$new_wt_p"
       new_wt_paths+=("$new_wt_p")
       print "  → ${new_wt_p}"

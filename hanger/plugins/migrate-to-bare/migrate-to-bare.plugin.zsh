@@ -13,11 +13,12 @@
 #   mv myrepo.git/ myrepo/
 
 # APFS clonefile (CoW) が使えれば高速コピー、なければ通常コピーにフォールバック
+# -P: シンボリックリンクを解決せずそのままコピー（node_modules等の壊れたリンクを避ける）
 _cp_clone() {
-  if cp -rc "$1" "$2" 2>/dev/null; then
+  if cp -rcP "$1" "$2" 2>/dev/null; then
     return 0
   fi
-  cp -r "$1" "$2"
+  cp -rP "$1" "$2"
 }
 
 migrate_to_bare() {
