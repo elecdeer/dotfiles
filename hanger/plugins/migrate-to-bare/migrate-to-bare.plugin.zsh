@@ -114,6 +114,9 @@ migrate_to_bare() {
   _cp_clone "${target}/.git/." "${bare_dir}/"
   git -C "$bare_dir" config core.bare true
   git config --file "${bare_dir}/config" --unset core.worktree 2>/dev/null || true
+  # worktreeをbare_dir/.wt/配下に作成するよう明示設定
+  # （migrate_from_bareで設定したwt.basedir=..が引き継がれた場合もリセットされる）
+  git config --file "${bare_dir}/config" wt.basedir ".wt"
 
   # [2/4] 既存のworktreeをコピー
   # mv ではなく cp にすることで target/ は .wt/ 含めて完全にそのまま動作し続ける

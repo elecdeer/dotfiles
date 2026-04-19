@@ -150,7 +150,10 @@ migrate_from_bare() {
   git config --file "${git_dir}/config" core.bare false
   # core.worktreeはデフォルト（.gitの親ディレクトリ）を使うので削除
   git config --file "${git_dir}/config" --unset core.worktree 2>/dev/null || true
-  print "  ✓ core.bare = false"
+  # worktreeを親ディレクトリ（my-project/）直下に作成するよう設定
+  # root/ から git wt feature-xxx すると ../feature-xxx/ = my-project/feature-xxx/ に作られる
+  git config --file "${git_dir}/config" wt.basedir ".."
+  print "  ✓ core.bare = false, wt.basedir = .."
 
   # [3/4] 他のworktreeをコピー
   # mv ではなく cp にすることで bare_dir は完全にそのまま動作し続ける
