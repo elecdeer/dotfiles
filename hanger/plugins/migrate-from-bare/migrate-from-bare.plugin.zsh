@@ -9,9 +9,12 @@
 #
 # 移行後の構造:
 #   myrepo/               (新しい親ディレクトリ)
-#   ├── root/             (メインのリポジトリ、.git本体がある場所)
+#   ├── $root/            (メインのリポジトリ、.git本体がある場所)
 #   ├── feature-alpha/    (worktree 1)
 #   └── hotfix-issue-12/  (worktree 2)
+#
+# $root というディレクトリ名はブランチ名に使えない文字($)を含むため、
+# worktreeのディレクトリ名と衝突しない。
 #
 # 確認後に手動で:
 #   rm -rf myrepo.git/
@@ -63,8 +66,10 @@ migrate_from_bare() {
   # ソースworktreeのディレクトリ名（migrate_to_bareがブランチ名で作った名前）
   local main_wt_src_name="${current_branch//\//-}"
   local main_wt_src="${bare_dir}/.wt/${main_wt_src_name}"
-  # メインリポジトリは常に "root" というディレクトリ名にする
-  local main_repo_path="${output_dir}/root"
+  # メインリポジトリは常に "$root" というディレクトリ名にする
+  # ブランチ名に $ は使えないためworktreeと衝突しない
+  # \$ でzshの変数展開を防ぎリテラルの $ にする
+  local main_repo_path="${output_dir}/\$root"
 
   # .wt/配下のworktreeを収集（メインブランチのworktree以外）
   local -a other_wt_paths
