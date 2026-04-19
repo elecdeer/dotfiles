@@ -24,7 +24,10 @@ function fzf-ghq-search() {
       zle redisplay
       return 1
     fi
-    zellij action new-tab --cwd "$ghq_root/$repo" --name "${repo:t}"
+    local tab_name="${repo:t}"
+    # $root ディレクトリはbare構造のメインリポジトリなので、親ディレクトリ名（リポジトリ名）を使う
+    [[ "$tab_name" == '$root' ]] && tab_name="${${repo:h}:t}"
+    zellij action new-tab --cwd "$ghq_root/$repo" --name "$tab_name"
     return
   fi
 
