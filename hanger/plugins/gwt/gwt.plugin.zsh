@@ -28,7 +28,13 @@ function gwt() {
     _wt_name=$(printf '%s' "$_result" | head -1 | cut -f1)
     _wt_path=$(printf '%s' "$_result" | head -1 | cut -f2)
     [[ -z "$_wt_path" ]] && return
-    zellij action new-tab --cwd "$_wt_path" --name "${_wt_name}"
+    # 既に同名タブが開いていれば移動する（exit code は常に 0 なので切り替え後の tab 名で判定）
+    zellij action go-to-tab-name "${_wt_name}" 2>/dev/null
+    local _current_tab_name
+    _current_tab_name=$(zellij action current-tab-info --json 2>/dev/null | jq -r '.name // empty' 2>/dev/null)
+    if [[ "$_current_tab_name" != "${_wt_name}" ]]; then
+      zellij action new-tab --cwd "$_wt_path" --name "${_wt_name}"
+    fi
     return
   fi
 
