@@ -28,6 +28,25 @@ _cp_clone_from_bare() {
   cp -rP "$1" "$2"
 }
 
+# ワーキングツリーをコピー（.git と node_modules を除外）
+# rsync が使えれば全階層の node_modules を除外、なければトップレベルのみ除外
+_copy_worktree() {
+  local src="$1"
+  local dst="$2"
+  mkdir -p "$dst"
+  if command -v rsync &>/dev/null; then
+    rsync -a --exclude='.git' --exclude='node_modules/' "${src}/" "${dst}/"
+    return $?
+  fi
+  # フォールバック: トップレベルの .git と node_modules のみ除外
+  local item item_name
+  for item in "${src}"/*(D); do
+    item_name="${item:t}"
+    [[ "$item_name" == ".git" || "$item_name" == "node_modules" ]] && continue
+    _cp_clone_from_bare "$item" "${dst}/${item_name}"
+  done
+}
+
 migrate_from_bare() {
   # 引数があればそのディレクトリを対象にする、なければカレントディレクトリ
   local bare_dir
@@ -128,17 +147,11 @@ migrate_from_bare() {
 
   # [1/4] メインのワーキングツリーを作成
   print "[1/4] メインのワーキングツリーを作成中..."
-  mkdir -p "$main_repo_path"
   if [[ -d "$main_wt_src" ]]; then
-    # .git ファイル（worktreeのgitdir参照）以外をコピー
-    local item item_name
-    for item in "${main_wt_src}"/*(D); do
-      item_name="${item:t}"
-      [[ "$item_name" == ".git" ]] && continue
-      _cp_clone_from_bare "$item" "${main_repo_path}/${item_name}"
-    done
+    _copy_worktree "${main_wt_src}" "${main_repo_path}"
     print "  コピー元: ${main_wt_src}"
   else
+    mkdir -p "$main_repo_path"
     print "  ⚠ ソースworktreeなし: ${main_wt_src}"
   fi
 
@@ -171,7 +184,7 @@ migrate_from_bare() {
       local new_wt_p="${output_dir}/${wt_rel}"
       # claude/feature のようにサブディレクトリがある場合は親を先に作成
       mkdir -p "$(dirname "$new_wt_p")"
-      _cp_clone_from_bare "$wt_p" "$new_wt_p"
+      _copy_worktree "$wt_p" "$new_wt_p"
       new_wt_paths+=("$new_wt_p")
       print "  → ${new_wt_p}"
     done

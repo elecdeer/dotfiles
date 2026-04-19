@@ -21,6 +21,25 @@ _cp_clone() {
   cp -rP "$1" "$2"
 }
 
+# ワーキングツリーをコピー（.git と node_modules を除外）
+# rsync が使えれば全階層の node_modules を除外、なければトップレベルのみ除外
+_copy_worktree() {
+  local src="$1"
+  local dst="$2"
+  mkdir -p "$dst"
+  if command -v rsync &>/dev/null; then
+    rsync -a --exclude='.git' --exclude='node_modules/' "${src}/" "${dst}/"
+    return $?
+  fi
+  # フォールバック: トップレベルの .git と node_modules のみ除外
+  local item item_name
+  for item in "${src}"/*(D); do
+    item_name="${item:t}"
+    [[ "$item_name" == ".git" || "$item_name" == "node_modules" ]] && continue
+    _cp_clone "$item" "${dst}/${item_name}"
+  done
+}
+
 migrate_to_bare() {
   # 引数があればそのディレクトリを対象にする、なければカレントリポジトリのrootを使う
   local target
@@ -129,7 +148,7 @@ migrate_to_bare() {
       local wt_rel="${wt_p#${target}/}"
       local new_wt_p="${bare_dir}/${wt_rel}"
       mkdir -p "$(dirname "$new_wt_p")"
-      _cp_clone "$wt_p" "$new_wt_p"
+      _copy_worktree "$wt_p" "$new_wt_p"
       new_wt_paths+=("$new_wt_p")
       print "  → ${new_wt_p}"
     done
