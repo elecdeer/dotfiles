@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+# zellijのfloating pane用: ghqリポジトリを選択し結果をnamed pipeに書き込む
+# Usage: executable_fzf-ghq-floating <ghq_root> <result_pipe>
+# result_pipe に "repo_path" を書き込んで終了する（キャンセル時は空行）
+
+local ghq_root="${1:-$(ghq root)}"
+local result_pipe="${2:-}"
+
+local script_dir="${0:A:h}"
+
+local repo
+repo=$(
+  export GHQ_ROOT="$ghq_root"
+  "$script_dir/executable_fzf-ghq-list" "$ghq_root" \
+    | fzf --prompt="repository > " --ansi \
+        --height 100% \
+        --delimiter $'\t' \
+        --with-nth 3,4 \
+        --nth 1 \
+        --preview 'if [[ -f "$GHQ_ROOT"/{2}/README.md ]]; then bat --color=always --style=numbers "$GHQ_ROOT"/{2}/README.md; else lsd -1 --icon=always --color=always "$GHQ_ROOT"/{2}; fi' \
+        --preview-window=right:50% \
+    | cut -f2
+)
+
+[[ -n "$result_pipe" ]] && printf '%s\n' "$repo" > "$result_pipe"

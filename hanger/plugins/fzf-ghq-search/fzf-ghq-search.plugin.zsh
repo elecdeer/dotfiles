@@ -6,9 +6,30 @@ function fzf-ghq-search() {
   setopt local_options
   unsetopt xtrace
 
-  local ghq_root repo
+  local ghq_root
   ghq_root=$(ghq root) || return 1
 
+  # zellijセッション内ではfloating paneでUIを表示する
+  # named pipeで同期し、floatingが閉じてからcdする
+  if [[ -n "$ZELLIJ" ]]; then
+    local _tmpfifo
+    _tmpfifo=$(mktemp -u /tmp/fzf-ghq-XXXXXX)
+    mkfifo "$_tmpfifo"
+    zellij run --floating --close-on-exit --name "ghq" --width 80% --height 50% --x 10% --y 25% \
+      -- "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-floating" "$ghq_root" "$_tmpfifo"
+    local repo
+    repo=$(cat "$_tmpfifo")
+    rm -f "$_tmpfifo"
+    if [[ -z "$repo" ]]; then
+      zle redisplay
+      return 1
+    fi
+    zellij action new-tab --cwd "$ghq_root/$repo" --name "${repo:t}"
+    return
+  fi
+
+  # 非zellij: インラインでリポジトリを選択
+  local repo
   repo=$(
     export GHQ_ROOT="$ghq_root"
     "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-list" "$ghq_root" \
