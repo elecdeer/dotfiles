@@ -9,7 +9,7 @@
 #
 # 移行後の構造:
 #   myrepo/               (新しい親ディレクトリ)
-#   ├── main/             (メインのリポジトリ、.git本体がある場所)
+#   ├── root/             (メインのリポジトリ、.git本体がある場所)
 #   ├── feature-alpha/    (worktree 1)
 #   └── hotfix-issue-12/  (worktree 2)
 #
@@ -60,10 +60,11 @@ migrate_from_bare() {
     return 1
   fi
 
-  # メインworktreeのディレクトリ名（ブランチ名のスラッシュをハイフンに変換）
-  local main_wt_name="${current_branch//\//-}"
-  local main_wt_src="${bare_dir}/.wt/${main_wt_name}"
-  local main_repo_path="${output_dir}/${main_wt_name}"
+  # ソースworktreeのディレクトリ名（migrate_to_bareがブランチ名で作った名前）
+  local main_wt_src_name="${current_branch//\//-}"
+  local main_wt_src="${bare_dir}/.wt/${main_wt_src_name}"
+  # メインリポジトリは常に "root" というディレクトリ名にする
+  local main_repo_path="${output_dir}/root"
 
   # .wt/配下のworktreeを収集（メインブランチのworktree以外）
   local -a other_wt_paths
@@ -88,11 +89,11 @@ migrate_from_bare() {
   print ""
   print "  bare repository     : ${bare_dir}  (変更しません)"
   print "  新しい親ディレクトリ: ${output_dir}"
-  print "  メインリポジトリ    : ${main_repo_path}  (${current_branch})"
+  print "  メインリポジトリ    : ${main_repo_path}  (${current_branch}, ソース: ${main_wt_src})"
 
   if [[ ! -d "$main_wt_src" ]]; then
     print "    ⚠ ソースworktreeが見つかりません: ${main_wt_src}"
-    print "      空のワーキングツリーを作成します（git checkout が必要）"
+    print "      空のワーキングツリーを作成します（後で git checkout が必要）"
   fi
 
   if [[ ${#other_wt_paths[@]} -gt 0 ]]; then
