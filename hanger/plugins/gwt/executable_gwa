@@ -49,8 +49,23 @@ print "gwa: ${current_branch:-${current_head:0:7}} → $main_worktree"
 # rsync用オプション構築
 # --filter=':- .gitignore': ソースの各ディレクトリの.gitignoreをexcludeルールとして適用
 # --delete: ソースにないファイルを削除（excludeされたファイルは保護される）
-local rsync_opts=(-a --delete --exclude='.git' --filter=':- .gitignore')
+# 注意: 動的gitignoreルール(:- .gitignore)は--deleteからの保護が不確実なため、
+# git check-ignoreでgitignore対象ディレクトリを取得して静的excludeを先に追加する
+local rsync_opts=(-a --delete --exclude='.git')
 (( verbose )) && rsync_opts+=(-v)
+
+# gitignoreされているトップレベルディレクトリを静的excludeとして追加
+# --deleteからの確実な保護のため、動的フィルターより先に処理する
+local gitignored_dirs
+gitignored_dirs=$(git -C "$current_worktree" ls-files --others --exclude-standard --directory 2>/dev/null | grep -v '^\.git/' || true)
+if [[ -n "$gitignored_dirs" ]]; then
+  while IFS= read -r dir; do
+    rsync_opts+=(--exclude="$dir")
+  done <<< "$gitignored_dirs"
+fi
+
+# 動的gitignoreルールも追加（ネストされたディレクトリのファイル転送制御用）
+rsync_opts+=(--filter=':- .gitignore')
 
 # global gitignoreがあれば追加
 local global_excludes
