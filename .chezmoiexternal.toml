@@ -47,3 +47,43 @@
     stripComponents = 3
     include = ["*/skills/composition-patterns/**"]
     refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/cloudflare"]
+    type = "archive"
+    url = "https://github.com/cloudflare/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/cloudflare/**"]
+    refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/durable-objects"]
+    type = "archive"
+    url = "https://github.com/cloudflare/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/durable-objects/**"]
+    refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/web-perf"]
+    type = "archive"
+    url = "https://github.com/cloudflare/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/web-perf/**"]
+    refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/workers-best-practices"]
+    type = "archive"
+    url = "https://github.com/cloudflare/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/workers-best-practices/**"]
+    refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/wrangler"]
+    type = "archive"
+    url = "https://github.com/cloudflare/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 3
+    include = ["*/skills/wrangler/**"]
+    refreshPeriod = "168h"  # 1 week
