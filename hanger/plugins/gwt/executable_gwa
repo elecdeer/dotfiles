@@ -24,16 +24,21 @@ if ! git rev-parse --git-dir >/dev/null 2>&1; then
   exit 1
 fi
 
+local current_worktree
+current_worktree=$(cd "$(git rev-parse --show-toplevel)" && pwd -P)
+
 local main_worktree
-main_worktree=$(git worktree list --porcelain | awk 'NR==1 && /^worktree / { print substr($0, 10) }')
+main_worktree=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+if [[ -n "$main_worktree" && "${main_worktree:t}" == ".git" ]]; then
+  main_worktree=$(cd "${main_worktree:h}" && pwd -P)
+else
+  main_worktree=$(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }')
+fi
 
 if [[ -z "$main_worktree" ]]; then
   print -u2 "gwa: failed to find main worktree"
   exit 1
 fi
-
-local current_worktree
-current_worktree=$(git rev-parse --show-toplevel)
 
 if [[ "$main_worktree" == "$current_worktree" ]]; then
   print -u2 "gwa: already in main worktree"
@@ -47,17 +52,18 @@ current_branch=$(git branch --show-current 2>/dev/null)
 print "gwa: ${current_branch:-${current_head:0:7}} → $main_worktree"
 
 # rsync用オプション構築
+# --itemize-changes: 実際に反映された差分をログに出す
 # --filter=':- .gitignore': ソースの各ディレクトリの.gitignoreをexcludeルールとして適用
 # --delete: ソースにないファイルを削除（excludeされたファイルは保護される）
 # 注意: 動的gitignoreルール(:- .gitignore)は--deleteからの保護が不確実なため、
 # git check-ignoreでgitignore対象ディレクトリを取得して静的excludeを先に追加する
-local rsync_opts=(-a --delete --exclude='.git')
+local rsync_opts=(-a --delete --itemize-changes --out-format='%i %n%L' --exclude='.git')
 (( verbose )) && rsync_opts+=(-v)
 
 # gitignoreされているトップレベルディレクトリを静的excludeとして追加
 # --deleteからの確実な保護のため、動的フィルターより先に処理する
 local gitignored_dirs
-gitignored_dirs=$(git -C "$current_worktree" ls-files --others --exclude-standard --directory 2>/dev/null | grep -v '^\.git/' || true)
+gitignored_dirs=$(git -C "$current_worktree" ls-files --others --ignored --exclude-standard --directory 2>/dev/null | grep -v '^\.git/' || true)
 if [[ -n "$gitignored_dirs" ]]; then
   while IFS= read -r dir; do
     rsync_opts+=(--exclude="$dir")

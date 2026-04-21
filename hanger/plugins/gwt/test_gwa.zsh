@@ -1,0 +1,74 @@
+#!/usr/bin/env zsh
+
+set -eu
+set -o pipefail
+
+SCRIPT_DIR=${0:A:h}
+GWA_SCRIPT="$SCRIPT_DIR/executable_gwa"
+
+tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/gwa-test.XXXXXX")
+trap 'rm -rf "$tmpdir"' EXIT
+
+repo_root="$tmpdir/repo"
+worktree_root="$tmpdir/repo-feature"
+
+mkdir -p "$repo_root"
+git -C "$repo_root" init >/dev/null
+git -C "$repo_root" config user.name "Codex Test"
+git -C "$repo_root" config user.email "codex@example.com"
+
+cat <<'EOF' > "$repo_root/.gitignore"
+dist/
+node_modules/
+EOF
+
+cat <<'EOF' > "$repo_root/tracked.txt"
+root tracked
+EOF
+
+mkdir -p "$repo_root/dist" "$repo_root/node_modules/pkg"
+cat <<'EOF' > "$repo_root/dist/output.txt"
+root ignored
+EOF
+cat <<'EOF' > "$repo_root/node_modules/pkg/index.js"
+root node_modules
+EOF
+
+git -C "$repo_root" add .gitignore tracked.txt
+git -C "$repo_root" commit -m "test fixture" >/dev/null
+git -C "$repo_root" branch feature >/dev/null
+git -C "$repo_root" worktree add "$worktree_root" feature >/dev/null
+
+cat <<'EOF' > "$worktree_root/tracked.txt"
+branch tracked
+EOF
+
+cat <<'EOF' > "$worktree_root/untracked.txt"
+branch untracked
+EOF
+
+mkdir -p "$worktree_root/dist" "$worktree_root/node_modules/pkg"
+cat <<'EOF' > "$worktree_root/dist/output.txt"
+branch ignored
+EOF
+cat <<'EOF' > "$worktree_root/node_modules/pkg/index.js"
+branch node_modules
+EOF
+
+output=$(cd "$worktree_root" && "$GWA_SCRIPT")
+
+tracked_content=$(<"$repo_root/tracked.txt")
+untracked_content=$(<"$repo_root/untracked.txt")
+ignored_content=$(<"$repo_root/dist/output.txt")
+node_modules_content=$(<"$repo_root/node_modules/pkg/index.js")
+
+[[ "$tracked_content" == "branch tracked" ]]
+[[ "$untracked_content" == "branch untracked" ]]
+[[ "$ignored_content" == "root ignored" ]]
+[[ "$node_modules_content" == "root node_modules" ]]
+[[ "$output" == *"tracked.txt"* ]]
+[[ "$output" == *"untracked.txt"* ]]
+[[ "$output" != *"dist/output.txt"* ]]
+[[ "$output" != *"node_modules/pkg/index.js"* ]]
+
+print "test_gwa: ok"
