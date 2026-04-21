@@ -69,7 +69,7 @@ touch -t 202401010101 "$repo_root/same-content.txt"
 touch -t 202501010101 "$worktree_root/same-content.txt"
 same_content_before=$(stat -f '%m' "$repo_root/same-content.txt")
 
-cd "$worktree_root" && "$GWA_SCRIPT" >/dev/null
+output=$(cd "$worktree_root" && "$GWA_SCRIPT")
 
 tracked_content=$(<"$repo_root/tracked.txt")
 untracked_content=$(<"$repo_root/untracked.txt")
@@ -82,5 +82,10 @@ same_content_after=$(stat -f '%m' "$repo_root/same-content.txt")
 [[ "$ignored_content" == "root ignored" ]]
 [[ "$node_modules_content" == "root node_modules" ]]
 [[ "$same_content_after" == "$same_content_before" ]]
+[[ "$output" == *"gwa: synced tracked.txt"* ]]
+[[ "$output" == *"gwa: synced untracked.txt"* ]]
+[[ "$output" != *"dist/output.txt"* ]]
+[[ "$output" != *"node_modules/pkg/index.js"* ]]
+[[ "$output" != *"same-content.txt"* ]]
 
 print "test_gwa: ok"

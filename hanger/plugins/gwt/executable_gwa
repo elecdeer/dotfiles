@@ -54,11 +54,12 @@ print "gwa: ${current_branch:-${current_head:0:7}} → $main_worktree"
 # rsync用オプション構築
 # --checksum: mtimeではなく内容差分で転送判定し、同内容ならroot側を触らない
 # --no-times: 同内容ファイルのmtimeだけを揃える更新を防ぐ
+# --out-format: 実際に反映したパスだけを表示する
 # --filter=':- .gitignore': ソースの各ディレクトリの.gitignoreをexcludeルールとして適用
 # --delete: ソースにないファイルを削除（excludeされたファイルは保護される）
 # 注意: 動的gitignoreルール(:- .gitignore)は--deleteからの保護が不確実なため、
 # git check-ignoreでgitignore対象ディレクトリを取得して静的excludeを先に追加する
-local rsync_opts=(-a --checksum --no-times --delete --exclude='.git')
+local rsync_opts=(-a --checksum --no-times --delete --out-format='gwa: synced %n%L' --exclude='.git')
 (( verbose )) && rsync_opts+=(-v)
 
 # gitignoreされているトップレベルディレクトリを静的excludeとして追加
