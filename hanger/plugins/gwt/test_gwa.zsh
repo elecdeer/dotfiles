@@ -33,6 +33,9 @@ EOF
 cat <<'EOF' > "$repo_root/node_modules/pkg/index.js"
 root node_modules
 EOF
+cat <<'EOF' > "$repo_root/same-content.txt"
+same content
+EOF
 
 git -C "$repo_root" add .gitignore tracked.txt
 git -C "$repo_root" commit -m "test fixture" >/dev/null
@@ -58,6 +61,13 @@ EOF
 cat <<'EOF' > "$worktree_root/node_modules/pkg/index.js"
 branch node_modules
 EOF
+cat <<'EOF' > "$worktree_root/same-content.txt"
+same content
+EOF
+
+touch -t 202401010101 "$repo_root/same-content.txt"
+touch -t 202501010101 "$worktree_root/same-content.txt"
+same_content_before=$(stat -f '%m' "$repo_root/same-content.txt")
 
 cd "$worktree_root" && "$GWA_SCRIPT" >/dev/null
 
@@ -65,10 +75,12 @@ tracked_content=$(<"$repo_root/tracked.txt")
 untracked_content=$(<"$repo_root/untracked.txt")
 ignored_content=$(<"$repo_root/dist/output.txt")
 node_modules_content=$(<"$repo_root/node_modules/pkg/index.js")
+same_content_after=$(stat -f '%m' "$repo_root/same-content.txt")
 
 [[ "$tracked_content" == "branch tracked" ]]
 [[ "$untracked_content" == "branch untracked" ]]
 [[ "$ignored_content" == "root ignored" ]]
 [[ "$node_modules_content" == "root node_modules" ]]
+[[ "$same_content_after" == "$same_content_before" ]]
 
 print "test_gwa: ok"
