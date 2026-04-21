@@ -4,8 +4,8 @@
 #   selected_path:
 #     実際のパス              -> git wt <name> して返す
 #     "__BASE__:"             -> current branchからgit wt <name>
-#     "__BASE__:<branch>"     -> local <branch>からgit wt <name>
-#     "__BASE__:origin/<b>"   -> local <b>をpullしてからgit wt <name>
+#     "__BASE__:<branch>"     -> <branch>からgit wt <name> を作成
+#     "__BASE__:origin/<b>"   -> origin/<b>からgit wt <name> を作成
 #     "" (空)                 -> git wt <name> して探す
 # exit 0: 成功（パスをstdout）, exit 1: 失敗
 
@@ -22,21 +22,8 @@ _find_wt_path() {
 
 if [[ "$selected_path" == __BASE__:* ]]; then
   local base="${selected_path#__BASE__:}"
-  if [[ "$base" == origin/* ]]; then
-    # origin/<branch> -> local <branch>のworktreeをpullしてから新規branch作成
-    local local_branch="${base#origin/}"
-    git wt "$local_branch" >/dev/null 2>&1 || true  # worktreeがなければ作成 (既にある場合はエラーを無視)
-    local base_path
-    base_path=$(_find_wt_path "$local_branch")
-    if [[ -z "$base_path" ]]; then
-      echo "gwt: worktree not found for '$local_branch'" >&2
-      exit 1
-    fi
-    (cd "$base_path" && git pull >/dev/null) || exit 1
-    (cd "$base_path" && git wt "$worktree_name" >/dev/null) || exit 1
-  elif [[ -n "$base" ]]; then
-    git wt "$base" >/dev/null 2>&1 || true  # 既にある場合はエラーを無視
-    git wt "$worktree_name" >/dev/null || exit 1
+  if [[ -n "$base" ]]; then
+    git wt "$worktree_name" "$base" >/dev/null || exit 1
   else
     git wt "$worktree_name" >/dev/null || exit 1
   fi

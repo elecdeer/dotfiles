@@ -51,10 +51,8 @@ function gwt() {
   # historyに記録してからworktree作成/解決
   if [[ "$selected_path" == __BASE__:* ]]; then
     local _base="${selected_path#__BASE__:}"
-    if [[ "$_base" == origin/* ]]; then
-      print -s "(cd <${_base#origin/} worktree> && git pull) && git wt \"$selected_worktree\""
-    elif [[ -n "$_base" ]]; then
-      print -s "git wt \"$_base\" && git wt \"$selected_worktree\""
+    if [[ -n "$_base" ]]; then
+      print -s "git wt \"$selected_worktree\" \"$_base\""
     else
       print -s "git wt \"$selected_worktree\""
     fi
