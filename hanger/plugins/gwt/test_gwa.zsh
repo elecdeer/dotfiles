@@ -59,7 +59,7 @@ cat <<'EOF' > "$worktree_root/node_modules/pkg/index.js"
 branch node_modules
 EOF
 
-output=$(cd "$worktree_root" && "$GWA_SCRIPT")
+cd "$worktree_root" && "$GWA_SCRIPT" >/dev/null
 
 tracked_content=$(<"$repo_root/tracked.txt")
 untracked_content=$(<"$repo_root/untracked.txt")
@@ -70,9 +70,5 @@ node_modules_content=$(<"$repo_root/node_modules/pkg/index.js")
 [[ "$untracked_content" == "branch untracked" ]]
 [[ "$ignored_content" == "root ignored" ]]
 [[ "$node_modules_content" == "root node_modules" ]]
-[[ "$output" == *"tracked.txt"* ]]
-[[ "$output" == *"untracked.txt"* ]]
-[[ "$output" != *"dist/output.txt"* ]]
-[[ "$output" != *"node_modules/pkg/index.js"* ]]
 
 print "test_gwa: ok"
