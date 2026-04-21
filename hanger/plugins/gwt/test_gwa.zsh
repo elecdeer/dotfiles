@@ -39,6 +39,10 @@ git -C "$repo_root" commit -m "test fixture" >/dev/null
 git -C "$repo_root" branch feature >/dev/null
 git -C "$repo_root" worktree add "$worktree_root" feature >/dev/null
 
+cat <<'EOF' > "$repo_root/tracked.txt"
+root dirty tracked
+EOF
+
 cat <<'EOF' > "$worktree_root/tracked.txt"
 branch tracked
 EOF

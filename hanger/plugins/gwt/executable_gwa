@@ -90,7 +90,7 @@ fi
 
 # Step 1: コミット済みの状態をmain worktreeに反映
 print "gwa: [1/2] checkout committed state..."
-git -C "$main_worktree" checkout --detach "$current_head" || {
+git -C "$main_worktree" checkout --detach --force "$current_head" || {
   print -u2 "gwa: checkout failed"
   exit 1
 }
