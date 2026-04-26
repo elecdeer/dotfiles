@@ -116,8 +116,17 @@
     "typescript-lsp@claude-plugins-official": true,
     "context7@claude-plugins-official": true
   },
+  "extraKnownMarketplaces": {
+    "chrome-devtools-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "ChromeDevTools/chrome-devtools-mcp"
+      }
+    }
+  },
   "language": "日本語",
   "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
   "voiceEnabled": true,
-  "effortLevel": "high"
+  "preferredNotifChannel": "terminal_bell"
 }
