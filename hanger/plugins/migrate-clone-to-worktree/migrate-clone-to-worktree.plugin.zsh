@@ -3,11 +3,12 @@
 # 通常のgit clone後のリポジトリを、migrate-from-bare の移行後と同じ構造に変換するスクリプト
 #
 # 現在の構造:
-#   myrepo/               (通常のgitリポジトリ、変更しない)
+#   myrepo/               (通常のgitリポジトリ)
 #   myrepo/.wt/...        (既存のlinked worktreeがあれば移行対象)
 #
 # 移行後の構造:
-#   myrepo.wt-layout/     (新しい親ディレクトリ)
+#   _myrepo/              (元のリポジトリ、退避して残す)
+#   myrepo/               (新しい親ディレクトリ)
 #   ├── $root/            (メインのリポジトリ、.git本体がある場所)
 #   ├── feature-alpha/    (worktree 1)
 #   └── hotfix-issue-12/  (worktree 2)
@@ -15,9 +16,8 @@
 # $root というディレクトリ名はブランチ名に使えない文字($)を含むため、
 # worktreeのディレクトリ名と衝突しない。
 #
-# 確認後に手動で:
-#   rm -rf myrepo/
-#   mv myrepo.wt-layout/ myrepo/
+# 動作確認後に手動で:
+#   rm -rf _myrepo/
 
 # APFS clonefile (CoW) が使えれば高速コピー、なければ通常コピーにフォールバック
 # -P: シンボリックリンクを解決せずそのままコピー（node_modules等の壊れたリンクを避ける）
@@ -99,15 +99,16 @@ migrate_clone_to_worktree() {
     return 1
   fi
 
-  local parent_dir repo_name output_dir main_repo_path
+  local parent_dir repo_name backup_dir output_dir main_repo_path
   parent_dir="$(dirname "$target")"
   repo_name="$(basename "$target")"
-  output_dir="${parent_dir}/${repo_name}.wt-layout"
+  backup_dir="${parent_dir}/_${repo_name}"
+  output_dir="$target"
   main_repo_path="${output_dir}/\$root"
 
-  # 作成先が既に存在する場合はエラー
-  if [[ -e "$output_dir" ]]; then
-    print -u2 "エラー: 作成先が既に存在します: ${output_dir}"
+  # 退避先が既に存在する場合はエラー
+  if [[ -e "$backup_dir" ]]; then
+    print -u2 "エラー: 退避先が既に存在します: ${backup_dir}"
     return 1
   fi
 
@@ -131,7 +132,8 @@ migrate_clone_to_worktree() {
 
   print "=== 通常リポジトリからworktree構造への移行 ==="
   print ""
-  print "  元のリポジトリ      : ${target}  (変更しません)"
+  print "  元のリポジトリ      : ${target}"
+  print "  退避先              : ${backup_dir}"
   print "  新しい親ディレクトリ: ${output_dir}"
   print "  メインリポジトリ    : ${main_repo_path}  (${current_branch})"
 
@@ -167,20 +169,29 @@ migrate_clone_to_worktree() {
   [[ "$answer" != "y" && "$answer" != "Y" ]] && { print "中止しました"; return 1; }
   print ""
 
-  # [1/4] メインのワーキングツリーを作成
-  print "[1/4] メインのワーキングツリーを作成中..."
-  if ! _copy_worktree_to_worktree_layout "$target" "$main_repo_path" true true; then
+  # [1/5] 元のリポジトリを退避
+  print "[1/5] 元のリポジトリを退避中..."
+  if ! mv "$target" "$backup_dir"; then
+    print -u2 "エラー: 元のリポジトリの退避に失敗しました"
+    return 1
+  fi
+  print "  → ${backup_dir}"
+
+  # [2/5] メインのワーキングツリーを作成
+  print "[2/5] メインのワーキングツリーを作成中..."
+  if ! _copy_worktree_to_worktree_layout "$backup_dir" "$main_repo_path" true true; then
     print -u2 "エラー: メインのワーキングツリーのコピーに失敗しました。ロールバック中..."
     rm -rf "$output_dir"
+    mv "$backup_dir" "$target" 2>/dev/null || true
     return 1
   fi
 
-  # [2/4] .gitディレクトリを作成
-  print "[2/4] .gitディレクトリを作成中..."
+  # [3/5] .gitディレクトリを作成
+  print "[3/5] .gitディレクトリを作成中..."
   local git_dir="${main_repo_path}/.git"
   mkdir -p "$git_dir"
   local item item_name
-  for item in "${target}/.git"/*(D); do
+  for item in "${backup_dir}/.git"/*(D); do
     item_name="${item:t}"
     _cp_clone_to_worktree "$item" "${git_dir}/${item_name}"
   done
@@ -189,28 +200,30 @@ migrate_clone_to_worktree() {
   git config --file "${git_dir}/config" wt.basedir ".."
   print "  ✓ core.bare = false, wt.basedir = .."
 
-  # [3/4] 既存worktreeをコピー
+  # [4/5] 既存worktreeをコピー
   local -a new_wt_paths
   if [[ ${#wt_paths[@]} -gt 0 ]]; then
-    print "[3/4] worktreeをコピー中..."
+    print "[4/5] worktreeをコピー中..."
     for wt_p in "${wt_paths[@]}"; do
       local wt_rel="${wt_p#${target}/.wt/}"
       local new_wt_p="${output_dir}/${wt_rel}"
+      local backup_wt_p="${backup_dir}/.wt/${wt_rel}"
       mkdir -p "$(dirname "$new_wt_p")"
-      if ! _copy_worktree_to_worktree_layout "$wt_p" "$new_wt_p"; then
+      if ! _copy_worktree_to_worktree_layout "$backup_wt_p" "$new_wt_p"; then
         print -u2 "エラー: worktreeのコピーに失敗しました。ロールバック中..."
         rm -rf "$output_dir"
+        mv "$backup_dir" "$target" 2>/dev/null || true
         return 1
       fi
       new_wt_paths+=("$new_wt_p")
       print "  → ${new_wt_p}"
     done
   else
-    print "[3/4] 移行するworktreeなし（スキップ）"
+    print "[4/5] 移行するworktreeなし（スキップ）"
   fi
 
-  # [4/4] worktreeの参照を修復
-  print "[4/4] worktreeの参照を修復中..."
+  # [5/5] worktreeの参照を修復
+  print "[5/5] worktreeの参照を修復中..."
   if [[ ${#new_wt_paths[@]} -gt 0 ]]; then
     if git -C "$main_repo_path" worktree repair "${new_wt_paths[@]}"; then
       print "  ✓ 参照修復完了"
@@ -228,7 +241,6 @@ migrate_clone_to_worktree() {
   print "新しいリポジトリで作業を開始:"
   print "  cd ${main_repo_path}"
   print ""
-  print "動作確認後、元のリポジトリと置き換えてください:"
-  print "  rm -rf '${target}'"
-  print "  mv '${output_dir}' '${target}'"
+  print "動作確認後、退避した元のリポジトリを削除してください:"
+  print "  rm -rf '${backup_dir}'"
 }

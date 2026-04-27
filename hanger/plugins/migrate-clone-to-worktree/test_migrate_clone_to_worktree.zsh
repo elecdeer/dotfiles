@@ -57,10 +57,14 @@ print "uncommitted" > "${repo}/local.txt"
 
 printf 'y\n' | migrate_clone_to_worktree "$repo" >/dev/null 2>&1
 
-output="${tmp_dir}/myrepo.wt-layout"
+backup="${tmp_dir}/_myrepo"
+output="${tmp_dir}/myrepo"
 root="${output}/\$root"
 feature_wt="${output}/feature"
 
+assert_dir_exists "$backup"
+assert_file_exists "${backup}/README.md"
+assert_file_exists "${backup}/local.txt"
 assert_dir_exists "$root"
 assert_dir_exists "${root}/.git"
 assert_file_exists "${root}/README.md"
