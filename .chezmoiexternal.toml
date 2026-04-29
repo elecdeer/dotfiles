@@ -87,3 +87,11 @@
     stripComponents = 3
     include = ["*/skills/wrangler/**"]
     refreshPeriod = "168h"  # 1 week
+
+[".claude/skills/empirical-prompt-tuning"]
+    type = "archive"
+    url = "https://github.com/mizchi/skills/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 2
+    include = ["*/empirical-prompt-tuning/**"]
+    refreshPeriod = "168h"  # 1 week

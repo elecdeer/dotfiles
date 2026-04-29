@@ -39,5 +39,16 @@
       "ctrl-n": "editor::ContextMenuNext",
       "ctrl-p": "editor::ContextMenuPrevious"
     }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-shift-g": "git_panel::ToggleFocus"
+    }
+  },
+  {
+    "bindings": {
+      "cmd-shift-g": "git_panel::Toggle"
+    }
   }
 ]
