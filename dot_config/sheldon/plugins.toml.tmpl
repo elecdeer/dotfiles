@@ -116,16 +116,8 @@ apply = ['defer']
 github = 'agkozak/zsh-z'
 apply = ['defer']
 
-[plugins.migrate-to-bare]
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/migrate-to-bare'
-apply = ['defer']
-
-[plugins.migrate-from-bare]
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/migrate-from-bare'
-apply = ['defer']
-
-[plugins.migrate-clone-to-worktree]
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/migrate-clone-to-worktree'
+[plugins.migrate-to-project-wt]
+local = '{{ .chezmoi.sourceDir }}/hanger/plugins/migrate-to-project-wt'
 apply = ['defer']
 
 # =====================

@@ -16,6 +16,7 @@ git init --bare "$remote_repo" >/dev/null
 git init "$repo_root" >/dev/null
 git -C "$repo_root" config user.name "Codex Test"
 git -C "$repo_root" config user.email "codex@example.com"
+git -C "$repo_root" config wt.basedir "../{gitroot}.wt"
 
 printf 'base\n' > "$repo_root/file.txt"
 git -C "$repo_root" add file.txt
@@ -37,6 +38,7 @@ origin_feature_path=$(
 origin_feature_hash=$(git -C "$repo_root" rev-parse origin-feature)
 
 [[ -d "$origin_feature_path" ]]
+[[ "$(realpath "$origin_feature_path")" == "$(realpath "$tmpdir/repo.wt/origin-feature")" ]]
 [[ "$origin_feature_hash" == "$origin_main_hash" ]]
 [[ "$origin_feature_hash" != "$local_main_hash" ]]
 
@@ -53,6 +55,7 @@ local_feature_path=$(
 local_feature_hash=$(git -C "$repo_root" rev-parse local-feature)
 
 [[ -d "$local_feature_path" ]]
+[[ "$(realpath "$local_feature_path")" == "$(realpath "$tmpdir/repo.wt/local-feature")" ]]
 [[ "$local_feature_hash" == "$feature_base_hash" ]]
 [[ "$local_feature_hash" != "$local_main_hash" ]]
 
