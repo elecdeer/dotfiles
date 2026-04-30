@@ -98,6 +98,19 @@ test_normal_repo_with_nested_wt() {
   assert_dir_exists "${root}"/_project.project-wt-backup-*(N[1])
 }
 
+test_normal_repo_with_detached_linked_wt() {
+  local root="${tmp_dir}/normal-detached-linked"
+  local repo="${root}/project"
+  create_repo "$repo"
+  git -C "$repo" worktree add --detach "${repo}/.wt/detached" HEAD >/dev/null 2>&1
+
+  migrate-to-project-wt --yes "$repo" >/dev/null
+
+  assert_migrated_repo "$repo" "${root}/project.wt"
+  assert_file_exists "${root}/project.wt/detached/README.md"
+  git -C "${root}/project.wt/detached" status --porcelain >/dev/null
+}
+
 test_normal_repo_without_linked_wt() {
   local root="${tmp_dir}/normal-single"
   local repo="${root}/project"
@@ -119,6 +132,7 @@ test_root_layout() {
   git -C "$main_repo" config wt.basedir ".."
   create_branch "$main_repo" "feature-a" "feature.txt"
   git -C "$main_repo" worktree add "${wrapper}/feature-a" "feature-a" >/dev/null 2>&1
+  git -C "$main_repo" switch --detach HEAD >/dev/null 2>&1
 
   migrate-to-project-wt --yes "$wrapper" >/dev/null
 
@@ -152,6 +166,7 @@ test_bare_layout() {
 }
 
 test_normal_repo_with_nested_wt
+test_normal_repo_with_detached_linked_wt
 test_normal_repo_without_linked_wt
 test_root_layout
 test_bare_layout

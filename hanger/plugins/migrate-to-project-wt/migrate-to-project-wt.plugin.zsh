@@ -125,13 +125,8 @@ _mtpw_collect_linked_worktrees() {
     [[ "$should_skip" == "true" ]] && return 0
     [[ ! -d "$wt_path" ]] && return 0
 
-    if [[ -z "$wt_branch" ]]; then
-      print -u2 "エラー: detached HEAD の linked worktree は自動移行できません: ${wt_path}"
-      return 1
-    fi
-
     MTPW_WT_PATHS+=("$wt_path")
-    MTPW_WT_BRANCHES+=("$wt_branch")
+    MTPW_WT_BRANCHES+=("${wt_branch:-${wt_path:t}}")
   }
 
   while IFS= read -r line; do
@@ -235,13 +230,6 @@ _mtpw_migrate_normal_repo() {
   local target="$1"
   local assume_yes="$2"
 
-  local branch
-  branch="$(_mtpw_current_branch "$target")"
-  if [[ -z "$branch" ]]; then
-    print -u2 "エラー: detached HEAD 状態では移行できません: ${target}"
-    return 1
-  fi
-
   local common_dir
   common_dir="$(git -C "$target" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)"
   if [[ "$common_dir" != "${target}/.git" ]]; then
@@ -292,13 +280,6 @@ _mtpw_migrate_root_layout() {
     return 1
   fi
 
-  local branch
-  branch="$(_mtpw_current_branch "$root_dir")"
-  if [[ -z "$branch" ]]; then
-    print -u2 "エラー: detached HEAD 状態では移行できません: ${root_dir}"
-    return 1
-  fi
-
   local parent repo_name wt_dir backup_dir
   parent="$(dirname "$wrapper")"
   repo_name="$(basename "$wrapper")"
@@ -335,6 +316,8 @@ _mtpw_migrate_root_layout() {
 _mtpw_find_bare_main_worktree() {
   local bare_dir="$1"
   local branch="$2"
+  [[ -z "$branch" ]] && return 1
+
   local preferred_name="${branch//\//-}"
   local preferred="${bare_dir}/.wt/${preferred_name}"
   if [[ -d "$preferred" ]]; then
@@ -362,11 +345,7 @@ _mtpw_migrate_bare_repo() {
   local assume_yes="$2"
 
   local branch
-  branch="$(_mtpw_current_branch "$bare_dir")"
-  if [[ -z "$branch" ]]; then
-    print -u2 "エラー: detached HEAD 状態では移行できません: ${bare_dir}"
-    return 1
-  fi
+  branch="$(_mtpw_current_branch "$bare_dir" 2>/dev/null || true)"
 
   local parent bare_name repo_name main_repo wt_dir main_wt_src backup_dir
   parent="$(dirname "$bare_dir")"
@@ -374,7 +353,7 @@ _mtpw_migrate_bare_repo() {
   repo_name="${bare_name%.git}"
   main_repo="${parent}/${repo_name}"
   wt_dir="${parent}/${repo_name}.wt"
-  main_wt_src="$(_mtpw_find_bare_main_worktree "$bare_dir" "$branch")"
+  main_wt_src="$(_mtpw_find_bare_main_worktree "$bare_dir" "$branch" 2>/dev/null || true)"
   backup_dir="$(_mtpw_backup_path "$bare_dir")"
 
   [[ -e "$main_repo" ]] && { print -u2 "エラー: main repo の作成先が既に存在します: ${main_repo}"; return 1; }
@@ -401,7 +380,7 @@ _mtpw_migrate_bare_repo() {
   _mtpw_copy_git_dir_from_bare "$bare_dir" "${main_repo}/.git" || return 1
   _mtpw_set_main_config "$main_repo"
   if [[ -z "$main_wt_src" ]]; then
-    git -C "$main_repo" reset --hard "$branch" >/dev/null
+    git -C "$main_repo" reset --hard "${branch:-HEAD}" >/dev/null
   fi
 
   print "[3/5] linked worktree をコピー中..."
