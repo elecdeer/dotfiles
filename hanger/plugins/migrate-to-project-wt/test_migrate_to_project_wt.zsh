@@ -104,11 +104,13 @@ test_normal_repo_with_detached_linked_wt() {
   create_repo "$repo"
   git -C "$repo" worktree add --detach "${repo}/.wt/detached" HEAD >/dev/null 2>&1
 
-  migrate-to-project-wt --yes "$repo" >/dev/null
+  local output
+  output="$(migrate-to-project-wt --yes "$repo")"
 
   assert_migrated_repo "$repo" "${root}/project.wt"
-  assert_file_exists "${root}/project.wt/detached/README.md"
-  git -C "${root}/project.wt/detached" status --porcelain >/dev/null
+  [[ ! -e "${root}/project.wt/detached" ]]
+  [[ "$output" == *"スキップする detached linked worktree:"* ]]
+  [[ "$output" == *"${repo}/.wt/detached"* ]]
 }
 
 test_normal_repo_without_linked_wt() {

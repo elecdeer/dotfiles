@@ -110,6 +110,7 @@ _mtpw_collect_linked_worktrees() {
 
   MTPW_WT_PATHS=()
   MTPW_WT_BRANCHES=()
+  MTPW_SKIPPED_DETACHED_WT_PATHS=()
 
   local wt_path="" wt_branch="" line
   local process_entry
@@ -124,9 +125,13 @@ _mtpw_collect_linked_worktrees() {
     done
     [[ "$should_skip" == "true" ]] && return 0
     [[ ! -d "$wt_path" ]] && return 0
+    if [[ -z "$wt_branch" ]]; then
+      MTPW_SKIPPED_DETACHED_WT_PATHS+=("$wt_path")
+      return 0
+    fi
 
     MTPW_WT_PATHS+=("$wt_path")
-    MTPW_WT_BRANCHES+=("${wt_branch:-${wt_path:t}}")
+    MTPW_WT_BRANCHES+=("$wt_branch")
   }
 
   while IFS= read -r line; do
@@ -221,6 +226,14 @@ _mtpw_print_summary() {
     local i
     for (( i = 1; i <= ${#MTPW_WT_BRANCHES[@]}; i++ )); do
       print "    ${MTPW_WT_PATHS[$i]} -> ${MTPW_NEW_WT_PATHS[$i]} (${MTPW_WT_BRANCHES[$i]})"
+    done
+  fi
+  if [[ ${#MTPW_SKIPPED_DETACHED_WT_PATHS[@]} -gt 0 ]]; then
+    print ""
+    print "  スキップする detached linked worktree:"
+    local skipped_path
+    for skipped_path in "${MTPW_SKIPPED_DETACHED_WT_PATHS[@]}"; do
+      print "    ${skipped_path}"
     done
   fi
   print ""
