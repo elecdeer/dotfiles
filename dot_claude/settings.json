@@ -128,5 +128,17 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "voiceEnabled": true,
-  "preferredNotifChannel": "terminal_bell"
+  "preferredNotifChannel": "terminal_bell",
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": true,
+    "network": {
+      "allowUnixSockets": [
+        "/var/run/docker.sock",
+        "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+      ],
+      "allowLocalBinding": true
+    }
+  }
 }
