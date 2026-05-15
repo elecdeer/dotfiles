@@ -285,11 +285,13 @@ plugins {
         show_tab_indices true
     }
     vertical-tabs location="file:~/.config/zellij/plugins/zellij-vertical-tabs.wasm" {
-        format "#[fg=#c6c8d1]{index}:#[fg=#89b8c2]{name} #[fg=#e2a578]{indicators}"
-        format_active "#[fg=#161821,bg=#84a0c6,fill]{index}:#[fg=#161821,bg=#84a0c6,bold]{name} #[fg=#161821,bg=#84a0c6]{indicators}"
+        format "#[fg=#c6c8d1] {index}:#[fg=#89b8c2]{name} #[fg=#e2a578]{indicators}"
+        format_active "#[fg=#161821,bg=#84a0c6,fill] {index}:#[fg=#161821,bg=#84a0c6,bold]{name} #[fg=#161821,bg=#84a0c6]{indicators}"
         indicator_active ""
         max_name_length 29
-        border "#[fg=#84a0c6]|"
+        // border "#[fg=#84a0c6]|"
+        border " "
+        padding_top 1
         overflow_above "#[fg=#e2a578]  ^ +{count}"
         overflow_below "#[fg=#e2a578]  v +{count}"
     }
