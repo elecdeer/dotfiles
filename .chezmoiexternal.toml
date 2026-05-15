@@ -2,8 +2,7 @@
 
 [".config/zellij/plugins/zellij-vertical-tabs.wasm"]
     type = "file"
-    url = "https://github.com/cfal/zellij-vertical-tabs/releases/latest/download/zellij-vertical-tabs.wasm"
-    refreshPeriod = "168h"  # 1 week
+    url = "https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm"
 
 [".claude/skills/playwright-cli"]
     type = "archive"
