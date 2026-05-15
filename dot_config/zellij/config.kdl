@@ -281,9 +281,6 @@ plugins {
     session-manager location="zellij:session-manager"
     status-bar location="zellij:status-bar"
     strider location="zellij:strider"
-    tab-bar location="https://github.com/ivoronin/zellij-tab-bar-indexed/releases/latest/download/tab-bar.wasm" {
-        show_tab_indices true
-    }
     vertical-tabs location="file:~/.config/zellij/plugins/zellij-vertical-tabs.wasm" {
         format "#[fg=#c6c8d1] {index}:#[fg=#89b8c2]{name} #[fg=#e2a578]{indicators}"
         format_active "#[fg=#161821,bg=#84a0c6,fill] {index}:#[fg=#161821,bg=#84a0c6,bold]{name} #[fg=#161821,bg=#84a0c6]{indicators}"
