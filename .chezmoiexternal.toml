@@ -1,5 +1,10 @@
 # External resources managed by chezmoi
 
+[".config/zellij/plugins/zellij-vertical-tabs.wasm"]
+    type = "file"
+    url = "https://github.com/cfal/zellij-vertical-tabs/releases/latest/download/zellij-vertical-tabs.wasm"
+    refreshPeriod = "168h"  # 1 week
+
 [".claude/skills/playwright-cli"]
     type = "archive"
     url = "https://github.com/microsoft/playwright-cli/archive/refs/heads/main.tar.gz"
