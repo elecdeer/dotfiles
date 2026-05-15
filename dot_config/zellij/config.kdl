@@ -284,6 +284,12 @@ plugins {
     tab-bar location="https://github.com/ivoronin/zellij-tab-bar-indexed/releases/latest/download/tab-bar.wasm" {
         show_tab_indices true
     }
+    vertical-tabs location="file:~/.config/zellij/plugins/zellij-vertical-tabs.wasm" {
+        format "{index}:{name} {indicators}"
+        format_active "#[bg=236,fill]{index}:{name} {indicators}"
+        max_name_length 15
+        border "#[fg=dim]|"
+    }
     welcome-screen location="zellij:session-manager" {
         welcome_screen true
     }

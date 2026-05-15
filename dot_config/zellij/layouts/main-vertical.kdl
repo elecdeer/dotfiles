@@ -1,23 +1,27 @@
 layout {
     default_tab_template {
-        pane size=1 borderless=true {
-            plugin location="tab-bar"
+        pane split_direction="vertical" {
+            pane size=18 borderless=true {
+                plugin location="vertical-tabs"
+            }
+            children
         }
-        children
         pane size=2 borderless=true {
             plugin location="status-bar"
         }
     }
     new_tab_template {
-        pane size=1 borderless=true {
-            plugin location="tab-bar"
-        }
         pane split_direction="vertical" {
-            pane size="60%"
-            pane split_direction="horizontal" {
-                pane
-                lazy_dev {}
-                lazy_storybook {}
+            pane size=18 borderless=true {
+                plugin location="vertical-tabs"
+            }
+            pane split_direction="vertical" {
+                pane size="60%"
+                pane split_direction="horizontal" {
+                    pane
+                    lazy_dev {}
+                    lazy_storybook {}
+                }
             }
         }
         pane size=2 borderless=true {
