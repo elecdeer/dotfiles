@@ -11,8 +11,6 @@ This skill provides a comprehensive workflow for creating GitHub Pull Requests u
 
 - **analyze_branch_changes.sh** - Analyzes branch information, determines base branch using decoration-based method (or uses explicitly specified base branch), lists changed files with diff stats, and shows commit log
 - **verify_remote_branch.sh** - Verifies remote branch status and provides human-readable status report
-- **create_pr_draft.sh** - Creates empty temporary file for PR content
-- **create_pr_from_draft.sh** - Creates PR using gh CLI from draft file with YAML frontmatter
 
 ## Workflow
 
@@ -55,14 +53,14 @@ Use gh CLI to find issues related to this change:
 - Note issue numbers to reference in PR description
 - Check for existing discussions or context around this change
 
-### 4. Gather Context
+### 3. Gather Context
 
 - Read PR template from `.github/pull_request_template.md` (if exists)
 - Follow template structure and requirements
 - Use language specified in template or appropriate for project
 - Only describe what was actually changed - do not mention unrelated items
 
-### 5. Analyze Impact
+### 4. Analyze Impact
 
 Based on changed files compared with `origin/<base-branch>`, determine:
 
@@ -70,53 +68,27 @@ Based on changed files compared with `origin/<base-branch>`, determine:
 - Whether changes are breaking or non-breaking
 - What type of change this represents (feature, fix, refactor, etc.)
 
-### 6. Draft PR Content
+### 5. Prepare PR Content
 
-Create PR description following template structure.
+Prepare the PR title and body following the repository's PR template structure.
 
-If a base branch PR was found in Step 3 (stacked PR scenario):
+If a base branch PR was found during the stacked PR check in Step 1:
 
 - Include a note that this PR is built on top of the base PR (e.g., "Built on top of #123" or "Depends on #123")
 - Place this information prominently, typically near the top of the description
 - Consider adding it as a separate section or as part of the introduction
 
-### 7. User Confirmation
+### 6. User Confirmation
 
-Allow user to review and edit PR content before creation:
+Present the proposed PR title, base branch, head branch, and body directly in the conversation.
 
-1. Use `create_pr_draft.sh` to create empty temporary file:
+Ask the user to confirm whether to open GitHub's PR creation page with this content:
 
-   ```bash
-   <SKILL_DIR>/scripts/create_pr_draft.sh
-   ```
+- If the user asks for edits, revise the proposed title/body in the conversation and ask again.
+- If the user cancels, stop the PR creation process.
+- If the user confirms, proceed without creating a local draft file.
 
-   Script outputs the temporary file path.
-
-2. Write PR content to the file with YAML frontmatter format using builtin tool:
-
-   ```markdown
-   ---
-   title: <proposed PR title>
-   base: <base branch>
-   head: <head branch>
-   ---
-
-   <proposed PR body content>
-   ```
-
-3. Present the temporary file path to the user
-4. Use the `ask_questions` tool to prompt user confirmation:
-   - Ask: "PR draft has been created at `<file-path>`. Please review and edit the file as needed. Have you finished editing?"
-   - Provide options like "Finished editing", "Cancel PR creation"
-   - Wait for user response
-5. If user selects "Cancel PR creation", stop the PR creation process
-6. If user confirms they finished editing, read the edited content from temporary file
-7. Parse frontmatter to extract title, base, and head branch
-8. Verify the file still contains content (non-empty PR description)
-9. If valid, proceed with PR creation using parsed metadata and body
-10. Do NOT delete temporary file - leave it for user reference
-
-### 8. Verify Remote Push
+### 7. Verify Remote Push
 
 Before creating PR, verify head branch is pushed to remote using `verify_remote_branch.sh`:
 
@@ -150,21 +122,20 @@ Based on the script output:
    - Inform user of the situation
    - Suggest appropriate action (pull, rebase, or force push)
 
-### 9. Create PR with gh CLI
+### 8. Open PR Creation in Browser
 
-Use `create_pr_from_draft.sh` to create PR from the user-confirmed draft file:
+Run `gh pr create --web` with the confirmed PR metadata and body. Do not create a draft file.
 
 ```bash
-<SKILL_DIR>/scripts/create_pr_from_draft.sh <draft-file-path>
+gh pr create \
+  --web \
+  --base "<base-branch>" \
+  --head "<head-branch>" \
+  --title "<confirmed PR title>" \
+  --body "<confirmed PR body>"
 ```
 
-The script will:
-
-1. Parse YAML frontmatter to extract `title`, `base`, and `head` fields
-2. Extract body content (everything after frontmatter)
-3. Validate required fields are present
-4. Create PR using `gh pr create` with parsed metadata and body
-5. Display PR creation status and URL
+This opens GitHub's PR creation page prefilled with the confirmed content, allowing the user to make any final adjustments in the browser before submitting.
 
 ## Important Guidelines
 
