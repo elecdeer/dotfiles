@@ -1,6 +1,6 @@
 ---
 name: create-github-pr
-description: Create GitHub Pull Requests with comprehensive workflow including change analysis, issue search, PR template application, user confirmation, and gh CLI integration. Use when creating a PR from the current branch, when asked to "create a pull request", "make a PR", "open a PR", or similar requests.
+description: Create GitHub Pull Requests with comprehensive workflow including change analysis, issue search, PR template application, and gh CLI web flow. Use when creating a PR from the current branch, when asked to "create a pull request", "make a PR", "open a PR", or similar requests.
 ---
 
 # Create GitHub Pull Request
@@ -78,17 +78,7 @@ If a base branch PR was found during the stacked PR check in Step 1:
 - Place this information prominently, typically near the top of the description
 - Consider adding it as a separate section or as part of the introduction
 
-### 6. User Confirmation
-
-Present the proposed PR title, base branch, head branch, and body directly in the conversation.
-
-Ask the user to confirm whether to open GitHub's PR creation page with this content:
-
-- If the user asks for edits, revise the proposed title/body in the conversation and ask again.
-- If the user cancels, stop the PR creation process.
-- If the user confirms, proceed without creating a local draft file.
-
-### 7. Verify Remote Push
+### 6. Verify Remote Push
 
 Before creating PR, verify head branch is pushed to remote using `verify_remote_branch.sh`:
 
@@ -122,20 +112,20 @@ Based on the script output:
    - Inform user of the situation
    - Suggest appropriate action (pull, rebase, or force push)
 
-### 8. Open PR Creation in Browser
+### 7. Open PR Creation in Browser
 
-Run `gh pr create --web` with the confirmed PR metadata and body. Do not create a draft file.
+Run `gh pr create --web` with the prepared PR metadata and body. Do not create a draft file or a separate confirmation step.
 
 ```bash
 gh pr create \
   --web \
   --base "<base-branch>" \
   --head "<head-branch>" \
-  --title "<confirmed PR title>" \
-  --body "<confirmed PR body>"
+  --title "<prepared PR title>" \
+  --body "<prepared PR body>"
 ```
 
-This opens GitHub's PR creation page prefilled with the confirmed content, allowing the user to make any final adjustments in the browser before submitting.
+This opens GitHub's PR creation page prefilled with the prepared content, allowing the user to make any final adjustments in the browser before submitting.
 
 ## Important Guidelines
 
