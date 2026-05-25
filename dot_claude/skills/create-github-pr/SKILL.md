@@ -127,6 +127,20 @@ gh pr create \
 
 This opens GitHub's PR creation page prefilled with the prepared content, allowing the user to make any final adjustments in the browser before submitting.
 
+If this fails because the generated URL is too long, retry without `--body` and copy the prepared PR body to the clipboard so the user can paste it into the browser:
+
+```bash
+printf '%s' "<prepared PR body>" | pbcopy
+
+gh pr create \
+  --web \
+  --base "<base-branch>" \
+  --head "<head-branch>" \
+  --title "<prepared PR title>"
+```
+
+Only use this fallback for URL length errors. Do not drop the body silently; tell the user that the body is on the clipboard and needs to be pasted into the PR description field.
+
 ## Important Guidelines
 
 - Follow project's PR template and conventions
