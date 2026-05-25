@@ -103,13 +103,11 @@ if ! command -v ni >/dev/null 2>&1; then
     fi
 fi
 
-ni run "$script_name" &
-runner_pid=$!
-
-watch_ports_and_rename "$runner_pid" "$initial_title" &
+unsetopt bg_nice
+watch_ports_and_rename "$$" "$initial_title" &
 watcher_pid=$!
 
-wait "$runner_pid"
+ni run "$script_name"
 exit_code=$?
 
 kill "$watcher_pid" >/dev/null 2>&1 || true
