@@ -8,6 +8,30 @@ function gwa() {
   "$_gwt_plugin_dir/executable_gwa" "$@"
 }
 
+_gwt_mise_config_paths="mise.toml .mise.toml .config/mise/config.toml mise.lock .config/mise/mise.lock"
+
+function _gwt_mise_diff_command() {
+  local root_branch="$1"
+  if [[ -n "$root_branch" ]]; then
+    print -r -- "git --no-pager diff ${(q)root_branch}...HEAD -- $_gwt_mise_config_paths"
+  else
+    print -r -- "git --no-pager diff -- $_gwt_mise_config_paths"
+  fi
+}
+
+function _gwt_zellij_send_command() {
+  local command="$1"
+  [[ -z "$command" ]] && return
+  zellij action write-chars "$command"
+  zellij action write 13
+}
+
+function _gwt_enter_command() {
+  local worktree_name="$1"
+  local selected_path="$2"
+  print -r -- "GWT_PLUGIN_DIR=${(q)_gwt_plugin_dir} source ${(q)_gwt_plugin_dir}/executable_gwt-enter ${(q)worktree_name} ${(q)selected_path}"
+}
+
 function gwt() {
   # 引数が渡された場合は直接git wtを実行
   if [[ $# -gt 0 ]]; then
@@ -25,19 +49,26 @@ function gwt() {
     # zellij run --floating は non-blocking なので、cat "$_tmpfifo" でブロックして結果を待つ
     zellij run --floating --close-on-exit --name "gwt" --width 80% --height 50% --x 10% --y 25% \
       -- "$_gwt_plugin_dir/executable_gwt-floating" "$PWD" "$_tmpfifo"
-    local _result _wt_name _wt_path
+    local _result _wt_name _selected_path
     _result=$(cat "$_tmpfifo")
     rm -f "$_tmpfifo"
     [[ -z "$_result" ]] && return
     _wt_name=$(printf '%s' "$_result" | head -1 | cut -f1)
-    _wt_path=$(printf '%s' "$_result" | head -1 | cut -f2)
-    [[ -z "$_wt_path" ]] && return
+    _selected_path=$(printf '%s' "$_result" | head -1 | cut -f2)
+    [[ -z "$_wt_name" ]] && return
     # 既に同名タブが開いていれば移動する（exit code は常に 0 なので切り替え後の tab 名で判定）
     zellij action go-to-tab-name "${_wt_name}" 2>/dev/null
     local _current_tab_name
     _current_tab_name=$(zellij action current-tab-info --json 2>/dev/null | jq -r '.name // empty' 2>/dev/null)
     if [[ "$_current_tab_name" != "${_wt_name}" ]]; then
-      zellij action new-tab --cwd "$_wt_path" --name "${_wt_name}"
+      local _new_tab_cwd="$PWD"
+      if [[ -n "$_selected_path" && "$_selected_path" != __BASE__:* ]]; then
+        _new_tab_cwd="$_selected_path"
+      fi
+      zellij action new-tab --cwd "$_new_tab_cwd" --name "${_wt_name}"
+      if [[ -z "$_selected_path" || "$_selected_path" == __BASE__:* ]]; then
+        _gwt_zellij_send_command "$(_gwt_enter_command "$_wt_name" "$_selected_path")"
+      fi
     fi
     return
   fi
@@ -60,11 +91,27 @@ function gwt() {
     print -s "git wt \"$selected_worktree\""
   fi
 
-  local _resolved_path
-  _resolved_path=$("$_gwt_plugin_dir/executable_gwt-create" "$selected_worktree" "$selected_path") || return
+  local _resolved_details _resolved_path _status _install_command _root_branch
+  _resolved_details=$("$_gwt_plugin_dir/executable_gwt-create" --details "$selected_worktree" "$selected_path") || return
+  _resolved_path=$(printf '%s' "$_resolved_details" | cut -f1)
+  _status=$(printf '%s' "$_resolved_details" | cut -f2)
+  _install_command=$(printf '%s' "$_resolved_details" | cut -f3)
+  _root_branch=$(printf '%s' "$_resolved_details" | cut -f4)
+  [[ -z "$_resolved_path" ]] && return
 
   # cmuxが使える場合、1ペインのときのみ左右に分割してcdする
   cmux-splits "$_resolved_path"
   cmux ping &>/dev/null && cmux rename-workspace "$selected_worktree" &>/dev/null
+
+  if [[ "$_status" == "mise-diff-needed" ]]; then
+    print "mise config differs from the root worktree. Review before running mise trust:"
+    print "  cd ${(q)_resolved_path} && $(_gwt_mise_diff_command "$_root_branch")"
+  elif [[ "$_status" == "mise-trust-failed" ]]; then
+    print "mise trust failed. Review the mise config before continuing:"
+    print "  cd ${(q)_resolved_path} && $(_gwt_mise_diff_command "$_root_branch")"
+  elif [[ -n "$_install_command" ]]; then
+    print "Run in the new worktree:"
+    print "  cd ${(q)_resolved_path} && $_install_command"
+  fi
 
 }

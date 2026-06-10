@@ -1,0 +1,53 @@
+#!/usr/bin/env zsh
+# 新しいタブ内でworktreeを作成/解決し、そのworktreeへ移動して後続処理を実行する
+# Usage: source executable_gwt-enter <worktree_name> <selected_path>
+
+function _gwt_enter_main() {
+  local worktree_name="$1"
+  local selected_path="$2"
+  local script_dir="$GWT_PLUGIN_DIR"
+  if [[ -z "$script_dir" ]]; then
+    local script_path="${(%):-%x}"
+    script_dir="${script_path:A:h}"
+  fi
+  local mise_config_paths="mise.toml .mise.toml .config/mise/config.toml mise.lock .config/mise/mise.lock"
+
+  local resolved_details resolved_path wt_status install_command root_branch
+  resolved_details=$("$script_dir/executable_gwt-create" --details "$worktree_name" "$selected_path") || return
+  resolved_path=$(printf '%s' "$resolved_details" | cut -f1)
+  wt_status=$(printf '%s' "$resolved_details" | cut -f2)
+  install_command=$(printf '%s' "$resolved_details" | cut -f3)
+  root_branch=$(printf '%s' "$resolved_details" | cut -f4)
+  [[ -z "$resolved_path" ]] && return 1
+
+  cd "$resolved_path" || return
+
+  if [[ "$wt_status" == "mise-diff-needed" ]]; then
+    print "mise config differs from the root worktree. Review before running mise trust."
+    if [[ -n "$root_branch" ]]; then
+      git --no-pager diff "$root_branch...HEAD" -- $=mise_config_paths
+    else
+      git --no-pager diff -- $=mise_config_paths
+    fi
+    return
+  fi
+
+  if [[ "$wt_status" == "mise-trust-failed" ]]; then
+    print "mise trust failed. Review the mise config before continuing."
+    if [[ -n "$root_branch" ]]; then
+      git --no-pager diff "$root_branch...HEAD" -- $=mise_config_paths
+    else
+      git --no-pager diff -- $=mise_config_paths
+    fi
+    return
+  fi
+
+  if [[ "$install_command" == "pnpm install" ]]; then
+    pnpm install
+  elif [[ "$install_command" == "npm install" ]]; then
+    npm install
+  fi
+}
+
+_gwt_enter_main "$@"
+unfunction _gwt_enter_main

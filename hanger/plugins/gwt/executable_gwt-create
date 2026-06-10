@@ -1,16 +1,30 @@
 #!/usr/bin/env zsh
 # worktreeを作成/解決し、パスをstdoutに出力する
-# Usage: executable_gwt-create <worktree_name> <selected_path>
+# Usage: executable_gwt-create [--details] <worktree_name> <selected_path>
 #   selected_path:
 #     実際のパス              -> git wt <name> して返す
 #     "__BASE__:"             -> current branchからgit wt <name>
 #     "__BASE__:<branch>"     -> <branch>からgit wt <name> を作成
 #     "__BASE__:origin/<b>"   -> origin/<b>からgit wt <name> を作成
 #     "" (空)                 -> git wt <name> して探す
+# --details の場合: path<TAB>status<TAB>install_command<TAB>root_branch をstdoutに出力する
 # exit 0: 成功（パスをstdout）, exit 1: 失敗
+
+local output_mode="path"
+if [[ "$1" == "--details" ]]; then
+  output_mode="details"
+  shift
+fi
 
 local worktree_name="$1"
 local selected_path="$2"
+local -a mise_config_files=(
+  "mise.toml"
+  ".mise.toml"
+  ".config/mise/config.toml"
+  "mise.lock"
+  ".config/mise/mise.lock"
+)
 
 _find_wt_path() {
   local branch="$1"
@@ -20,25 +34,119 @@ _find_wt_path() {
   '
 }
 
+_root_wt_path() {
+  git worktree list --porcelain | awk '
+    /^worktree / { print substr($0, 10); exit }
+  '
+}
+
+_root_wt_branch() {
+  local root_path="$1"
+  [[ -z "$root_path" ]] && return
+  git -C "$root_path" branch --show-current 2>/dev/null
+}
+
+_has_mise_config() {
+  local wt_path="$1"
+  local file
+  for file in "${mise_config_files[@]}"; do
+    [[ -e "$wt_path/$file" ]] && return 0
+  done
+  return 1
+}
+
+_mise_configs_match_root() {
+  local root_path="$1"
+  local wt_path="$2"
+  local file
+  for file in "${mise_config_files[@]}"; do
+    if [[ -e "$root_path/$file" && -e "$wt_path/$file" ]]; then
+      cmp -s "$root_path/$file" "$wt_path/$file" || return 1
+    elif [[ -e "$root_path/$file" || -e "$wt_path/$file" ]]; then
+      return 1
+    fi
+  done
+  return 0
+}
+
+_install_command_for() {
+  local wt_path="$1"
+  if [[ -f "$wt_path/pnpm-lock.yaml" ]]; then
+    printf '%s\n' "pnpm install"
+  elif [[ -f "$wt_path/package-lock.json" ]]; then
+    printf '%s\n' "npm install"
+  fi
+}
+
+_post_create_status() {
+  local wt_path="$1"
+  local root_path result_status="created"
+  root_path="$(_root_wt_path)"
+  if [[ -n "$root_path" && "$root_path" != "$wt_path" ]] && _has_mise_config "$wt_path"; then
+    if _mise_configs_match_root "$root_path" "$wt_path"; then
+      if command -v mise >/dev/null 2>&1; then
+        (cd "$wt_path" && mise trust >/dev/null 2>&1) || result_status="mise-trust-failed"
+      fi
+    else
+      result_status="mise-diff-needed"
+    fi
+  fi
+  printf '%s\n' "$result_status"
+}
+
+_print_result() {
+  local wt_path="$1"
+  local created="$2"
+  local result_status=""
+  local install_command=""
+  local root_path=""
+  local root_branch=""
+
+  if [[ "$created" == "true" ]]; then
+    root_path="$(_root_wt_path)"
+    root_branch="$(_root_wt_branch "$root_path")"
+    result_status="$(_post_create_status "$wt_path")"
+    install_command="$(_install_command_for "$wt_path")"
+  fi
+
+  if [[ "$output_mode" == "details" ]]; then
+    printf '%s\t%s\t%s\t%s\n' "$wt_path" "$result_status" "$install_command" "$root_branch"
+  else
+    printf '%s\n' "$wt_path"
+  fi
+}
+
+_run_git_wt() {
+  local before_path="$1"
+  shift
+  local git_wt_status=0
+  git wt "$@" >/dev/null || git_wt_status=$?
+  local result_path
+  result_path="$(_find_wt_path "$worktree_name")"
+  [[ -z "$result_path" ]] && exit 1
+  if [[ $git_wt_status -ne 0 && -z "$result_path" ]]; then
+    exit 1
+  fi
+  local created="false"
+  [[ -z "$before_path" ]] && created="true"
+  _print_result "$result_path" "$created"
+}
+
 if [[ "$selected_path" == __BASE__:* ]]; then
   local base="${selected_path#__BASE__:}"
+  local before_path
+  before_path="$(_find_wt_path "$worktree_name")"
   if [[ -n "$base" ]]; then
-    git wt "$worktree_name" "$base" >/dev/null || exit 1
+    _run_git_wt "$before_path" "$worktree_name" "$base"
   else
-    git wt "$worktree_name" >/dev/null || exit 1
+    _run_git_wt "$before_path" "$worktree_name"
   fi
-  local result_path
-  result_path=$(_find_wt_path "$worktree_name")
-  [[ -z "$result_path" ]] && exit 1
-  printf '%s\n' "$result_path"
 elif [[ -n "$selected_path" ]]; then
   # 既存worktree: パスが既に判明しているのでそのまま返す（git wtは不要）
-  printf '%s\n' "$selected_path"
+  _print_result "$selected_path" "false"
 else
   # path不明（クエリのみ確定など）
-  git wt "$worktree_name" >/dev/null || exit 1
-  local result_path
-  result_path=$(_find_wt_path "$worktree_name")
-  [[ -z "$result_path" ]] && exit 1
-  printf '%s\n' "$result_path"
+  local before_path
+  before_path="$(_find_wt_path "$worktree_name")"
+  _run_git_wt "$before_path" "$worktree_name"
 fi

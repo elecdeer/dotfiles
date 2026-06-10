@@ -50,4 +50,3 @@
 	root = ~/dev
 [wt]
 	basedir = "../{gitroot}.wt"
-	hook = "if [ -f pnpm-lock.yaml ]; then pnpm install; elif [ -f package-lock.json ]; then npm install; fi"

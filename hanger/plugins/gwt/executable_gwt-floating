@@ -21,13 +21,5 @@ local selected_worktree selected_path
 selected_worktree=$(echo "$selected_line" | cut -f1)
 selected_path=$(echo "$selected_line" | cut -f2)
 
-# worktreeを作成/解決してパスを取得
-local resolved_path
-resolved_path=$("$script_dir/executable_gwt-create" "$selected_worktree" "$selected_path")
-if [[ $? -ne 0 || -z "$resolved_path" ]]; then
-  [[ -n "$result_pipe" ]] && printf '\n' > "$result_pipe"
-  exit 1
-fi
-
-# 結果をnamed pipeに書き込む（gwt側でnew-tabを開く）
-[[ -n "$result_pipe" ]] && printf '%s\t%s\n' "$selected_worktree" "$resolved_path" > "$result_pipe"
+# 選択結果だけをnamed pipeに書き込む（git wtは新しいタブ側で実行する）
+[[ -n "$result_pipe" ]] && printf '%s\t%s\n' "$selected_worktree" "$selected_path" > "$result_pipe"
