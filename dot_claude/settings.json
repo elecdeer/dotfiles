@@ -1,10 +1,13 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "USE_BUILTIN_RIPGREP": "1",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-5-20251101",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-7",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
+    "SSH_AUTH_SOCK": "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
   },
   "permissions": {
+    "defaultMode": "auto",
     "allow": [
       "Bash(pnpm run:*)",
       "Bash(pnpm exec:*)",
@@ -128,17 +131,5 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "voiceEnabled": true,
-  "preferredNotifChannel": "terminal_bell",
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true,
-    "allowUnsandboxedCommands": true,
-    "network": {
-      "allowUnixSockets": [
-        "/var/run/docker.sock",
-        "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-      ],
-      "allowLocalBinding": true
-    }
-  }
+  "preferredNotifChannel": "terminal_bell"
 }
