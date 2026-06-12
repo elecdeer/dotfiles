@@ -61,6 +61,20 @@ apply = ['defer']
 
 [plugins.ni-zsh]
 github = 'azu/ni.zsh'
+hooks.post = '''
+zsh-defer -c '
+  if typeset -f _ni_original >/dev/null 2>&1; then
+    return
+  fi
+
+  functions -c ni _ni_original
+  ni() {
+    local gp_token
+    gp_token="$(op read "op://Personal/tl5vbvpj6zkzcz55f3hwprj6ba/credential")" || return 1
+    GITHUB_PACKAGES_TOKEN="$gp_token" _ni_original "$@"
+  }
+'
+'''
 apply = ['defer']
 
 [plugins.fzf-tab]

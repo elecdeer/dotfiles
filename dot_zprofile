@@ -9,7 +9,3 @@ fi
 
 # https://mise.jdx.dev/ide-integration.html#ide-integration
 eval "$(~/.local/bin/mise activate zsh --shims)"
-
-# GitHub CLIの認証トークンを1Passwordから取得して環境変数にセット
-# package:readしか持っていないトークンを使用する想定
-export GITHUB_TOKEN=$(op read "op://Personal/tl5vbvpj6zkzcz55f3hwprj6ba/credential")
