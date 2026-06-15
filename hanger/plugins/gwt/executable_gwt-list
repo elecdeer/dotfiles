@@ -5,55 +5,11 @@
 
 local query="${1:-}"
 
-function _gwt_tracking_arrows() {
-  local trackshort="$1"
-
-  case "$trackshort" in
-    '>')
-      print -r -- $'\033[33m⇡\033[0m'
-      ;;
-    '<')
-      print -r -- $'\033[31m⇣\033[0m'
-      ;;
-    '<>')
-      print -r -- $'\033[33m⇡\033[0m\033[31m⇣\033[0m'
-      ;;
-    *)
-      print -r -- ""
-      ;;
-  esac
-}
-
-typeset -A branch_arrows=()
-typeset -A branch_commit_times=()
-typeset -A branch_relative_times=()
-
-while IFS=$'\t' read -r branch trackshort commit_time relative_time; do
-  [[ -z "$branch" ]] && continue
-  branch_arrows[$branch]="$(_gwt_tracking_arrows "$trackshort")"
-  branch_commit_times[$branch]="${commit_time:-0}"
-  branch_relative_times[$branch]="${relative_time:-0 seconds ago}"
-done < <(git branch --format=$'%(refname:short)\t%(upstream:trackshort)\t%(committerdate:unix)\t%(committerdate:relative)')
-
-git-wt | tail -n +2 | sed 's/^[ *]*//' | while IFS= read -r line; do
-  wt_path=""
-  branch=""
-  hash="" 
-  _rest=""
-  commit_time=0
-  relative_time=""
-  arrows=""
-
-  read -r wt_path branch hash _rest <<< "$line"
-
+gdn wt list --column updateAt,branch,path,hash,updateAtRelative,tracking --no-color | while IFS=$'\t' read -r update_at branch wt_path hash relative_time tracking; do
   [[ -z "$branch" || "$branch" == "(bare)" ]] && continue
 
-  commit_time="${branch_commit_times[$branch]:-0}"
-  relative_time="${branch_relative_times[$branch]:-0 seconds ago}"
-  arrows="${branch_arrows[$branch]:-}"
-
   printf "%s\t%s\t%s\t\033[34m%-45s\033[0m\t\033[90m%-8s\033[0m\t\033[2m%s\033[0m\t%s\n" \
-    "$commit_time" "$branch" "$wt_path" "$branch" "$hash" "$relative_time" "$arrows"
+    "$update_at" "$branch" "$wt_path" "$branch" "$hash" "$relative_time" "$tracking"
 done | sort -t $'\t' -k1 -rn | cut -f2-
 
 # クエリがある場合、分岐元ごとのcreateエントリを末尾に追加

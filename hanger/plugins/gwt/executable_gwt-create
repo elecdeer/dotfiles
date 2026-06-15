@@ -2,11 +2,11 @@
 # worktreeを作成/解決し、パスをstdoutに出力する
 # Usage: executable_gwt-create [--details] <worktree_name> <selected_path>
 #   selected_path:
-#     実際のパス              -> git wt <name> して返す
-#     "__BASE__:"             -> current branchからgit wt <name>
-#     "__BASE__:<branch>"     -> <branch>からgit wt <name> を作成
-#     "__BASE__:origin/<b>"   -> origin/<b>からgit wt <name> を作成
-#     "" (空)                 -> git wt <name> して探す
+#     実際のパス              -> そのまま返す
+#     "__BASE__:"             -> current branchからgdn wt switch <name>
+#     "__BASE__:<branch>"     -> <branch>からgdn wt switch <name> を作成
+#     "__BASE__:origin/<b>"   -> origin/<b>からgdn wt switch <name> を作成
+#     "" (空)                 -> gdn wt switch <name> して探す
 # --details の場合: path<TAB>status<TAB>install_command<TAB>root_branch をstdoutに出力する
 # exit 0: 成功（パスをstdout）, exit 1: 失敗
 
@@ -116,17 +116,20 @@ _print_result() {
   fi
 }
 
-_run_git_wt() {
+_run_gdn_switch() {
   local before_path="$1"
-  shift
-  local git_wt_status=0
-  git wt "$@" >/dev/null || git_wt_status=$?
+  local branch="$2"
+  local base="${3:-}"
   local result_path
-  result_path="$(_find_wt_path "$worktree_name")"
-  [[ -z "$result_path" ]] && exit 1
-  if [[ $git_wt_status -ne 0 && -z "$result_path" ]]; then
-    exit 1
+  if [[ -n "$base" ]]; then
+    result_path=$(gdn wt switch "$branch" --base "$base" 2>/dev/null) || result_path=""
+  else
+    result_path=$(gdn wt switch "$branch" 2>/dev/null) || result_path=""
   fi
+  if [[ -z "$result_path" ]]; then
+    result_path="$(_find_wt_path "$branch")"
+  fi
+  [[ -z "$result_path" ]] && exit 1
   local created="false"
   [[ -z "$before_path" ]] && created="true"
   _print_result "$result_path" "$created"
@@ -137,16 +140,16 @@ if [[ "$selected_path" == __BASE__:* ]]; then
   local before_path
   before_path="$(_find_wt_path "$worktree_name")"
   if [[ -n "$base" ]]; then
-    _run_git_wt "$before_path" "$worktree_name" "$base"
+    _run_gdn_switch "$before_path" "$worktree_name" "$base"
   else
-    _run_git_wt "$before_path" "$worktree_name"
+    _run_gdn_switch "$before_path" "$worktree_name"
   fi
 elif [[ -n "$selected_path" ]]; then
-  # 既存worktree: パスが既に判明しているのでそのまま返す（git wtは不要）
+  # 既存worktree: パスが既に判明しているのでそのまま返す（gdn wtは不要）
   _print_result "$selected_path" "false"
 else
   # path不明（クエリのみ確定など）
   local before_path
   before_path="$(_find_wt_path "$worktree_name")"
-  _run_git_wt "$before_path" "$worktree_name"
+  _run_gdn_switch "$before_path" "$worktree_name"
 fi

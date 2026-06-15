@@ -84,9 +84,6 @@ apply = ['defer']
 [plugins.fzf-zsh]
 inline = 'source <(fzf --zsh)'
 
-[plugins.git-wt]
-inline = 'zsh-defer eval "$(git wt --init zsh)"'
-
 [plugins.gwt]
 local = '{{ .chezmoi.sourceDir }}/hanger/plugins/gwt'
 apply = ['defer']
@@ -128,10 +125,6 @@ apply = ['defer']
 
 [plugins.zsh-z]
 github = 'agkozak/zsh-z'
-apply = ['defer']
-
-[plugins.migrate-to-project-wt]
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/migrate-to-project-wt'
 apply = ['defer']
 
 # =====================

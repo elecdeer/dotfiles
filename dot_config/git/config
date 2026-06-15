@@ -46,7 +46,8 @@
 [credential "https://gist.github.com"]
   helper = !gh auth git-credential
 
-[ghq]
+[gdn]
 	root = ~/dev
-[wt]
-	basedir = "../{gitroot}.wt"
+	defaultHost = github.com
+	wtBasedir = "../{gitroot}.wt"
+	postCloneHook = gdn-post-clone

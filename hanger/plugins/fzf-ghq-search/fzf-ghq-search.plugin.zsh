@@ -7,7 +7,7 @@ function fzf-ghq-search() {
   unsetopt xtrace
 
   local ghq_root
-  ghq_root=$(ghq root) || return 1
+  ghq_root=$(gdn repo root) || return 1
 
   # zellijセッション内ではfloating paneでUIを表示する
   # named pipeで同期し、floatingが閉じてからcdする
@@ -35,13 +35,13 @@ function fzf-ghq-search() {
   # 非zellij: インラインでリポジトリを選択
   local repo
   repo=$(
-    export GHQ_ROOT="$ghq_root"
-    "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-list" "$ghq_root" \
+    export GDN_ROOT="$ghq_root"
+    "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-list" \
       | fzf --prompt="repository > " --ansi \
           --delimiter $'\t' \
           --with-nth 3,4 \
           --nth 1 \
-          --preview 'if [[ -f "$GHQ_ROOT"/{2}/README.md ]]; then bat --color=always --style=numbers "$GHQ_ROOT"/{2}/README.md; else lsd -1 --icon=always --color=always "$GHQ_ROOT"/{2}; fi' \
+          --preview 'if [[ -f "$GDN_ROOT"/{2}/README.md ]]; then bat --color=always --style=numbers "$GDN_ROOT"/{2}/README.md; else lsd -1 --icon=always --color=always "$GDN_ROOT"/{2}; fi' \
           --preview-window=right:50% \
           | cut -f2
   )

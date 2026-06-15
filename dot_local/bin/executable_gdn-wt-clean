@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# gdn wt prune --yes を使ってマージ済みworktreeを一括削除する
+# 注意: gdn wt prune は "git branch --merged HEAD" 基準。
+# squash merge / rebase merge したブランチは検出されないため、
+# リモートでgoneになったブランチを削除したい場合は
+# "git fetch --prune && git branch -vv | grep ': gone]'" で手動確認が必要。
+
+set -euo pipefail
+
+git fetch --prune
+gdn wt prune --yes

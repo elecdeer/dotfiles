@@ -1,0 +1,21 @@
+#!/bin/bash
+# mise で git-gardener がインストール済みであれば、~/.local/bin/gdn へのシンボリックリンクを作成し
+# zsh補完スクリプトを生成する
+# mise config が変化したときのみ再実行される
+# {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+set -uo pipefail
+
+target=$(mise which git-gardener 2>/dev/null) || {
+  echo "⚠️  git-gardener not installed via mise yet; run 'mise install' and re-apply"
+  exit 0
+}
+
+mkdir -p "$HOME/.local/bin"
+ln -sf "$target" "$HOME/.local/bin/gdn"
+
+mkdir -p "$HOME/.zsh/completions"
+"$HOME/.local/bin/gdn" complete zsh > "$HOME/.zsh/completions/_gdn" 2>/dev/null \
+  || echo "⚠️  failed to generate gdn completion"
+
+echo "✅ gdn symlink created: $HOME/.local/bin/gdn -> $target"

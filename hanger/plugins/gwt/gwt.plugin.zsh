@@ -33,10 +33,17 @@ function _gwt_enter_command() {
 }
 
 function gwt() {
-  # 引数が渡された場合は直接git wtを実行
+  # 引数が渡された場合は直接gdn wt switchを実行
   if [[ $# -gt 0 ]]; then
-    print -s "git wt \"$@\""
-    git wt "$@"
+    local _path
+    if [[ $# -ge 2 ]]; then
+      print -s "gdn wt switch ${(q)1} --base ${(q)2}"
+      _path=$(gdn wt switch "$1" --base "$2") || return
+    else
+      print -s "gdn wt switch ${(q)1}"
+      _path=$(gdn wt switch "$1") || return
+    fi
+    [[ -n "$_path" ]] && cd "$_path"
     return
   fi
 
@@ -83,12 +90,12 @@ function gwt() {
   if [[ "$selected_path" == __BASE__:* ]]; then
     local _base="${selected_path#__BASE__:}"
     if [[ -n "$_base" ]]; then
-      print -s "git wt \"$selected_worktree\" \"$_base\""
+      print -s "gdn wt switch ${(q)selected_worktree} --base ${(q)_base}"
     else
-      print -s "git wt \"$selected_worktree\""
+      print -s "gdn wt switch ${(q)selected_worktree}"
     fi
   else
-    print -s "git wt \"$selected_worktree\""
+    print -s "gdn wt switch ${(q)selected_worktree}"
   fi
 
   local _resolved_details _resolved_path _status _install_command _root_branch

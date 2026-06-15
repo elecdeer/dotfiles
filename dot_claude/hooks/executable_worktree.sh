@@ -1,7 +1,6 @@
 #!/bin/bash
 # WorktreeCreate / WorktreeRemove フック
-# git-wt (k1LoW/git-wt) に委譲する
-# from: https://sushichan044.hateblo.jp/entry/2026/02/21/174922
+# git-gardener (gdn) に委譲する
 
 set -euo pipefail
 
@@ -12,15 +11,11 @@ case "$HOOK_EVENT" in
 WorktreeCreate)
   WT_NAME=$(printf '%s' "$INPUT" | jq -r '.name')
 
-  # git-wt の出力例:
-  #   Preparing worktree (new branch 'branch-name')
-  #   HEAD is now at abc1234 commit message
-  #   /path/to/worktree
-  # 最終行が作成されたworktreeの絶対パス
-  WT_ABS_PATH=$(git-wt "$WT_NAME" --nocd | tail -n 1 | xargs)
+  # gdn wt switch はworktreeの絶対パスのみをstdoutに出力する
+  WT_ABS_PATH=$(gdn wt switch "$WT_NAME")
 
   if [ -z "$WT_ABS_PATH" ]; then
-    echo "Failed to create worktree: git-wt returned no path" >&2
+    echo "Failed to create worktree: gdn returned no path" >&2
     exit 1
   fi
 
@@ -28,6 +23,13 @@ WorktreeCreate)
   ;;
 WorktreeRemove)
   WT_PATH=$(printf '%s' "$INPUT" | jq -r '.worktree_path')
-  git-wt -d "$WT_PATH" || true
+  # gdn wt delete はブランチ名を受け取るため、パスからブランチ名を逆引きする
+  WT_BRANCH=$(git -C "$WT_PATH" rev-parse --abbrev-ref HEAD 2>/dev/null) || true
+  if [ -n "$WT_BRANCH" ] && [ "$WT_BRANCH" != "HEAD" ]; then
+    gdn wt delete "$WT_BRANCH" || true
+  else
+    # detached HEAD の場合は git worktree remove で直接削除
+    git -C "$(dirname "$WT_PATH")" worktree remove --force "$WT_PATH" || true
+  fi
   ;;
 esac

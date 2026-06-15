@@ -1,25 +1,9 @@
 #!/usr/bin/env zsh
 
-local ghq_root="${1:-$(ghq root)}"
-
-while IFS= read -r repo; do
-  [[ -z "$repo" ]] && continue
-
-  local repo_path="$ghq_root/$repo"
-
-  # .git がファイルの場合は linked worktree なので除外する
-  # （bare構造: my-project/feature-alpha/ のような worktree ディレクトリが対象）
-  [[ -f "$repo_path/.git" ]] && continue
-
-  local git_time_info mtime relative_time
-
-  git_time_info=$(git -C "$repo_path" log -1 --format=$'%ct\t%cr' HEAD 2>/dev/null)
-  if [[ -z "$git_time_info" ]]; then
-    continue
-  fi
-
-  mtime=${git_time_info%%$'\t'*}
-  relative_time=${git_time_info#*$'\t'}
-
-  printf "%s\t%s\t%-60s\t\033[2m%s\033[0m\n" "$mtime" "$repo" "$repo" "$relative_time"
-done < <(ghq list) | sort -t $'\t' -k1 -rn
+# gdn repo list でリポジトリ一覧と更新時刻を取得する
+# 引数は無視（gdn.root の設定が使われる）
+gdn repo list --column repo,updateAt,updateAtRelative --no-color \
+  | while IFS=$'\t' read -r repo mtime relative_time; do
+      [[ -z "$repo" ]] && continue
+      printf "%s\t%s\t%-60s\t\033[2m%s\033[0m\n" "$mtime" "$repo" "$repo" "$relative_time"
+    done | sort -t $'\t' -k1 -rn

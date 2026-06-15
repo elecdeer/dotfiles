@@ -13,14 +13,16 @@ function ghwt() {
     if [[ "$arg" =~ ^[0-9]+$ ]]; then
       local branch_name=$(gh pr view "$arg" --json headRefName --jq '.headRefName')
       if [[ -n "$branch_name" ]]; then
-        git wt "$branch_name"
+        local _path
+        _path=$(gdn wt switch "$branch_name") && cd "$_path"
       else
         echo "PR #$arg not found"
         return 1
       fi
     else
       # ブランチ名として扱う
-      git wt "$arg"
+      local _path
+      _path=$(gdn wt switch "$arg") && cd "$_path"
     fi
     return
   fi
@@ -86,7 +88,8 @@ function ghwt() {
   unset GHWT_PR_CACHE
 
   if [[ -n "$selected_branch" ]]; then
-    print -s "git wt \"$selected_branch\""
-    git wt "$selected_branch"
+    print -s "gdn wt switch ${(q)selected_branch}"
+    local _path
+    _path=$(gdn wt switch "$selected_branch") && cd "$_path"
   fi
 }

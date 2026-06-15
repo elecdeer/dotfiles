@@ -1,0 +1,11 @@
+#!/bin/bash
+# gdn postCloneHook: クローン後に JS プロジェクトの wtHook を自動設定する
+# gdn は execFile(cmd, args) で実行するためインラインシェルコマンドは不可
+# このスクリプトは GDN_REPO_PATH 環境変数でクローン先を受け取る
+set -euo pipefail
+
+# gdn は execFile(cmd, args, {cwd: repoPath}) で実行するため $PWD = クローン先
+# package.json があれば wtHook を設定する
+if [[ -f "$PWD/package.json" ]]; then
+  git config gdn.wtHook "npm install"
+fi

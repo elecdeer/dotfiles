@@ -21,5 +21,5 @@ local selected_worktree selected_path
 selected_worktree=$(echo "$selected_line" | cut -f1)
 selected_path=$(echo "$selected_line" | cut -f2)
 
-# 選択結果だけをnamed pipeに書き込む（git wtは新しいタブ側で実行する）
+# 選択結果だけをnamed pipeに書き込む（gdn wt switchは新しいタブ側で実行する）
 [[ -n "$result_pipe" ]] && printf '%s\t%s\n' "$selected_worktree" "$selected_path" > "$result_pipe"
