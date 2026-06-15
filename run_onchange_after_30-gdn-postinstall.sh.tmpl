@@ -14,8 +14,4 @@ target=$(mise which git-gardener 2>/dev/null) || {
 mkdir -p "$HOME/.local/bin"
 ln -sf "$target" "$HOME/.local/bin/gdn"
 
-mkdir -p "$HOME/.zsh/completions"
-"$HOME/.local/bin/gdn" complete zsh > "$HOME/.zsh/completions/_gdn" 2>/dev/null \
-  || echo "⚠️  failed to generate gdn completion"
-
 echo "✅ gdn symlink created: $HOME/.local/bin/gdn -> $target"
