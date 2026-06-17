@@ -223,7 +223,19 @@ zsh-defer compdef _zbnc_zsh_better_ni_completion ni
 inline = 'on_demand_completion "zellij" "zellij setup --generate-completion zsh"'
 
 [plugins.gdn-completion]
-inline = 'on_demand_completion "gdn" "gdn complete zsh"'
+inline = '''
+if command -v gdn &> /dev/null; then
+  # gdn complete zsh が生成する requestComp が "gdn gdn complete --" という誤った形式になるため
+  # sed で "gdn complete --" に修正する。また _on_demand_gdn という名前を使うことで
+  # cobra の自己呼び出しチェック (funcstack[1] = "_gdn") を回避する。
+  _on_demand_gdn() {
+    unfunction '_on_demand_gdn'
+    eval "$(gdn complete zsh 2>/dev/null | sed 's|  gdn complete --|  complete --|')"
+    $_comps[gdn]
+  }
+  compdef _on_demand_gdn gdn
+fi
+'''
 
 
 # =====================
