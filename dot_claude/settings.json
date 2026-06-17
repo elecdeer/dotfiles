@@ -7,7 +7,6 @@
     "SSH_AUTH_SOCK": "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
   },
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "Bash(pnpm run:*)",
       "Bash(pnpm exec:*)",
@@ -64,7 +63,8 @@
       "WebFetch(domain:*)",
       "mcp__context7",
       "mcp__grep"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "model": "opusplan",
   "hooks": {
@@ -130,6 +130,6 @@
   "language": "日本語",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
-  "voiceEnabled": true,
-  "preferredNotifChannel": "terminal_bell"
+  "preferredNotifChannel": "terminal_bell",
+  "voiceEnabled": true
 }
