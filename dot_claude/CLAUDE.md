@@ -92,3 +92,5 @@ This is global guidance for Claude Code.
 - When the script path contains the home directory, use `~` instead of the absolute home directory path.
   - Correct: `~/.claude/skills/my-skill/scripts/my-script.sh`
   - Incorrect: `/Users/username/.claude/skills/my-skill/scripts/my-script.sh`
+
+@RTK.md
