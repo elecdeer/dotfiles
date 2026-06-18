@@ -45,16 +45,7 @@ function _gwt_enter_main() {
   local lock_file
   for lock_file in "${lock_files[@]}"; do
     if [[ -f "$lock_file" ]]; then
-      if (( $+functions[ni] )) || command -v ni >/dev/null 2>&1; then
-        ni
-      else
-        case "$lock_file" in
-          pnpm-lock.yaml)    pnpm install ;;
-          package-lock.json) npm install ;;
-          yarn.lock)         yarn install ;;
-          bun.lockb)         bun install ;;
-        esac
-      fi
+      ni
       break
     fi
   done
