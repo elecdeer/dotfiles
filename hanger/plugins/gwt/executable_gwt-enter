@@ -41,14 +41,6 @@ function _gwt_enter_main() {
     return
   fi
 
-  local lock_files=(pnpm-lock.yaml package-lock.json yarn.lock bun.lockb)
-  local lock_file
-  for lock_file in "${lock_files[@]}"; do
-    if [[ -f "$lock_file" ]]; then
-      ni
-      break
-    fi
-  done
 }
 
 _gwt_enter_main "$@"

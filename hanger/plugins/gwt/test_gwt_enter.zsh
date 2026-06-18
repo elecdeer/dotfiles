@@ -12,7 +12,6 @@ mkdir -p "$tmpdir/home" "$tmpdir/bin"
 export HOME="$tmpdir/home"
 
 mise_log="$tmpdir/mise.log"
-ni_log="$tmpdir/ni.log"
 
 cat <<'EOF' > "$tmpdir/bin/mise"
 #!/usr/bin/env zsh
@@ -20,15 +19,8 @@ print "$PWD $*" >> "$MISE_LOG"
 EOF
 chmod +x "$tmpdir/bin/mise"
 
-cat <<'EOF' > "$tmpdir/bin/ni"
-#!/usr/bin/env zsh
-print "$PWD${@:+ $@}" >> "$NI_LOG"
-EOF
-chmod +x "$tmpdir/bin/ni"
-
 export PATH="$tmpdir/bin:$PATH"
 export MISE_LOG="$mise_log"
-export NI_LOG="$ni_log"
 export GWT_PLUGIN_DIR="$SCRIPT_DIR"
 
 repo_root="$tmpdir/repo"
@@ -53,6 +45,5 @@ source "$GWT_ENTER_SCRIPT" enter-feature "__BASE__:main"
 expected_path="$tmpdir/repo.wt/enter-feature"
 [[ "$(realpath "$PWD")" == "$(realpath "$expected_path")" ]]
 [[ "$(<"$mise_log")" == "$(realpath "$expected_path") trust" ]]
-[[ "$(<"$ni_log")" == "$(realpath "$expected_path")" ]]
 
 print "test_gwt_enter: ok"

@@ -109,20 +109,12 @@ function gwt() {
   cmux-splits "$_resolved_path"
   cmux ping &>/dev/null && cmux rename-workspace "$selected_worktree" &>/dev/null
 
-  local _has_lock=false _lf
-  for _lf in pnpm-lock.yaml package-lock.json yarn.lock bun.lockb; do
-    [[ -f "$_resolved_path/$_lf" ]] && _has_lock=true && break
-  done
-
   if [[ "$_status" == "mise-diff-needed" ]]; then
     print "mise config differs from the root worktree. Review before running mise trust:"
     print "  cd ${(q)_resolved_path} && $(_gwt_mise_diff_command "$_root_branch")"
   elif [[ "$_status" == "mise-trust-failed" ]]; then
     print "mise trust failed. Review the mise config before continuing:"
     print "  cd ${(q)_resolved_path} && $(_gwt_mise_diff_command "$_root_branch")"
-  elif [[ "$_has_lock" == "true" ]]; then
-    print "Run in the new worktree:"
-    print "  cd ${(q)_resolved_path} && ni"
   fi
 
 }
