@@ -98,17 +98,21 @@ function gwt() {
     print -s "gdn wt switch ${(q)selected_worktree}"
   fi
 
-  local _resolved_details _resolved_path _status _install_command _root_branch
+  local _resolved_details _resolved_path _status _root_branch
   _resolved_details=$("$_gwt_plugin_dir/executable_gwt-create" --details "$selected_worktree" "$selected_path") || return
   _resolved_path=$(printf '%s' "$_resolved_details" | cut -f1)
   _status=$(printf '%s' "$_resolved_details" | cut -f2)
-  _install_command=$(printf '%s' "$_resolved_details" | cut -f3)
-  _root_branch=$(printf '%s' "$_resolved_details" | cut -f4)
+  _root_branch=$(printf '%s' "$_resolved_details" | cut -f3)
   [[ -z "$_resolved_path" ]] && return
 
   # cmuxが使える場合、1ペインのときのみ左右に分割してcdする
   cmux-splits "$_resolved_path"
   cmux ping &>/dev/null && cmux rename-workspace "$selected_worktree" &>/dev/null
+
+  local _has_lock=false _lf
+  for _lf in pnpm-lock.yaml package-lock.json yarn.lock bun.lockb; do
+    [[ -f "$_resolved_path/$_lf" ]] && _has_lock=true && break
+  done
 
   if [[ "$_status" == "mise-diff-needed" ]]; then
     print "mise config differs from the root worktree. Review before running mise trust:"
@@ -116,9 +120,9 @@ function gwt() {
   elif [[ "$_status" == "mise-trust-failed" ]]; then
     print "mise trust failed. Review the mise config before continuing:"
     print "  cd ${(q)_resolved_path} && $(_gwt_mise_diff_command "$_root_branch")"
-  elif [[ -n "$_install_command" ]]; then
+  elif [[ "$_has_lock" == "true" ]]; then
     print "Run in the new worktree:"
-    print "  cd ${(q)_resolved_path} && $_install_command"
+    print "  cd ${(q)_resolved_path} && ni"
   fi
 
 }
