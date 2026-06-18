@@ -12,12 +12,11 @@ function _gwt_enter_main() {
   fi
   local mise_config_paths="mise.toml .mise.toml .config/mise/config.toml mise.lock .config/mise/mise.lock"
 
-  local resolved_details resolved_path wt_status install_command root_branch
+  local resolved_details resolved_path wt_status root_branch
   resolved_details=$("$script_dir/executable_gwt-create" --details "$worktree_name" "$selected_path") || return
   resolved_path=$(printf '%s' "$resolved_details" | cut -f1)
   wt_status=$(printf '%s' "$resolved_details" | cut -f2)
-  install_command=$(printf '%s' "$resolved_details" | cut -f3)
-  root_branch=$(printf '%s' "$resolved_details" | cut -f4)
+  root_branch=$(printf '%s' "$resolved_details" | cut -f3)
   [[ -z "$resolved_path" ]] && return 1
 
   cd "$resolved_path" || return
@@ -42,11 +41,14 @@ function _gwt_enter_main() {
     return
   fi
 
-  if [[ "$install_command" == "pnpm install" ]]; then
-    pnpm install
-  elif [[ "$install_command" == "npm install" ]]; then
-    npm install
-  fi
+  local lock_files=(pnpm-lock.yaml package-lock.json yarn.lock bun.lockb)
+  local lock_file
+  for lock_file in "${lock_files[@]}"; do
+    if [[ -f "$lock_file" ]]; then
+      ni
+      break
+    fi
+  done
 }
 
 _gwt_enter_main "$@"

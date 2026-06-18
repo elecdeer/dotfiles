@@ -87,12 +87,10 @@ trusted_details=$(
 )
 trusted_path=$(printf '%s' "$trusted_details" | cut -f1)
 trusted_status=$(printf '%s' "$trusted_details" | cut -f2)
-trusted_install_command=$(printf '%s' "$trusted_details" | cut -f3)
-trusted_root_branch=$(printf '%s' "$trusted_details" | cut -f4)
+trusted_root_branch=$(printf '%s' "$trusted_details" | cut -f3)
 
 [[ -d "$trusted_path" ]]
 [[ "$trusted_status" == "created" ]]
-[[ "$trusted_install_command" == "pnpm install" ]]
 [[ "$trusted_root_branch" == "main" ]]
 [[ "$(wc -l < "$mise_log" | tr -d ' ')" == "1" ]]
 [[ "$(<"$mise_log")" == "$trusted_path trust" ]]
@@ -103,11 +101,9 @@ existing_details=$(
 )
 existing_path=$(printf '%s' "$existing_details" | cut -f1)
 existing_status=$(printf '%s' "$existing_details" | cut -f2)
-existing_install_command=$(printf '%s' "$existing_details" | cut -f3)
 
 [[ "$existing_path" == "$trusted_path" ]]
 [[ -z "$existing_status" ]]
-[[ -z "$existing_install_command" ]]
 
 git -C "$repo_root" switch -c mise-changed-base >/dev/null
 cat <<'EOF' > "$repo_root/.mise.toml"
@@ -123,12 +119,10 @@ changed_details=$(
 )
 changed_path=$(printf '%s' "$changed_details" | cut -f1)
 changed_status=$(printf '%s' "$changed_details" | cut -f2)
-changed_install_command=$(printf '%s' "$changed_details" | cut -f3)
-changed_root_branch=$(printf '%s' "$changed_details" | cut -f4)
+changed_root_branch=$(printf '%s' "$changed_details" | cut -f3)
 
 [[ -d "$changed_path" ]]
 [[ "$changed_status" == "mise-diff-needed" ]]
-[[ "$changed_install_command" == "pnpm install" ]]
 [[ "$changed_root_branch" == "main" ]]
 [[ "$(wc -l < "$mise_log" | tr -d ' ')" == "1" ]]
 

@@ -69,15 +69,6 @@ _mise_configs_match_root() {
   return 0
 }
 
-_install_command_for() {
-  local wt_path="$1"
-  if [[ -f "$wt_path/pnpm-lock.yaml" ]]; then
-    printf '%s\n' "pnpm install"
-  elif [[ -f "$wt_path/package-lock.json" ]]; then
-    printf '%s\n' "npm install"
-  fi
-}
-
 _post_create_status() {
   local wt_path="$1"
   local root_path result_status="created"
@@ -98,7 +89,6 @@ _print_result() {
   local wt_path="$1"
   local created="$2"
   local result_status=""
-  local install_command=""
   local root_path=""
   local root_branch=""
 
@@ -106,11 +96,10 @@ _print_result() {
     root_path="$(_root_wt_path)"
     root_branch="$(_root_wt_branch "$root_path")"
     result_status="$(_post_create_status "$wt_path")"
-    install_command="$(_install_command_for "$wt_path")"
   fi
 
   if [[ "$output_mode" == "details" ]]; then
-    printf '%s\t%s\t%s\t%s\n' "$wt_path" "$result_status" "$install_command" "$root_branch"
+    printf '%s\t%s\t%s\n' "$wt_path" "$result_status" "$root_branch"
   else
     printf '%s\n' "$wt_path"
   fi
