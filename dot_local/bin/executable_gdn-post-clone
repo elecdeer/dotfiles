@@ -7,5 +7,5 @@ set -euo pipefail
 # gdn は execFile(cmd, args, {cwd: repoPath}) で実行するため $PWD = クローン先
 # package.json があれば wtHook を設定する
 if [[ -f "$PWD/package.json" ]]; then
-  git config gdn.wtHook "npm install"
+  git config gdn.wtHook "ni"
 fi
