@@ -26,7 +26,7 @@ gh = "2.92.0"
 ghq = "1.10.1"
 # https://github.com/k1LoW/git-wt/pull/162
 "github:k1LoW/git-wt" = "0.14.2"
-gdn = { version = "0.3.1", bin = "gdn" }
+gdn = { version = "0.3.2", bin = "gdn" }
 "github:trasta298/keifu" = "0.3.0"
 "github:zyedidia/micro" = "2.0.15"
 "github:pnpm/pnpm" = "11.0.7"
