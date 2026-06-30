@@ -55,3 +55,4 @@ wrangler = "latest"
 rtk = "0.42.4"
 herdr = "0.7.1"
 codex = "latest"
+aws-cli = { version = "2.35.12", symlink_bins = "true" }
