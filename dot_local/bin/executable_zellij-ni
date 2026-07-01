@@ -9,11 +9,11 @@ initial_title="$script_name"
 rename_pane_title() {
     local title="$1"
 
-    if [[ -z "$ZELLIJ" ]] || [[ -z "$title" ]]; then
+    if [[ -z "$HERDR_ENV" ]] || [[ -z "$title" ]]; then
         return
     fi
 
-    zellij action rename-pane "$title" >/dev/null 2>&1 || true
+    herdr pane rename "$HERDR_PANE_ID" "$title" >/dev/null 2>&1 || true
 }
 
 collect_descendant_pids() {

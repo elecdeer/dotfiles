@@ -9,18 +9,22 @@ function fzf-ghq-search() {
   local ghq_root
   ghq_root=$(gdn repo root) || return 1
 
-  # zellijセッション内ではfloating paneでUIを表示する
-  # named pipeで同期し、floatingが閉じてからcdする
-  if [[ -n "$ZELLIJ" ]]; then
-    local _tmpfifo
-    _tmpfifo=$(mktemp -u /tmp/fzf-ghq-XXXXXX)
-    mkfifo "$_tmpfifo"
-    # zellij run --floating は non-blocking なので、cat "$_tmpfifo" でブロックして結果を待つ
-    zellij run --floating --close-on-exit --name "ghq" --width 80% --height 50% --x 10% --y 25% \
-      -- "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-floating" "$ghq_root" "$_tmpfifo"
+  # herdrセッション内ではインライン選択 + herdrのタブ管理を使用
+  # （herdrはfloating paneを持たないためインライン選択にフォールバック）
+  if [[ -n "$HERDR_ENV" ]]; then
     local repo
-    repo=$(cat "$_tmpfifo")
-    rm -f "$_tmpfifo"
+    repo=$(
+      export GDN_ROOT="$ghq_root"
+      "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-list" \
+        | fzf --prompt="repository > " --ansi \
+            --delimiter $'\t' \
+            --with-nth 3,4 \
+            --nth 1 \
+            --preview 'if [[ -f "$GDN_ROOT"/{2}/README.md ]]; then bat --color=always --style=numbers "$GDN_ROOT"/{2}/README.md; else lsd -1 --icon=always --color=always "$GDN_ROOT"/{2}; fi' \
+            --preview-window=right:50% \
+            | cut -f2
+    )
+
     if [[ -z "$repo" ]]; then
       zle redisplay
       return 1
@@ -28,11 +32,11 @@ function fzf-ghq-search() {
     local tab_name="${repo:t}"
     # $root ディレクトリはbare構造のメインリポジトリなので、親ディレクトリ名（リポジトリ名）を使う
     [[ "$tab_name" == '$root' ]] && tab_name="${${repo:h}:t}"
-    zellij action new-tab --cwd "$ghq_root/$repo" --name "$tab_name"
+    herdr tab create --cwd "$ghq_root/$repo" --label "$tab_name" --focus
     return
   fi
 
-  # 非zellij: インラインでリポジトリを選択
+  # 非herdr: インラインでリポジトリを選択
   local repo
   repo=$(
     export GDN_ROOT="$ghq_root"
