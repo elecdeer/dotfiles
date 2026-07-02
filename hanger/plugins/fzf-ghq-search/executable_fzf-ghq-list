@@ -5,5 +5,6 @@
 gdn repo list --column repo,updateAt,updateAtRelative --no-color \
   | while IFS=$'\t' read -r repo mtime relative_time; do
       [[ -z "$repo" ]] && continue
-      printf "%s\t%s\t%-60s\t\033[2m%s\033[0m\n" "$mtime" "$repo" "$repo" "$relative_time"
+      display_repo="${repo#github.com/}"
+      printf "%s\t%s\t%-60s\t\033[2m%s\033[0m\n" "$mtime" "$repo" "$display_repo" "$relative_time"
     done | sort -t $'\t' -k1 -rn
