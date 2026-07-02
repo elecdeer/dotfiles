@@ -61,3 +61,4 @@ function fzf-ghq-search() {
 
 zle -N fzf-ghq-search
 bindkey $'\e[113;6u' fzf-ghq-search
+bindkey $'\C-x\C-q' fzf-ghq-search

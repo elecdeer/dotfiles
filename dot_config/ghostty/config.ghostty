@@ -71,6 +71,9 @@ keybind = option+¥=text:\\
 # claude code
 keybind = shift+enter=text:\x1b\r
 
+# herdrはCtrl+Shift+QをCtrl+Qへ正規化するため、衝突しないZLE用シーケンスを送る
+keybind = ctrl+shift+q=text:\x18\x11
+
 
 ## Zellij用に無効化
 # cmd+f 検索
