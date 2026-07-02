@@ -3,6 +3,41 @@ shell = "$SHELL"
 
 [keys]
 prefix = "ctrl+b"
+help = "prefix+?"
+settings = "prefix+s"
+detach = "prefix+q"
+reload_config = "prefix+shift+r"
+
+# Workspace controls
+workspace_picker = "prefix+w"
+goto = "prefix+g"
+new_workspace = "prefix+shift+n"
+new_worktree = "prefix+shift+g"
+rename_workspace = "prefix+shift+w"
+close_workspace = "prefix+shift+d"
+previous_workspace = "super+alt+left"
+next_workspace = "super+alt+right"
+switch_workspace = "super+shift+1..9"
+
+# Tab controls, matching the old Zellij Cmd-key workflow.
+new_tab = "super+t"
+rename_tab = "prefix+shift+t"
+previous_tab = "super+shift+["
+next_tab = "super+shift+]"
+switch_tab = "super+1..9"
+close_tab = "super+shift+w"
+
+# Pane controls
+cycle_pane_previous = "super+["
+cycle_pane_next = "super+]"
+split_vertical = "super+d"
+split_horizontal = "super+shift+d"
+close_pane = "super+w"
+rename_pane = "prefix+shift+p"
+edit_scrollback = "prefix+e"
+zoom = "prefix+z"
+resize_mode = "prefix+r"
+toggle_sidebar = "prefix+b"
 
 [theme]
 # iceberg-dark カラースキーム

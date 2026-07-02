@@ -75,7 +75,7 @@ keybind = shift+enter=text:\x1b\r
 keybind = ctrl+shift+q=text:\x18\x11
 
 
-## Zellij用に無効化
+## Herdr用に無効化
 # cmd+f 検索
 keybind = super+f=unbind
 # cmd+[,] pane間の移動用
@@ -112,7 +112,26 @@ keybind = super+digit_7=unbind
 keybind = super+digit_8=unbind
 keybind = super+digit_9=unbind
 
-## Zellij用にoptをaltとして扱う
+keybind = super+shift+1=unbind
+keybind = super+shift+2=unbind
+keybind = super+shift+3=unbind
+keybind = super+shift+4=unbind
+keybind = super+shift+5=unbind
+keybind = super+shift+6=unbind
+keybind = super+shift+7=unbind
+keybind = super+shift+8=unbind
+keybind = super+shift+9=unbind
+keybind = super+shift+digit_1=unbind
+keybind = super+shift+digit_2=unbind
+keybind = super+shift+digit_3=unbind
+keybind = super+shift+digit_4=unbind
+keybind = super+shift+digit_5=unbind
+keybind = super+shift+digit_6=unbind
+keybind = super+shift+digit_7=unbind
+keybind = super+shift+digit_8=unbind
+keybind = super+shift+digit_9=unbind
+
+## Herdr用にoptをaltとして扱う
 macos-option-as-alt = true
 
 # Option+Arrow は単語移動を維持しつつ、Alt+f / Alt+b には化けさせない

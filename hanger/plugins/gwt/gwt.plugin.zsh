@@ -19,12 +19,13 @@ function _gwt_mise_diff_command() {
   fi
 }
 
-function _gwt_herdr_send_command() {
+function _gwt_herdr_send_command_to_workspace() {
   local command="$1"
-  local tab_id="$2"
+  local workspace_id="$2"
   [[ -z "$command" ]] && return
+  [[ -z "$workspace_id" ]] && return
   local pane_id
-  pane_id=$(herdr tab get "$tab_id" 2>/dev/null | jq -r '.panes[0].id // empty' 2>/dev/null)
+  pane_id=$(herdr workspace get "$workspace_id" 2>/dev/null | jq -r 'first(.. | objects | select(has("panes")) | .panes[0].id? // empty) // empty' 2>/dev/null)
   [[ -z "$pane_id" ]] && return
   herdr pane send-text "$pane_id" "$command"
   herdr pane send-keys "$pane_id" Enter
@@ -51,7 +52,7 @@ function gwt() {
     return
   fi
 
-  # herdrセッション内ではインライン選択 + herdrのタブ管理を使用
+  # herdrセッション内ではインライン選択 + herdrのworkspace管理を使用
   # （herdrはfloating paneを持たないためインライン選択にフォールバック）
   if [[ -n "$HERDR_ENV" ]]; then
     local _selected_line _wt_name _selected_path
@@ -61,20 +62,20 @@ function gwt() {
     _selected_path=$(printf '%s' "$_selected_line" | head -1 | cut -f2)
     [[ -z "$_wt_name" ]] && return
 
-    # 既に同名タブが開いていれば移動する
-    local _existing_tab_id
-    _existing_tab_id=$(herdr tab list 2>/dev/null | jq -r ".[] | select(.label == \"${_wt_name}\") | .id" 2>/dev/null | head -1)
-    if [[ -n "$_existing_tab_id" ]]; then
-      herdr tab focus "$_existing_tab_id"
+    # 既に同名workspaceが開いていれば移動する
+    local _existing_workspace_id
+    _existing_workspace_id=$(herdr workspace list 2>/dev/null | jq -r --arg label "$_wt_name" '.[] | select(.label == $label) | .id' 2>/dev/null | head -1)
+    if [[ -n "$_existing_workspace_id" ]]; then
+      herdr workspace focus "$_existing_workspace_id"
     else
-      local _new_tab_cwd="$PWD"
+      local _new_workspace_cwd="$PWD"
       if [[ -n "$_selected_path" && "$_selected_path" != __BASE__:* ]]; then
-        _new_tab_cwd="$_selected_path"
+        _new_workspace_cwd="$_selected_path"
       fi
-      local _new_tab_id
-      _new_tab_id=$(herdr tab create --cwd "$_new_tab_cwd" --label "${_wt_name}" --focus 2>/dev/null | jq -r '.id // empty' 2>/dev/null)
+      local _new_workspace_id
+      _new_workspace_id=$(herdr workspace create --cwd "$_new_workspace_cwd" --label "${_wt_name}" --focus 2>/dev/null | jq -r '(.id // .workspace.id // .workspace_id // empty)' 2>/dev/null)
       if [[ -z "$_selected_path" || "$_selected_path" == __BASE__:* ]]; then
-        _gwt_herdr_send_command "$(_gwt_enter_command "$_wt_name" "$_selected_path")" "$_new_tab_id"
+        _gwt_herdr_send_command_to_workspace "$(_gwt_enter_command "$_wt_name" "$_selected_path")" "$_new_workspace_id"
       fi
     fi
     return

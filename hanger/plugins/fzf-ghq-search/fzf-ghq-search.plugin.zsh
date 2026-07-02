@@ -9,7 +9,7 @@ function fzf-ghq-search() {
   local ghq_root
   ghq_root=$(gdn repo root) || return 1
 
-  # herdrセッション内ではインライン選択 + herdrのタブ管理を使用
+  # herdrセッション内ではインライン選択 + herdrのworkspace管理を使用
   # （herdrはfloating paneを持たないためインライン選択にフォールバック）
   if [[ -n "$HERDR_ENV" ]]; then
     local repo
@@ -29,10 +29,16 @@ function fzf-ghq-search() {
       zle redisplay
       return 1
     fi
-    local tab_name="${repo:t}"
+    local workspace_name="${repo:t}"
     # $root ディレクトリはbare構造のメインリポジトリなので、親ディレクトリ名（リポジトリ名）を使う
-    [[ "$tab_name" == '$root' ]] && tab_name="${${repo:h}:t}"
-    herdr tab create --cwd "$ghq_root/$repo" --label "$tab_name" --focus
+    [[ "$workspace_name" == '$root' ]] && workspace_name="${${repo:h}:t}"
+    local existing_workspace_id
+    existing_workspace_id=$(herdr workspace list 2>/dev/null | jq -r --arg label "$workspace_name" '.[] | select(.label == $label) | .id' 2>/dev/null | head -1)
+    if [[ -n "$existing_workspace_id" ]]; then
+      herdr workspace focus "$existing_workspace_id"
+    else
+      herdr workspace create --cwd "$ghq_root/$repo" --label "$workspace_name" --focus
+    fi
     return
   fi
 
