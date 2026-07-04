@@ -2,8 +2,6 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "USE_BUILTIN_RIPGREP": "1",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
     "SSH_AUTH_SOCK": "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
   },
   "permissions": {
@@ -66,7 +64,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opusplan",
+  "model": "sonnet",
   "hooks": {
     "Stop": [
       {
@@ -141,6 +139,7 @@
   "language": "日本語",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
+  "tui": "fullscreen",
   "preferredNotifChannel": "terminal_bell",
   "voiceEnabled": true
 }
