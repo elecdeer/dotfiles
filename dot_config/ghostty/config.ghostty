@@ -130,6 +130,8 @@ keybind = super+shift+digit_6=unbind
 keybind = super+shift+digit_7=unbind
 keybind = super+shift+digit_8=unbind
 keybind = super+shift+digit_9=unbind
+keybind = super+alt+left=unbind
+keybind = super+alt+right=unbind
 
 ## Herdr用にoptをaltとして扱う
 macos-option-as-alt = true

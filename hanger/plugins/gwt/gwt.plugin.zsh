@@ -25,10 +25,19 @@ function _gwt_herdr_send_command_to_workspace() {
   [[ -z "$command" ]] && return
   [[ -z "$workspace_id" ]] && return
   local pane_id
-  pane_id=$(herdr workspace get "$workspace_id" 2>/dev/null | jq -r 'first(.. | objects | select(has("panes")) | .panes[0].id? // empty) // empty' 2>/dev/null)
+  pane_id=$(herdr pane list --workspace "$workspace_id" 2>/dev/null | jq -r '.result.panes[0].pane_id // empty' 2>/dev/null)
   [[ -z "$pane_id" ]] && return
-  herdr pane send-text "$pane_id" "$command"
-  herdr pane send-keys "$pane_id" Enter
+  herdr pane run "$pane_id" "$command"
+}
+
+function _gwt_herdr_split_workspace() {
+  local workspace_id="$1"
+  local cwd="$2"
+  [[ -z "$workspace_id" ]] && return
+  local pane_id
+  pane_id=$(herdr pane list --workspace "$workspace_id" 2>/dev/null | jq -r '.result.panes[0].pane_id // empty' 2>/dev/null)
+  [[ -z "$pane_id" ]] && return
+  herdr pane split "$pane_id" --direction right --ratio 0.5 --cwd "$cwd" --no-focus >/dev/null 2>&1
 }
 
 function _gwt_enter_command() {
@@ -64,7 +73,7 @@ function gwt() {
 
     # 既に同名workspaceが開いていれば移動する
     local _existing_workspace_id
-    _existing_workspace_id=$(herdr workspace list 2>/dev/null | jq -r --arg label "$_wt_name" '.[] | select(.label == $label) | .id' 2>/dev/null | head -1)
+    _existing_workspace_id=$(herdr workspace list 2>/dev/null | jq -r --arg label "$_wt_name" '.result.workspaces[] | select(.label == $label) | .workspace_id' 2>/dev/null | head -1)
     if [[ -n "$_existing_workspace_id" ]]; then
       herdr workspace focus "$_existing_workspace_id"
     else
@@ -73,9 +82,11 @@ function gwt() {
         _new_workspace_cwd="$_selected_path"
       fi
       local _new_workspace_id
-      _new_workspace_id=$(herdr workspace create --cwd "$_new_workspace_cwd" --label "${_wt_name}" --focus 2>/dev/null | jq -r '(.id // .workspace.id // .workspace_id // empty)' 2>/dev/null)
+      _new_workspace_id=$(herdr workspace create --cwd "$_new_workspace_cwd" --label "${_wt_name}" --focus 2>/dev/null | jq -r '(.result.workspace.workspace_id // .result.workspace_id // .result.created_workspace.workspace_id // .workspace_id // .id // empty)' 2>/dev/null)
       if [[ -z "$_selected_path" || "$_selected_path" == __BASE__:* ]]; then
         _gwt_herdr_send_command_to_workspace "$(_gwt_enter_command "$_wt_name" "$_selected_path")" "$_new_workspace_id"
+      else
+        _gwt_herdr_split_workspace "$_new_workspace_id" "$_new_workspace_cwd"
       fi
     fi
     return
