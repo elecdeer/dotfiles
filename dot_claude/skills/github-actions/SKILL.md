@@ -68,12 +68,12 @@ uses: actions/checkout@main
 
 ### 2. Runner の選択
 
-- **処理が軽量な場合**（バージョン取得・ファイル操作・スクリプト実行程度）: `ubuntu-latest-slim` を使う
+- **処理が軽量な場合**（バージョン取得・ファイル操作・スクリプト実行程度）: `ubuntu-slim` を使う
 - **通常のビルド・テスト・デプロイ**: `ubuntu-latest`
 
 ```yaml
 # 軽量な処理（例: バージョン取得、outputs だけ返すジョブ）
-runs-on: ubuntu-latest-slim
+runs-on: ubuntu-slim
 
 # 重い処理（ビルド、テスト等）
 runs-on: ubuntu-latest
