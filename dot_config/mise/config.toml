@@ -1,4 +1,5 @@
 [tool_alias]
+docker-credential-osxkeychain = "github:docker/docker-credential-helpers"
 gdn = "github:elecdeer/git-gardener"
 
 [tools]
@@ -20,6 +21,7 @@ colima = "0.10.3"
 delta = "0.19.2"
 deno = "2.8.3"
 dive = "0.13.1"
+docker-credential-osxkeychain = { version = "0.9.8", matching = "docker-credential-osxkeychain", bin = "docker-credential-osxkeychain" }
 fd = "10.4.2"
 fzf = "0.73.1"
 gh = "2.95.0"
