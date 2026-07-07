@@ -46,16 +46,16 @@ command = "herdr-workspace-new-2pane"
 description = "new 2-pane workspace"
 
 [[keys.command]]
-key = "ctrl+shift+q"
+key = "ctrl+alt+q"
 type = "pane"
 command = "fzf-ghq-herdr-workspace"
 description = "open repository workspace"
 
 [[keys.command]]
-key = "ctrl+alt+q"
+key = "ctrl+q"
 type = "pane"
-command = "fzf-ghq-herdr-workspace"
-description = "open repository workspace"
+command = "gwt-herdr-workspace"
+description = "open worktree workspace"
 
 [theme]
 # iceberg-dark カラースキーム

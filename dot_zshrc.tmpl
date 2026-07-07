@@ -86,7 +86,9 @@ function zle-gwt() {
     zle reset-prompt
 }
 zle -N zle-gwt
-bindkey '^q' zle-gwt
+if [[ -z "$HERDR_ENV" ]]; then
+    bindkey '^q' zle-gwt
+fi
 
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS='--height 50% --reverse --border --ansi'
