@@ -117,10 +117,6 @@ function gwt() {
   _root_branch=$(printf '%s' "$_resolved_details" | cut -f3)
   [[ -z "$_resolved_path" ]] && return
 
-  # cmuxが使える場合、1ペインのときのみ左右に分割してcdする
-  cmux-splits "$_resolved_path"
-  cmux ping &>/dev/null && cmux rename-workspace "$selected_worktree" &>/dev/null
-
   if [[ "$_status" == "mise-diff-needed" ]]; then
     print "mise config differs from the root worktree. Review before running mise trust:"
     print "  cd ${(q)_resolved_path} && $(_gwt_mise_diff_command "$_root_branch")"
