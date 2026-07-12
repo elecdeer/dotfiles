@@ -1,10 +1,18 @@
 #!/usr/bin/env zsh
 
 # gdn repo list でリポジトリ一覧と更新時刻を取得する
-# 引数は無視（gdn.root の設定が使われる）
+# 引数: [query] - クエリが指定された場合、clone候補を末尾に追加する
+
+local query="${1:-}"
+
 gdn repo list --column repo,updateAt,updateAtRelative --no-color \
   | while IFS=$'\t' read -r repo mtime relative_time; do
       [[ -z "$repo" ]] && continue
       display_repo="${repo#github.com/}"
       printf "%s\t%s\t%-60s\t\033[2m%s\033[0m\n" "$mtime" "$repo" "$display_repo" "$relative_time"
     done | sort -t $'\t' -k1 -rn
+
+if [[ -n "$query" ]]; then
+  printf '0\t__GDN_CLONE__:%s\t\033[32m* clone: %s\033[0m\t\033[2mgdn repo clone\033[0m\n' \
+    "$query" "$query"
+fi

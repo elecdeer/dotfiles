@@ -5,31 +5,40 @@ unsetopt xtrace
 
 herdr_bin="${HERDR_BIN_PATH:-herdr}"
 ghq_root=$(gdn repo root) || exit 1
+source_dir="${CHEZMOI_SOURCE_DIR:-$HOME/.local/share/chezmoi}"
+repo_list_script="${FZF_GHQ_LIST_SCRIPT:-$source_dir/hanger/plugins/fzf-ghq-search/executable_fzf-ghq-list}"
 
-repo=$(
+selected=$(
   export GDN_ROOT="$ghq_root"
-  gdn repo list --column repo,updateAt,updateAtRelative --no-color \
-    | while IFS=$'\t' read -r repo mtime relative_time; do
-        [[ -z "$repo" ]] && continue
-        display_repo="${repo#github.com/}"
-        printf "%s\t%s\t%-60s\t\033[2m%s\033[0m\n" "$mtime" "$repo" "$display_repo" "$relative_time"
-      done \
-    | sort -t $'\t' -k1 -rn \
+  export FZF_GHQ_LIST_SCRIPT="$repo_list_script"
+  "$repo_list_script" \
     | fzf --prompt="repository > " --ansi \
+        --no-sort \
         --reverse \
         --border \
         --delimiter $'\t' \
         --with-nth 3,4 \
         --nth 1 \
-        --preview 'if [[ -f "$GDN_ROOT"/{2}/README.md ]]; then bat --color=always --style=numbers "$GDN_ROOT"/{2}/README.md; else lsd -1 --icon=always --color=always "$GDN_ROOT"/{2}; fi' \
+        --bind 'change:reload("$FZF_GHQ_LIST_SCRIPT" {q})' \
+        --preview 'case {2} in __GDN_CLONE__:*) printf "%s\n" {2} | sed "s/^__GDN_CLONE__:/gdn repo clone /" ;; *) if [[ -f "$GDN_ROOT"/{2}/README.md ]]; then bat --color=always --style=numbers "$GDN_ROOT"/{2}/README.md; else lsd -1 --icon=always --color=always "$GDN_ROOT"/{2}; fi ;; esac' \
         --preview-window=right:50% \
     | cut -f2
 )
 
-[[ -z "$repo" ]] && exit 130
+[[ -z "$selected" ]] && exit 130
 
-workspace_name="${repo:t}"
-[[ "$workspace_name" == '$root' ]] && workspace_name="${${repo:h}:t}"
+if [[ "$selected" == __GDN_CLONE__:* ]]; then
+  clone_target="${selected#__GDN_CLONE__:}"
+  [[ -z "$clone_target" ]] && exit 130
+  workspace_cwd=$(gdn repo clone "$clone_target") || exit 1
+  [[ -z "$workspace_cwd" ]] && exit 1
+  workspace_name="${workspace_cwd:t}"
+else
+  repo="$selected"
+  workspace_cwd="$ghq_root/$repo"
+  workspace_name="${repo:t}"
+  [[ "$workspace_name" == '$root' ]] && workspace_name="${${repo:h}:t}"
+fi
 
 existing_workspace_id=$("$herdr_bin" workspace list 2>/dev/null | jq -r --arg label "$workspace_name" '.result.workspaces[] | select(.label == $label) | .workspace_id' 2>/dev/null | head -1)
 if [[ -n "$existing_workspace_id" ]]; then
@@ -37,7 +46,6 @@ if [[ -n "$existing_workspace_id" ]]; then
   exit
 fi
 
-workspace_cwd="$ghq_root/$repo"
 new_workspace_id=$("$herdr_bin" workspace create --cwd "$workspace_cwd" --label "$workspace_name" --focus 2>/dev/null | jq -r '(.result.workspace.workspace_id // .result.workspace_id // .result.created_workspace.workspace_id // .workspace_id // .id // empty)' 2>/dev/null)
 [[ -z "$new_workspace_id" ]] && exit 1
 
