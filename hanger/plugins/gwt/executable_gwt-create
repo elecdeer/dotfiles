@@ -18,6 +18,11 @@ fi
 
 local worktree_name="$1"
 local selected_path="$2"
+
+# worktree 検索中の git status による optional index lock を抑止する。
+# worktree add に必要な必須 lock はこの設定の対象外。
+export GIT_OPTIONAL_LOCKS=0
+
 local -a mise_config_files=(
   "mise.toml"
   ".mise.toml"

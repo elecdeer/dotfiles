@@ -5,6 +5,9 @@
 
 local query="${1:-}"
 
+# fzf の reload で中断・重複しても、一覧取得が index.lock を作らないようにする
+export GIT_OPTIONAL_LOCKS=0
+
 gdn wt list --column updateAt,branch,path,hash,updateAtRelative,tracking --no-color | while IFS=$'\t' read -r update_at branch wt_path hash relative_time tracking; do
   [[ -z "$branch" || "$branch" == "(bare)" ]] && continue
 
