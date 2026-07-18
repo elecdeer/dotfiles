@@ -4,7 +4,7 @@ set -eu
 set -o pipefail
 
 SCRIPT_DIR=${0:A:h}
-ZELLIJ_NI_SCRIPT="$SCRIPT_DIR/../../dot_local/bin/executable_zellij-ni"
+ZELLIJ_NI_SCRIPT="$SCRIPT_DIR/../../home/local/bin/zellij-ni"
 
 tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/zellij-ni-test.XXXXXX")
 trap 'rm -rf "$tmpdir"' EXIT

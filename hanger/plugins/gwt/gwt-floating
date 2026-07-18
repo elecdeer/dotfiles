@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # zellijのfloating pane用: worktree選択し結果をnamed pipeに書き込む
-# Usage: executable_gwt-floating <cwd> <result_pipe>
+# Usage: gwt-floating <cwd> <result_pipe>
 # result_pipe に "name\tpath" を書き込んで終了する（キャンセル時は空行）
 
 local cwd="${1:-$PWD}"
@@ -11,7 +11,7 @@ local script_dir="${0:A:h}"
 
 # fzf選択
 local selected_line
-selected_line=$("$script_dir/executable_gwt-select" "$cwd")
+selected_line=$("$script_dir/gwt-select" "$cwd")
 if [[ $? -ne 0 ]]; then
   [[ -n "$result_pipe" ]] && printf '\n' > "$result_pipe"
   exit 0

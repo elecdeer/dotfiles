@@ -4,7 +4,7 @@ set -eu
 set -o pipefail
 
 SCRIPT_DIR=${0:A:h}
-GWT_CREATE_SCRIPT="$SCRIPT_DIR/executable_gwt-create"
+GWT_CREATE_SCRIPT="$SCRIPT_DIR/gwt-create"
 
 tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/gwt-create-test.XXXXXX")
 trap 'rm -rf "$tmpdir"' EXIT

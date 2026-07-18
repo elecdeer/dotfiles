@@ -5,8 +5,8 @@ set -o pipefail
 
 SCRIPT_DIR=${0:A:h}
 REPO_ROOT=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)
-LIST_SCRIPT="$SCRIPT_DIR/executable_fzf-ghq-list"
-WORKSPACE_SCRIPT="$REPO_ROOT/dot_local/bin/executable_fzf-ghq-herdr-workspace"
+LIST_SCRIPT="$SCRIPT_DIR/fzf-ghq-list"
+WORKSPACE_SCRIPT="$REPO_ROOT/home/local/bin/fzf-ghq-herdr-workspace"
 
 tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/fzf-ghq-herdr-test.XXXXXX")
 trap 'rm -rf "$tmpdir"' EXIT

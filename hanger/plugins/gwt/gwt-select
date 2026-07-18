@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # fzfでworktreeを選択するUI（zellij / 非zellij 共通）
-# Usage: executable_gwt-select <cwd>
+# Usage: gwt-select <cwd>
 # stdout: 選択行（タブ区切り: worktree_name\tpath\t...）
 # exit 0: 選択あり, exit 1: キャンセル
 
@@ -8,7 +8,7 @@ local cwd="${1:-$PWD}"
 cd "$cwd" || exit 1
 
 local script_dir="${0:A:h}"
-local gwt_list_script="$script_dir/executable_gwt-list"
+local gwt_list_script="$script_dir/gwt-list"
 
 local fzf_output
 fzf_output=$(

@@ -30,11 +30,11 @@ function _gwt_herdr_run_enter() {
   local pane_id command
   pane_id=$(_gwt_herdr_pane_id "$workspace_id")
   [[ -z "$pane_id" ]] && return 1
-  command="GWT_PLUGIN_DIR=${(q)gwt_plugin_dir} source ${(q)gwt_plugin_dir}/executable_gwt-enter ${(q)worktree_name} ${(q)selected_path}"
+  command="GWT_PLUGIN_DIR=${(q)gwt_plugin_dir} source ${(q)gwt_plugin_dir}/gwt-enter ${(q)worktree_name} ${(q)selected_path}"
   "$herdr_bin" pane run "$pane_id" "$command"
 }
 
-selected_line=$("$gwt_plugin_dir/executable_gwt-select" "$cwd") || exit 130
+selected_line=$("$gwt_plugin_dir/gwt-select" "$cwd") || exit 130
 [[ -z "$selected_line" ]] && exit 130
 
 worktree_name=$(printf '%s' "$selected_line" | head -1 | cut -f1)

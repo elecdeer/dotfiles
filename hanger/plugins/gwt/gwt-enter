@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # 新しいタブ内でworktreeを作成/解決し、そのworktreeへ移動して後続処理を実行する
-# Usage: source executable_gwt-enter <worktree_name> <selected_path>
+# Usage: source gwt-enter <worktree_name> <selected_path>
 
 function _gwt_enter_main() {
   local worktree_name="$1"
@@ -13,7 +13,7 @@ function _gwt_enter_main() {
   local mise_config_paths="mise.toml .mise.toml .config/mise/config.toml mise.lock .config/mise/mise.lock"
 
   local resolved_details resolved_path wt_status root_branch
-  resolved_details=$("$script_dir/executable_gwt-create" --details "$worktree_name" "$selected_path") || return
+  resolved_details=$("$script_dir/gwt-create" --details "$worktree_name" "$selected_path") || return
   resolved_path=$(printf '%s' "$resolved_details" | cut -f1)
   wt_status=$(printf '%s' "$resolved_details" | cut -f2)
   root_branch=$(printf '%s' "$resolved_details" | cut -f3)

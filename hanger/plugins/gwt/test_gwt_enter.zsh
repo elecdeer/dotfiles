@@ -4,7 +4,7 @@ set -eu
 set -o pipefail
 
 SCRIPT_DIR=${0:A:h}
-GWT_ENTER_SCRIPT="$SCRIPT_DIR/executable_gwt-enter"
+GWT_ENTER_SCRIPT="$SCRIPT_DIR/gwt-enter"
 
 tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/gwt-enter-test.XXXXXX")
 trap 'rm -rf "$tmpdir"' EXIT

@@ -12,7 +12,7 @@ function fzf-ghq-search() {
   local repo
   repo=$(
     export GDN_ROOT="$ghq_root"
-    "$_fzf_ghq_search_plugin_dir/executable_fzf-ghq-list" \
+    "$_fzf_ghq_search_plugin_dir/fzf-ghq-list" \
       | fzf --prompt="repository > " --ansi \
           --height 50% \
           --reverse \

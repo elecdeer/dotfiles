@@ -4,7 +4,7 @@ set -eu
 set -o pipefail
 
 SCRIPT_DIR=${0:A:h}
-GWA_SCRIPT="$SCRIPT_DIR/executable_gwa"
+GWA_SCRIPT="$SCRIPT_DIR/gwa"
 
 tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/gwa-test.XXXXXX")
 trap 'rm -rf "$tmpdir"' EXIT

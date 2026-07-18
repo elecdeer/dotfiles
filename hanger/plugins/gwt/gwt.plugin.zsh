@@ -5,7 +5,7 @@
 _gwt_plugin_dir="${0:A:h}"
 
 function gwa() {
-  "$_gwt_plugin_dir/executable_gwa" "$@"
+  "$_gwt_plugin_dir/gwa" "$@"
 }
 
 _gwt_mise_config_paths="mise.toml .mise.toml .config/mise/config.toml mise.lock .config/mise/mise.lock"
@@ -43,7 +43,7 @@ function _gwt_herdr_split_workspace() {
 function _gwt_enter_command() {
   local worktree_name="$1"
   local selected_path="$2"
-  print -r -- "GWT_PLUGIN_DIR=${(q)_gwt_plugin_dir} source ${(q)_gwt_plugin_dir}/executable_gwt-enter ${(q)worktree_name} ${(q)selected_path}"
+  print -r -- "GWT_PLUGIN_DIR=${(q)_gwt_plugin_dir} source ${(q)_gwt_plugin_dir}/gwt-enter ${(q)worktree_name} ${(q)selected_path}"
 }
 
 function gwt() {
@@ -65,7 +65,7 @@ function gwt() {
   # （herdrはfloating paneを持たないためインライン選択にフォールバック）
   if [[ -n "$HERDR_ENV" ]]; then
     local _selected_line _wt_name _selected_path
-    _selected_line=$("$_gwt_plugin_dir/executable_gwt-select" "$PWD") || return
+    _selected_line=$("$_gwt_plugin_dir/gwt-select" "$PWD") || return
     [[ -z "$_selected_line" ]] && return
     _wt_name=$(printf '%s' "$_selected_line" | head -1 | cut -f1)
     _selected_path=$(printf '%s' "$_selected_line" | head -1 | cut -f2)
@@ -94,7 +94,7 @@ function gwt() {
 
   # 非herdr: インラインでworktreeを選択
   local selected_worktree selected_path selected_line
-  selected_line=$("$_gwt_plugin_dir/executable_gwt-select" "$PWD") || return
+  selected_line=$("$_gwt_plugin_dir/gwt-select" "$PWD") || return
   selected_worktree=$(echo "$selected_line" | cut -f1)
   selected_path=$(echo "$selected_line" | cut -f2)
 
@@ -111,7 +111,7 @@ function gwt() {
   fi
 
   local _resolved_details _resolved_path _status _root_branch
-  _resolved_details=$("$_gwt_plugin_dir/executable_gwt-create" --details "$selected_worktree" "$selected_path") || return
+  _resolved_details=$("$_gwt_plugin_dir/gwt-create" --details "$selected_worktree" "$selected_path") || return
   _resolved_path=$(printf '%s' "$_resolved_details" | cut -f1)
   _status=$(printf '%s' "$_resolved_details" | cut -f2)
   _root_branch=$(printf '%s' "$_resolved_details" | cut -f3)

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # worktreeを作成/解決し、パスをstdoutに出力する
-# Usage: executable_gwt-create [--details] <worktree_name> <selected_path>
+# Usage: gwt-create [--details] <worktree_name> <selected_path>
 #   selected_path:
 #     実際のパス              -> そのまま返す
 #     "__BASE__:"             -> current branchからgdn wt switch <name>
