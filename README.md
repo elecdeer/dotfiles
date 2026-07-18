@@ -18,9 +18,9 @@ xcode-select --install
 # 2. mise を導入（https://mise.jdx.dev/getting-started.html）
 curl https://mise.run | sh
 
-# 3. リポジトリを取得（安定パス推奨）
-git clone https://github.com/elecdeer/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
+# 3. リポジトリを取得（安定パス。gdn 標準構造 ~/dev/github.com/elecdeer/dotfiles へ）
+gdn repo clone elecdeer/dotfiles          # gdn 未導入なら git clone <url> <安定パス>
+cd "$(gdn repo root)/github.com/elecdeer/dotfiles"
 
 # 4. dotfiles を配置（~/.config/mise/config.toml の symlink もここで作られる）
 #    既存の実ファイルを置き換える場合は --force を付ける

@@ -5,7 +5,7 @@ unsetopt xtrace
 
 herdr_bin="${HERDR_BIN_PATH:-herdr}"
 ghq_root=$(gdn repo root) || exit 1
-source_dir="${DOTFILES_DIR:-$HOME/.local/share/chezmoi}"
+source_dir="${DOTFILES_DIR:-$HOME/dev/github.com/elecdeer/dotfiles}"
 repo_list_script="${FZF_GHQ_LIST_SCRIPT:-$source_dir/hanger/plugins/fzf-ghq-search/fzf-ghq-list}"
 
 selected=$(
