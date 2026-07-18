@@ -151,3 +151,6 @@ window-padding-y = 2
 
 # maximize
 # macos-window-buttons = hidden
+
+# 終了時の確認ダイアログを無効化
+confirm-close-surface = false
