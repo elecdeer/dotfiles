@@ -16,10 +16,10 @@ shell = "zsh"
 github = "romkatv/zsh-defer"
 
 [plugins.on-demand-completion]
-local = "{{ .chezmoi.sourceDir }}/hanger/plugins/on-demand-completion"
+local = "{{ vars.repo_root }}/hanger/plugins/on-demand-completion"
 
 [templates]
-defer = "{{`{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}`}}"
+defer = "{% raw %}{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}{% endraw %}"
 
 # =====================
 # Zsh Plugins
@@ -84,15 +84,15 @@ apply = ['defer']
 inline = 'source <(fzf --zsh)'
 
 [plugins.gwt]
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/gwt'
+local = '{{ vars.repo_root }}/hanger/plugins/gwt'
 apply = ['defer']
 
 [plugins.ghwt]
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/ghwt'
+local = '{{ vars.repo_root }}/hanger/plugins/ghwt'
 apply = ['defer']
 
 [plugins.fzf-ghq-search]
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/fzf-ghq-search'
+local = '{{ vars.repo_root }}/hanger/plugins/fzf-ghq-search'
 apply = ['defer']
 
 [plugins.zsh-history-substring-search]
@@ -119,7 +119,7 @@ zsh-defer abbr load
 
 [plugins.abbr-fast-syntax-highlighting]
 # ここで変数を使ってはいけない！
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/abbr-fast-syntax-highlighting'
+local = '{{ vars.repo_root }}/hanger/plugins/abbr-fast-syntax-highlighting'
 apply = ['defer']
 
 [plugins.zsh-z]
@@ -133,7 +133,7 @@ apply = ['defer']
 # https://kapeli.com/cheat_sheets/Oh-My-Zsh_Git.docset/Contents/Resources/Documents/index
 
 [plugins.git-alias-fn]
-local = '{{ .chezmoi.sourceDir }}/hanger/plugins/ohmyzsh-git-fn'
+local = '{{ vars.repo_root }}/hanger/plugins/ohmyzsh-git-fn'
 apply = ['defer']
 
 # =====================
@@ -251,7 +251,7 @@ inline = '''
 # OS specific settings
 # =====================
 
-{{ if eq .chezmoi.os "darwin" }}
+{% if os() == "macos" %}
 
 [plugins.opr]
 inline = '''
@@ -268,17 +268,17 @@ opr () {
 	then
 		op run --env-file=$PWD/.env -- $@
 	else
-		op run --env-file={{ .chezmoi.sourceDir }}/hanger/.env.1password -- $@
+		op run --env-file={{ vars.repo_root }}/hanger/.env.1password -- $@
 	fi
 }
 '''
 
-{{ else if eq .chezmoi.os "linux" }}
+{% elif os() == "linux" %}
 
 # linux
 
-{{ else }}
+{% else %}
 
 # other operating system
 
-{{ end }}
+{% endif %}

@@ -1,0 +1,42 @@
+# dotfiles 管理用 mise 設定
+# ----------------------------
+# このファイルはリポジトリ内でのみ使用され、home 側へは配置されない。
+# `mise dotfiles apply` / `mise bootstrap packages apply` をリポジトリ直下で実行する。
+# CLI ツールの一覧は home/config/mise/config.toml（= ~/.config/mise/config.toml）側にある。
+
+[vars]
+# dotfiles テンプレートから参照するリポジトリのルート。
+# テンプレート描画コンテキストでは config_root を直接参照できないため vars 経由で渡す。
+repo_root = "{{ config_root }}"
+
+[settings]
+# dotfiles のソースルート。config_root = この mise.toml があるディレクトリ（＝リポジトリ）。
+dotfiles.root = "{{ config_root }}"
+dotfiles.default_mode = "symlink"
+
+[dotfiles]
+"~/.zshrc" = "home/zshrc"
+"~/.zprofile" = "home/zprofile"
+"~/.zshenv" = "home/zshenv"
+"~/.default-npm-packages" = "home/default-npm-packages"
+
+# ディレクトリはソース構造だけをミラーして各ファイルを個別 symlink する
+# （symlink-each）。~/.config などに他ツールが生成したファイルを壊さない。
+"~/.config" = { source = "home/config", mode = "symlink-each" }
+"~/.claude" = { source = "home/claude", mode = "symlink-each" }
+"~/.docker" = { source = "home/docker", mode = "symlink-each" }
+"~/.local/bin" = { source = "home/local/bin", mode = "symlink-each" }
+
+# テンプレート要（repo_root 参照 + OS 分岐）。symlink-each 対象の
+# home/config 配下には置かず templates/ から直接生成する。
+"~/.config/sheldon/plugins.toml" = { source = "templates/sheldon-plugins.toml.tera", mode = "template" }
+
+[bootstrap.packages]
+# 現状 system package の依存は無い（CLI ツールは home/config/mise/config.toml の [tools] で管理）。
+# 将来 system ライブラリが必要になったら "brew:xxx" / "apt:xxx" 形式でここに追加し、
+# `mise bootstrap packages apply` で導入する。
+
+[tasks.setup-agents-skills]
+description = "~/.agents/skills -> ~/.claude/skills の symlink を作成する"
+# mise dotfiles は非リポジトリの home パスを指す相対 symlink を扱えないため task で再現する。
+run = "mkdir -p ~/.agents && ln -sfn ../.claude/skills ~/.agents/skills"

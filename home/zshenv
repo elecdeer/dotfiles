@@ -8,7 +8,10 @@ export XDG_DATA_HOME="$HOME"/.local/share
 export XDG_STATE_HOME="$HOME"/.local/state
 
 # Dotfiles管理
-export DOTFILES_HANGER_DIR="$HOME/.local/share/chezmoi/hanger"
+# ~/.zshenv は home/zshenv への symlink。自身の symlink 先からリポジトリルートを解決する
+# （リポジトリを移動しても追従する）。DOTFILES_DIR で上書き可能。
+export DOTFILES_DIR="${DOTFILES_DIR:-${${(%):-%x}:A:h:h}}"
+export DOTFILES_HANGER_DIR="$DOTFILES_DIR/hanger"
 
 export EDITOR="micro"
 # https://github.com/yyx990803/launch-editor

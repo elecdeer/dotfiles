@@ -5,7 +5,7 @@ unsetopt xtrace
 
 herdr_bin="${HERDR_BIN_PATH:-herdr}"
 cwd="${HERDR_ACTIVE_PANE_CWD:-$PWD}"
-source_dir="${CHEZMOI_SOURCE_DIR:-$HOME/.local/share/chezmoi}"
+source_dir="${DOTFILES_DIR:-$HOME/.local/share/chezmoi}"
 gwt_plugin_dir="${GWT_PLUGIN_DIR:-$source_dir/hanger/plugins/gwt}"
 
 function _gwt_herdr_pane_id() {
