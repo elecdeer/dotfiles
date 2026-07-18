@@ -50,6 +50,7 @@ curl https://mise.run | sh          # install mise
 git clone <repo> ~/.dotfiles && cd ~/.dotfiles
 mise dotfiles apply                 # place dotfiles (creates ~/.config/mise/config.toml symlink)
 mise install                        # install tools
+mise run skills-install              # apm.yml から ~/.claude/skills へ Claude Code skills をデプロイ
 mise run setup-agents-skills        # ~/.agents/skills -> ~/.claude/skills
 mise bootstrap packages apply       # (optional) system packages
 
@@ -67,6 +68,7 @@ mise bootstrap packages apply       # (optional) system packages
 ### Package Management Layers
 1. **mise** (`home/config/mise/config.toml`) - CLI tools and runtimes (bat, fd, ripgrep, fzf, gh, Node.js, Deno, Bun 等)
 2. **sheldon** (`templates/sheldon-plugins.toml.tera`) - Zsh plugins with deferred loading
+3. **apm** (`apm.yml` / `skills/`) - Claude Code skills。外部 skill は GitHub リポジトリを直接参照し、自作 skill は `skills/` 配下でこのリポジトリ自身（`elecdeer/dotfiles`）を配布元として自己参照する。`apm install --global --target claude` で `~/.claude/skills/` へ直接デプロイされ、`home/` の symlink 機構は経由しない。
 
 ### Custom Plugins
 Located in `hanger/plugins/`（`[dotfiles]` に載せず、テンプレートから `{{ vars.repo_root }}/hanger/plugins/...` として絶対パス参照する）:

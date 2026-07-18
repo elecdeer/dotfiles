@@ -29,10 +29,13 @@ mise dotfiles apply
 # 5. CLI ツール・ランタイムを導入（tools 設定が配置された後に実行）
 mise install
 
-# 6. ~/.agents/skills -> ~/.claude/skills の symlink を作成
+# 6. Claude Code skills を apm.yml から ~/.claude/skills へデプロイ
+mise run skills-install
+
+# 7. ~/.agents/skills -> ~/.claude/skills の symlink を作成
 mise run setup-agents-skills
 
-# 7. （必要時）system パッケージを導入
+# 8. （必要時）system パッケージを導入
 mise bootstrap packages apply
 ```
 
@@ -86,5 +89,25 @@ system ライブラリ等が必要な場合は `mise.toml` の `[bootstrap.packa
 
 ## Claude Code skills について
 
-以前は chezmoi の external 機能で `~/.claude/skills/` 配下の各 skill を GitHub から取得していたが、
-mise dotfiles には相当機能がないため **移行対象外**とした。skills は別途手動 / 別ツールで管理する。
+[APM (Agent Package Manager)](https://microsoft.github.io/apm/) で管理する。
+
+- 依存関係の定義: リポジトリルートの `apm.yml`
+- 外部 skill は GitHub リポジトリを直接参照し、自作 skill は `skills/` 配下に置いた上でこのリポジトリ自身
+  （`elecdeer/dotfiles`）を配布元として自己参照する
+- `apm install --global --target claude` で `~/.claude/skills/` へ直接デプロイされる
+  （`home/` の symlink 機構は経由しない）
+
+### skills の更新
+
+```zsh
+mise run skills-update   # apm.yml の #main 参照先を最新化し ~/.claude/skills へ再デプロイ
+```
+
+### 新しい外部 skill を追加する
+
+`apm.yml` の `dependencies.apm` に `owner/repo/skills/<name>` 形式で追記し、`mise run skills-install` を実行する。
+
+### 自作 skill を追加する
+
+`skills/<name>/SKILL.md` を新規作成してコミット・push し、`apm.yml` の `dependencies.apm` に
+`elecdeer/dotfiles/skills/<name>#main` を追記した上で `mise run skills-install` を実行する。

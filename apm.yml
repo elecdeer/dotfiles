@@ -1,0 +1,34 @@
+name: elecdeer-dotfiles-skills
+version: 0.1.0
+
+targets:
+  - claude
+
+dependencies:
+  apm:
+    # --- 外部skills（旧 .chezmoiexternal.toml 相当）---
+    - microsoft/playwright-cli/skills/playwright-cli#main
+    - anthropics/skills/skills/skill-creator#main
+    - antfu/skills/skills/vitest#main
+    - antfu/skills/skills/pnpm#main
+    - rolldown/tsdown/skills/tsdown#main
+    - vercel-labs/agent-skills/skills/composition-patterns#main
+    - vercel-labs/agent-skills/skills/react-best-practices#main
+    - cloudflare/skills/skills/cloudflare#main
+    - cloudflare/skills/skills/durable-objects#main
+    - cloudflare/skills/skills/web-perf#main
+    - cloudflare/skills/skills/workers-best-practices#main
+    - cloudflare/skills/skills/wrangler#main
+    - mizchi/skills/empirical-prompt-tuning#main
+    - yusukebe/hono-skill/skills/hono#main
+    - shadcn/ui/skills/shadcn#main
+
+    # --- 自作skills（このリポジトリ自身を配布元として自己参照）---
+    - elecdeer/dotfiles/skills/commit-message-rules#main
+    - elecdeer/dotfiles/skills/create-github-pr#main
+    - elecdeer/dotfiles/skills/github-actions#main
+    - elecdeer/dotfiles/skills/writing-test-using-vitest#main
+  mcp: []
+
+includes: auto
+scripts: {}

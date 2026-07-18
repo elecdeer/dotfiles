@@ -40,3 +40,11 @@ dotfiles.default_mode = "symlink"
 description = "~/.agents/skills -> ~/.claude/skills の symlink を作成する"
 # mise dotfiles は非リポジトリの home パスを指す相対 symlink を扱えないため task で再現する。
 run = "mkdir -p ~/.agents && ln -sfn ../.claude/skills ~/.agents/skills"
+
+[tasks.skills-install]
+description = "apm.yml の依存関係を解決し ~/.claude/skills へ直接デプロイする"
+run = "apm install --global --target claude"
+
+[tasks.skills-update]
+description = "apm.yml の #main 参照先を最新化し ~/.claude/skills へ再デプロイする"
+run = "apm update --global --target claude"
