@@ -19,7 +19,7 @@ dependencies:
     - cloudflare/skills/skills/web-perf#main
     - cloudflare/skills/skills/workers-best-practices#main
     - cloudflare/skills/skills/wrangler#main
-    - mizchi/skills/empirical-prompt-tuning#main
+    - mizchi/skills/meta/empirical-prompt-tuning#main
     - yusukebe/hono-skill/skills/hono#main
     - shadcn/ui/skills/shadcn#main
 

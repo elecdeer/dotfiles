@@ -91,7 +91,7 @@ system ライブラリ等が必要な場合は `mise.toml` の `[bootstrap.packa
 
 [APM (Agent Package Manager)](https://microsoft.github.io/apm/) で管理する。
 
-- 依存関係の定義: リポジトリルートの `apm.yml`
+- 依存関係の定義: `home/apm/apm.yml`（`~/.apm/apm.yml` へ symlink-each で配置。`apm install --global` が参照するパスのため）
 - 外部 skill は GitHub リポジトリを直接参照し、自作 skill は `skills/` 配下に置いた上でこのリポジトリ自身
   （`elecdeer/dotfiles`）を配布元として自己参照する
 - `apm install --global --target claude` で `~/.claude/skills/` へ直接デプロイされる

@@ -24,6 +24,7 @@ dotfiles.default_mode = "symlink"
 # （symlink-each）。~/.config などに他ツールが生成したファイルを壊さない。
 "~/.config" = { source = "home/config", mode = "symlink-each" }
 "~/.claude" = { source = "home/claude", mode = "symlink-each" }
+"~/.apm" = { source = "home/apm", mode = "symlink-each" }
 "~/.docker" = { source = "home/docker", mode = "symlink-each" }
 "~/.local/bin" = { source = "home/local/bin", mode = "symlink-each" }
 
@@ -43,8 +44,13 @@ run = "mkdir -p ~/.agents && ln -sfn ../.claude/skills ~/.agents/skills"
 
 [tasks.skills-install]
 description = "apm.yml の依存関係を解決し ~/.claude/skills へ直接デプロイする"
+# apm install --global はデプロイ先 (.claude/skills) を実行時のカレントディレクトリ基準で
+# 解決するため、リポジトリ直下で実行すると誤ってリポジトリ内に生成されてしまう。
+# dir = "~" で作業ディレクトリを固定し ~/.claude/skills を対象にする。
+dir = "~"
 run = "apm install --global --target claude"
 
 [tasks.skills-update]
 description = "apm.yml の #main 参照先を最新化し ~/.claude/skills へ再デプロイする"
+dir = "~"
 run = "apm update --global --target claude"

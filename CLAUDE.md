@@ -68,7 +68,7 @@ mise bootstrap packages apply       # (optional) system packages
 ### Package Management Layers
 1. **mise** (`home/config/mise/config.toml`) - CLI tools and runtimes (bat, fd, ripgrep, fzf, gh, Node.js, Deno, Bun 等)
 2. **sheldon** (`templates/sheldon-plugins.toml.tera`) - Zsh plugins with deferred loading
-3. **apm** (`apm.yml` / `skills/`) - Claude Code skills。外部 skill は GitHub リポジトリを直接参照し、自作 skill は `skills/` 配下でこのリポジトリ自身（`elecdeer/dotfiles`）を配布元として自己参照する。`apm install --global --target claude` で `~/.claude/skills/` へ直接デプロイされ、`home/` の symlink 機構は経由しない。
+3. **apm** (`home/apm/apm.yml` / `skills/`) - Claude Code skills。`apm.yml` 自体は `home/apm` → `~/.apm` の symlink-each で配置する（`apm install --global` が `~/.apm/apm.yml` を参照する仕様のため）。外部 skill は GitHub リポジトリを直接参照し、自作 skill は `skills/` 配下でこのリポジトリ自身（`elecdeer/dotfiles`）を配布元として自己参照する。`apm install --global --target claude` で `~/.claude/skills/` へ直接デプロイされ、skill の実体は `home/` の symlink 機構を経由しない。
 
 ### Custom Plugins
 Located in `hanger/plugins/`（`[dotfiles]` に載せず、テンプレートから `{{ vars.repo_root }}/hanger/plugins/...` として絶対パス参照する）:
