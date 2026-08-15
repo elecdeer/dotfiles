@@ -1,7 +1,7 @@
 [user]
 	name = elecdeer
 	email = 37701077+elecdeer@users.noreply.github.com
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbivrGflT9ilKBOtOx60eVWbmEB4KJ0P+oJrgC1GkX9
+  signingkey = ~/.ssh/id_git_sign
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
@@ -13,7 +13,7 @@
 [gpg]
 	format = ssh
 [gpg "ssh"]
-	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+	program = ssh-sign
 
 [i18n]
 	logOutputEncoding = utf-8
