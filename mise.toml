@@ -54,3 +54,32 @@ run = "apm install --global --target claude"
 description = "apm.yml の #main 参照先を最新化し ~/.claude/skills へ再デプロイする"
 dir = "~"
 run = "apm update --global --target claude"
+
+[tasks.bootstrap-git-signing-key]
+description = "Secure Enclave に Git 署名用 SSH 鍵(git-sign)を作成し ~/.ssh/id_git_sign へエクスポートする（冪等）"
+# ssh-keygen -K は Secure Enclave 上の全 resident key をダウンロードしようとするため、
+# git-sign 以外の CTK identity が存在すると 2 件目以降で overwrite 確認の対話プロンプトが
+# 出て非対話実行が止まる。上書き確認を抑止するオプションは ssh-keygen 側に存在しない。
+run = '''
+set -eu
+
+label=git-sign
+key_path="$HOME/.ssh/id_git_sign"
+
+if [ -f "$key_path" ]; then
+  echo "already exported: $key_path"
+  exit 0
+fi
+
+if ! sc_auth list-ctk-identities | tail -n +2 | awk '{print $4}' | grep -qx "$label"; then
+  sc_auth create-ctk-identity -l "$label" -k p-256-ne -t none
+fi
+
+tmp_dir=$(mktemp -d)
+trap 'rm -rf "$tmp_dir"' EXIT
+(cd "$tmp_dir" && ssh-keygen -w /usr/lib/ssh-keychain.dylib -K -N "")
+
+mv "$tmp_dir/id_ecdsa_sk_rk" "$key_path"
+mv "$tmp_dir/id_ecdsa_sk_rk.pub" "$key_path.pub"
+echo "exported: $key_path"
+'''
