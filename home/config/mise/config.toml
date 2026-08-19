@@ -29,7 +29,7 @@ ghq = "1.10.1"
 # https://github.com/k1LoW/git-wt/pull/162
 "github:k1LoW/git-wt" = "0.29.0"
 gdn = { version = "0.3.3", bin = "gdn" }
-"github:trasta298/keifu" = "0.5.0"
+"github:trasta298/keifu" = "0.6.0"
 "github:zyedidia/micro" = "2.0.15"
 hyperfine = "1.20.0"
 jq = "1.8.2"
