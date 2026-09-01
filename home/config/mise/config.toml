@@ -57,3 +57,4 @@ herdr = "0.8.0"
 codex = "latest"
 aws-cli = { version = "2.35.12", symlink_bins = "true" }
 pnpm = "11.13.1"
+"npm:taze" = "latest"
