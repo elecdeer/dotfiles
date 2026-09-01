@@ -116,6 +116,7 @@ function gwt() {
   _status=$(printf '%s' "$_resolved_details" | cut -f2)
   _root_branch=$(printf '%s' "$_resolved_details" | cut -f3)
   [[ -z "$_resolved_path" ]] && return
+  cd "$_resolved_path" || return
 
   if [[ "$_status" == "mise-diff-needed" ]]; then
     print "mise config differs from the root worktree. Review before running mise trust:"
