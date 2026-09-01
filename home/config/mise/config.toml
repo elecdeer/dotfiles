@@ -5,7 +5,7 @@ gdn = "github:elecdeer/git-gardener"
 [tools]
 1password = "2.34.1"
 "aqua:boyter/scc" = "3.7.0"
-"aqua:docker/buildx" = "0.35.0"
+"aqua:docker/buildx" = "0.36.1"
 "aqua:docker/cli" = "29.6.0"
 "aqua:docker/compose" = "5.2.0"
 "aqua:g-plane/pnpm-shell-completion" = "0.5.5"
