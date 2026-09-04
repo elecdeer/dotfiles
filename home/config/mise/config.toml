@@ -24,7 +24,7 @@ dive = "0.13.1"
 docker-credential-osxkeychain = { version = "0.9.8", matching = "docker-credential-osxkeychain", bin = "docker-credential-osxkeychain" }
 fd = "10.4.2"
 fzf = "0.73.1"
-gh = "2.95.0"
+gh = "2.99.0"
 ghq = "1.10.1"
 # https://github.com/k1LoW/git-wt/pull/162
 "github:k1LoW/git-wt" = "0.29.0"
