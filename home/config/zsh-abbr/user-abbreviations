@@ -7,6 +7,7 @@ abbr "relogin"="exec \$SHELL -l"
 abbr "nr"="ni run"
 
 abbr "oc"="code -r ."
+abbr "cdn"="open \"claude://code/new?folder=\$(pwd)\""
 abbr "opr"="gh repo view --web"
 
 abbr "g"="git"
