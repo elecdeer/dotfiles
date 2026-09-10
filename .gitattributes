@@ -1,0 +1,3 @@
+# 外部ツール(Claude Codeアプリ本体)が書き換える整形・キー順・model/effortLevelの
+# 変更でdiffが荒れないよう、コミット前にjqで正規化する
+home/claude/settings.json filter=jsonsort

@@ -1,88 +1,51 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "alwaysThinkingEnabled": true,
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
   "env": {
-    "USE_BUILTIN_RIPGREP": "1",
-    "SSH_AUTH_SOCK": "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    "SSH_AUTH_SOCK": "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock",
+    "USE_BUILTIN_RIPGREP": "1"
   },
-  "permissions": {
-    "allow": [
-      "Bash(pnpm run:*)",
-      "Bash(pnpm exec:*)",
-      "Bash(pnpm view:*)",
-      "Bash(pnpm list:*)",
-      "Bash(pnpm ls:*)",
-      "Bash(pnpm outdated:*)",
-      "Bash(pnpm why:*)",
-      "Bash(npm run:*)",
-      "Bash(npm exec:*)",
-      "Bash(npm view:*)",
-      "Bash(npm list:*)",
-      "Bash(npm ls:*)",
-      "Bash(npm outdated:*)",
-      "Bash(npm why:*)",
-      "Bash(yarn run:*)",
-      "Bash(yarn exec:*)",
-      "Bash(yarn info:*)",
-      "Bash(yarn list:*)",
-      "Bash(yarn outdated:*)",
-      "Bash(yarn why:*)",
-      "Bash(node:*)",
-      "Bash(ls:*)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(git add:*)",
-      "Bash(git show:*)",
-      "Bash(git branch:*)",
-      "Bash(git checkout:*)",
-      "Bash(git switch:*)",
-      "Bash(git stash:*)",
-      "Bash(git remote:*)",
-      "Bash(git fetch:*)",
-      "Bash(git pull:*)",
-      "Bash(git restore:*)",
-      "Bash(git tag:*)",
-      "Bash(rg:*)",
-      "Bash(grep:*)",
-      "Bash(find:*)",
-      "Bash(fd:*)",
-      "Bash(mv:*)",
-      "Bash(mkdir:*)",
-      "Bash(touch:*)",
-      "Bash(cat:*)",
-      "Bash(bat:*)",
-      "Bash(echo:*)",
-      "Bash(cp:*)",
-      "Bash(cd:*)",
-      "Bash(tree:*)",
-      "Bash(jq:*)",
-      "Bash(rm:*)",
-      "Grep(**)",
-      "WebFetch(domain:*)",
-      "mcp__context7",
-      "mcp__grep"
-    ],
-    "defaultMode": "auto"
+  "extraKnownMarketplaces": {
+    "chrome-devtools-plugins": {
+      "source": {
+        "repo": "ChromeDevTools/chrome-devtools-mcp",
+        "source": "github"
+      }
+    }
   },
-  "model": "sonnet",
   "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "~/.claude/hooks/post-tool-use-lint.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "Edit|MultiEdit|Write"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "rtk hook claude",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "~/.claude/hooks/stop-notification.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|MultiEdit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/post-tool-use-lint.sh"
+            "command": "~/.claude/hooks/stop-notification.sh",
+            "type": "command"
           }
         ]
       }
@@ -91,8 +54,8 @@
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "~/.claude/hooks/worktree.sh"
+            "command": "~/.claude/hooks/worktree.sh",
+            "type": "command"
           }
         ]
       }
@@ -101,45 +64,80 @@
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "~/.claude/hooks/worktree.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude"
+            "command": "~/.claude/hooks/worktree.sh",
+            "type": "command"
           }
         ]
       }
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "bunx -y ccstatusline@2.2.4",
-    "padding": 0
-  },
-  "enabledPlugins": {
-    "typescript-lsp@claude-plugins-official": true,
-    "context7@claude-plugins-official": true
-  },
-  "extraKnownMarketplaces": {
-    "chrome-devtools-plugins": {
-      "source": {
-        "source": "github",
-        "repo": "ChromeDevTools/chrome-devtools-mcp"
-      }
-    }
-  },
   "language": "日本語",
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
-  "tui": "fullscreen",
+  "permissions": {
+    "allow": [
+      "Bash(bat:*)",
+      "Bash(cat:*)",
+      "Bash(cd:*)",
+      "Bash(cp:*)",
+      "Bash(echo:*)",
+      "Bash(fd:*)",
+      "Bash(find:*)",
+      "Bash(git add:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git diff:*)",
+      "Bash(git fetch:*)",
+      "Bash(git log:*)",
+      "Bash(git pull:*)",
+      "Bash(git remote:*)",
+      "Bash(git restore:*)",
+      "Bash(git show:*)",
+      "Bash(git stash:*)",
+      "Bash(git status:*)",
+      "Bash(git switch:*)",
+      "Bash(git tag:*)",
+      "Bash(grep:*)",
+      "Bash(jq:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(node:*)",
+      "Bash(npm exec:*)",
+      "Bash(npm list:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm outdated:*)",
+      "Bash(npm run:*)",
+      "Bash(npm view:*)",
+      "Bash(npm why:*)",
+      "Bash(pnpm exec:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm ls:*)",
+      "Bash(pnpm outdated:*)",
+      "Bash(pnpm run:*)",
+      "Bash(pnpm view:*)",
+      "Bash(pnpm why:*)",
+      "Bash(rg:*)",
+      "Bash(rm:*)",
+      "Bash(touch:*)",
+      "Bash(tree:*)",
+      "Bash(yarn exec:*)",
+      "Bash(yarn info:*)",
+      "Bash(yarn list:*)",
+      "Bash(yarn outdated:*)",
+      "Bash(yarn run:*)",
+      "Bash(yarn why:*)",
+      "Grep(**)",
+      "WebFetch(domain:*)",
+      "mcp__context7",
+      "mcp__grep"
+    ],
+    "defaultMode": "auto"
+  },
   "preferredNotifChannel": "terminal_bell",
+  "statusLine": {
+    "command": "bunx -y ccstatusline@2.2.4",
+    "padding": 0,
+    "type": "command"
+  },
+  "tui": "fullscreen",
   "voiceEnabled": true
 }

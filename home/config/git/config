@@ -38,6 +38,10 @@
 	name = mergiraf
 	driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
 
+[filter "jsonsort"]
+	; 外部ツールが整形・配列順・model/effortLevelを書き換えても差分が出ないよう index 側を正規化する
+	clean = jq -S 'walk(if type==\"array\" then sort else . end) | del(.model, .effortLevel)'
+
 
 [url "https://github.com/"]
 	insteadOf = git@github.com:
