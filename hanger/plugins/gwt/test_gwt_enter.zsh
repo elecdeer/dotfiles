@@ -39,6 +39,11 @@ printf 'lockfileVersion: 9\n' > "$repo_root/pnpm-lock.yaml"
 git -C "$repo_root" add .mise.toml package.json pnpm-lock.yaml
 git -C "$repo_root" commit -m "initial commit" >/dev/null
 
+if (cd "$repo_root" && source "$GWT_ENTER_SCRIPT" invalid-feature "__BASE__:origin/missing"); then
+	print -u2 "invalid base unexpectedly succeeded"
+	exit 1
+fi
+
 cd "$repo_root"
 source "$GWT_ENTER_SCRIPT" enter-feature "__BASE__:main"
 

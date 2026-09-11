@@ -48,4 +48,6 @@ function _gwt_enter_main() {
 }
 
 _gwt_enter_main "$@"
+local exit_code=$?
 unfunction _gwt_enter_main
+return "$exit_code"

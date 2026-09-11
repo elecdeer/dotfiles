@@ -116,9 +116,9 @@ _run_gdn_switch() {
   local base="${3:-}"
   local result_path
   if [[ -n "$base" ]]; then
-    result_path=$(gdn wt switch "$branch" --base "$base" 2>/dev/null) || result_path=""
+    result_path=$(gdn wt switch "$branch" --base "$base") || result_path=""
   else
-    result_path=$(gdn wt switch "$branch" 2>/dev/null) || result_path=""
+    result_path=$(gdn wt switch "$branch") || result_path=""
   fi
   if [[ -z "$result_path" ]]; then
     result_path="$(_find_wt_path "$branch")"

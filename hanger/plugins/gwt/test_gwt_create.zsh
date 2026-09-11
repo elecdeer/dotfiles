@@ -56,6 +56,12 @@ origin_feature_hash=$(git -C "$repo_root" rev-parse origin-feature)
 [[ "$origin_feature_hash" == "$origin_main_hash" ]]
 [[ "$origin_feature_hash" != "$local_main_hash" ]]
 
+if invalid_base_output=$(cd "$repo_root" && "$GWT_CREATE_SCRIPT" invalid-base "__BASE__:origin/missing" 2>&1); then
+  print -u2 "invalid base unexpectedly succeeded"
+  exit 1
+fi
+[[ "$invalid_base_output" == *"invalid reference: origin/missing"* ]]
+
 git -C "$repo_root" checkout -b feature-base >/dev/null
 printf 'feature base\n' >> "$repo_root/file.txt"
 git -C "$repo_root" commit -am "feature base" >/dev/null
