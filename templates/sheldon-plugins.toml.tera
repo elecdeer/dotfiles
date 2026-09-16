@@ -69,9 +69,13 @@ zsh-defer -c '
 
   functions -c ni _ni_original
   ni() {
-    local gp_token
-    gp_token="$(op read "op://Personal/tl5vbvpj6zkzcz55f3hwprj6ba/credential")" || return 1
-    GITHUB_PACKAGES_TOKEN="$gp_token" _ni_original "$@"
+    if [[ $# -eq 0 || "$1" == "add" ]]; then
+      local gp_token
+      gp_token="$(op read "op://Personal/tl5vbvpj6zkzcz55f3hwprj6ba/credential")" || return 1
+      GITHUB_PACKAGES_TOKEN="$gp_token" _ni_original "$@"
+    else
+      _ni_original "$@"
+    fi
   }
 '
 '''
