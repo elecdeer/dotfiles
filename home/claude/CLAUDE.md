@@ -62,6 +62,13 @@ This is global guidance for Claude Code.
 
 ## General Development Guidelines
 
+### Writing Principles
+
+- Code describes **how** it works.
+- Test code describes **what** it does.
+- Commit messages describe **why** the change was made.
+- Code comments describe **why not** (rejected alternatives, constraints, non-obvious reasoning).
+
 ### Version Control
 
 - Use git to revert changes; avoid manual modifications whenever possible.
