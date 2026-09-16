@@ -61,13 +61,13 @@ apply = ['defer']
 
 [plugins.github-packages-token]
 inline = '''
-_gp_token() {
+gp-token-fetch() {
   op read "op://Personal/tl5vbvpj6zkzcz55f3hwprj6ba/credential"
 }
 
 gp-token() {
   local token
-  token="$(_gp_token)" || return 1
+  token="$(gp-token-fetch)" || return 1
   GITHUB_PACKAGES_TOKEN="$token" "$@"
 }
 '''
@@ -84,7 +84,7 @@ zsh-defer -c '
   ni() {
     if [[ $# -eq 0 || "$1" == "add" ]]; then
       local gp_token
-      gp_token="$(_gp_token)" || return 1
+      gp_token="$(gp-token-fetch)" || return 1
       GITHUB_PACKAGES_TOKEN="$gp_token" _ni_original "$@"
     else
       _ni_original "$@"
