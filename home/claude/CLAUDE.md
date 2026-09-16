@@ -79,6 +79,7 @@ This is global guidance for Claude Code.
 - When a package manager command needs `GITHUB_PACKAGES_TOKEN` (e.g. installing from GitHub Packages), prefix the command with `gp-token` instead of setting the token yourself.
   - Correct: `gp-token pnpm install`
   - Incorrect: `GITHUB_PACKAGES_TOKEN=xxx pnpm install`
+  - `gp-token` may prompt the user for 1Password authentication, so it can take longer than a normal command to finish; don't assume it's stuck.
 
 ### Code Quality
 
