@@ -15,6 +15,11 @@ This is global guidance for Claude Code.
   - Determine the commit message in advance and present it when executing the commit.
   - If the user rejects the commit execution, ask what should be done next.
 
+## Repository Scope
+
+- Other local repositories can be discovered with `gdn repo list`.
+- YOU MUST NOT modify files in a repository other than the one you are currently working in, unless the user explicitly asks you to.
+
 ## TypeScript Guidelines
 
 ### Package Manager
