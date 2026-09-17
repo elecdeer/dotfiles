@@ -8,6 +8,7 @@ abbr "nr"="ni run"
 
 abbr "oc"="code -r ."
 abbr "cdn"="open \"claude://code/new?folder=\$(pwd)\""
+abbr "cxn"="codex app \"\$(pwd)\""
 abbr "opr"="gh repo view --web"
 
 abbr "g"="git"
