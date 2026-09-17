@@ -71,9 +71,15 @@ function gwt() {
     _selected_path=$(printf '%s' "$_selected_line" | head -1 | cut -f2)
     [[ -z "$_wt_name" ]] && return
 
+    # worktree名だけだとブランチ名が被る別リポジトリ/別worktreeのタブと区別できないため、リポジトリ名を前置する
+    local _repo_git_common_dir _repo_name _workspace_label
+    _repo_git_common_dir=$(git -C "$PWD" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+    _repo_name="${${_repo_git_common_dir:h}:t}"
+    _workspace_label="${_repo_name}/${_wt_name}"
+
     # 既に同名workspaceが開いていれば移動する
     local _existing_workspace_id
-    _existing_workspace_id=$(herdr workspace list 2>/dev/null | jq -r --arg label "$_wt_name" '.result.workspaces[] | select(.label == $label) | .workspace_id' 2>/dev/null | head -1)
+    _existing_workspace_id=$(herdr workspace list 2>/dev/null | jq -r --arg label "$_workspace_label" '.result.workspaces[] | select(.label == $label) | .workspace_id' 2>/dev/null | head -1)
     if [[ -n "$_existing_workspace_id" ]]; then
       herdr workspace focus "$_existing_workspace_id"
     else
@@ -82,7 +88,7 @@ function gwt() {
         _new_workspace_cwd="$_selected_path"
       fi
       local _new_workspace_id
-      _new_workspace_id=$(herdr workspace create --cwd "$_new_workspace_cwd" --label "${_wt_name}" --focus 2>/dev/null | jq -r '(.result.workspace.workspace_id // .result.workspace_id // .result.created_workspace.workspace_id // .workspace_id // .id // empty)' 2>/dev/null)
+      _new_workspace_id=$(herdr workspace create --cwd "$_new_workspace_cwd" --label "${_workspace_label}" --focus 2>/dev/null | jq -r '(.result.workspace.workspace_id // .result.workspace_id // .result.created_workspace.workspace_id // .workspace_id // .id // empty)' 2>/dev/null)
       if [[ -z "$_selected_path" || "$_selected_path" == __BASE__:* ]]; then
         _gwt_herdr_send_command_to_workspace "$(_gwt_enter_command "$_wt_name" "$_selected_path")" "$_new_workspace_id"
       else
