@@ -83,6 +83,7 @@ This is global guidance for Claude Code.
 
 - When introducing libraries, use commands like `pnpm view` to check the latest stable version and maintenance status.
 - When researching how to use libraries, prioritize using context7 MCP.
+- Use `gp-token` only when the command actually requires `GITHUB_PACKAGES_TOKEN`; do not use it for public packages or commands that do not need GitHub Packages authentication.
 - When a package manager command needs `GITHUB_PACKAGES_TOKEN` (e.g. installing from GitHub Packages), prefix the command with `gp-token` instead of setting the token yourself.
   - Correct: `gp-token pnpm install`
   - Incorrect: `GITHUB_PACKAGES_TOKEN=xxx pnpm install`
