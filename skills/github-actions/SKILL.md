@@ -167,7 +167,21 @@ organization internal なパッケージ（`@your-org/package-name` 等）を Gi
     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### 7. コンポジットアクションでは `shell:` を必ず明記する
+### 7. pnpm のセットアップ: バージョンに応じてアクションを選ぶ
+
+pnpm **v11 以降**では `pnpm/action-setup` ではなく `pnpm/setup` を使う。`pnpm/setup` は pnpm の自己完結型リリースバイナリを使い、npm 署名・チェックサム検証も行うためより安全。`pnpm/setup` は pnpm v11 以降専用（v10 以下では動かない）なので、対象プロジェクトの pnpm バージョンが v10 以下の場合は引き続き `pnpm/action-setup` を使う。
+
+```yaml
+# ✅ pnpm v11 以降
+- uses: pnpm/setup@<SHA> # v3
+  with:
+    runtime: node@22 # package.json の devEngines.runtime があれば省略可
+
+# ✅ pnpm v10 以下
+- uses: pnpm/action-setup@<SHA> # vX.X.X
+```
+
+### 8. コンポジットアクションでは `shell:` を必ず明記する
 
 コンポジットアクション（`using: 'composite'`）内の `run:` ステップは、通常のワークフローと異なり `shell:` のデフォルトが存在しない。**必ず `shell: bash` を明記する**（省略するとエラーになる）。
 
@@ -188,7 +202,7 @@ runs:
       run: pnpm install --frozen-lockfile  # shell: が無いとエラー
 ```
 
-### 8. jq で値を取得する際の null 文字列問題
+### 9. jq で値を取得する際の null 文字列問題
 
 `jq` でフィールドを取り出すとき、**フィールドが存在しない・値が null の場合に文字列 `"null"` が出力される**。
 これをシェル変数に格納すると `-n "$VAR"` チェックが真になり、`null` を含む値をそのまま後続処理に渡してバグを引き起こす。
@@ -216,7 +230,7 @@ if [ -n "$BRANCH" ]; then
 fi
 ```
 
-### 9. コメントで処理の意図を残す
+### 10. コメントで処理の意図を残す
 
 - ジョブ・ステップの目的が自明でない場合はコメントを書く
 - 特に「なぜこの順番で実行するか」「なぜこの値を使っているか」が分かりにくい箇所にコメントを入れる
@@ -403,6 +417,7 @@ inputs:
 runs:
   using: "composite"
   steps:
+    # pnpm v11 以降なら pnpm/setup を使う（7章参照）。ここでは v10 以下想定の例
     - name: Install pnpm
       uses: pnpm/action-setup@<SHA> # vX.X.X
 
