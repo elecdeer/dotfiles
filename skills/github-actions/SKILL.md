@@ -244,6 +244,21 @@ fi
     echo "version=$VERSION" >> $GITHUB_OUTPUT
 ```
 
+### 11. 書いた・直したワークフローは jactionlint で検査する
+
+ワークフローを作成・変更したら、コミット前に `jactionlint`（[jdx/jactionlint](https://github.com/jdx/jactionlint)、rhysd/actionlint のフォーク）を実行する。構文・`${{ }}` 式の型・`uses:` の入力/出力・reusable workflow の整合性に加え、スクリプトインジェクションや権限過多などのセキュリティチェックも行う。
+
+```bash
+# リポジトリ内の .github/workflows/*.yml をまとめて検査
+jactionlint
+
+# 指定ファイルだけ検査
+jactionlint .github/workflows/ci.yml
+```
+
+- エラーは指摘どおり直す。意図的に許容する場合のみ、理由を添えて ignore する
+- `actionlint` ではなく `jactionlint` コマンドを使う
+
 ---
 
 ## ベストプラクティス チェックリスト
@@ -251,6 +266,7 @@ fi
 ### セキュリティ
 
 - [ ] アクションは SHA でピン留め（`pinact` で管理）
+- [ ] `jactionlint` がエラーなしで通る
 - [ ] `permissions` は最小権限で明示
 - [ ] `run:` 内に `${{ }}` 式を書いていない（`env:` を使う）
 - [ ] シークレットはハードコードしていない
