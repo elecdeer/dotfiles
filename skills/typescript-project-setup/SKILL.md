@@ -66,6 +66,9 @@ export default defineConfig({
       typeAware: true,
       typeCheck: true,
     },
+    rules: {
+      "func-style": ["error", "expression"],
+    },
   },
   fmt: {},
 });
@@ -154,6 +157,23 @@ import { render } from "#pkg/render";
 - 型定義だけを使う依存は **`import type`** で取り込み、実行時の import を発生させない
   - `verbatimModuleSyntax: true` により、型のみの import に `import type` を付け忘れると検出できる
 - 公開物は `"files": ["dist"]`、`"type": "module"` とし、`exports` は `pack.exports: true` で tsdown に生成させる
+
+## 関数は const + アロー関数で書く
+
+関数は `function` 宣言ではなく、`const` に代入したアロー関数で書く。
+
+```ts
+// NG
+export function add(a: number, b: number): number {
+  return a + b;
+}
+
+// OK
+export const add = (a: number, b: number): number => a + b;
+```
+
+- vite.config.ts の `lint.rules` に `"func-style": ["error", "expression"]` を設定し、`vp check` で `function` 宣言を検出する
+- クラスのメソッドはこのルールの対象外
 
 ## 注意点: タグ付きテンプレートの関数名
 
