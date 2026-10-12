@@ -1,16 +1,16 @@
 ---
 name: typescript-project-setup
 description: >
-  vite-plus（vp）と pnpm を使った TypeScript プロジェクトのセットアップ方針。
-  TypeScript のライブラリ・アプリケーション・monorepo を新規作成するとき、既存プロジェクトの初期設定や作り直しをするとき、
-  tsconfig.json / vite.config.ts / package.json（scripts・imports・exports）の設定を追加・変更するときに必ず使うこと。
-  「TS プロジェクトを作って」「ライブラリの雛形を作りたい」「tsconfig を設定して」「vite.config を直して」「パスエイリアスを張りたい」と言われた場合にも適用する。
+  vite-plus（vp）と pnpm を使って TypeScript プロジェクトを新規作成するときのセットアップ方針。
+  TypeScript のライブラリ・アプリケーション・monorepo をゼロから作るとき、新規プロジェクトの雛形を作った直後に
+  tsconfig.json / vite.config.ts / package.json を初期設定するときに必ず使うこと。
+  「TS プロジェクトを作って」「新しいライブラリを作りたい」「雛形を作って」「プロジェクトをゼロから作り直したい」と言われた場合にも適用する。
+  既存プロジェクトの設定変更や移行には使わない。
 ---
 
 # TypeScript プロジェクトセットアップ
 
-新規・既存を問わず、TypeScript プロジェクトの土台を以下の方針で揃える。
-既存プロジェクトで方針と異なる構成になっている場合は、勝手に移行せず差分をユーザーに提示して確認する。
+TypeScript プロジェクトを新規作成するとき、土台を以下の方針で揃える。
 
 vite-plus の詳細が必要なときは https://viteplus.dev/llms-full.txt を参照する。
 
@@ -30,7 +30,7 @@ vp create vite:monorepo     # monorepo
 ```
 
 非対話で作る場合は `--package-manager pnpm --no-interactive` などを付ける（`vp create --help` で確認）。
-生成後は下記の方針に合わせて設定を調整する。
+生成された設定を、下記の方針に合わせて調整する。
 
 ### vite.config.ts にすべての設定を集約する
 
@@ -149,38 +149,9 @@ import { render } from "#pkg/render";
 - ビルド時は内部 import としてバンドルされ、dist には `#pkg/...` の指定子は残らない
 - `#pkg` の部分はパッケージ名などプロジェクトに合わせた名前にする
 
-### 例: JSX ランタイムを自作するライブラリ
-
-ライブラリ自身の JSX ランタイムを、ライブラリ内のコード・テストから参照したい場合:
-
-```jsonc
-// package.json
-{
-  "imports": { "#pkg/*": "./src/*.ts" },
-  "exports": {
-    ".": "./dist/index.mjs",
-    "./jsx-runtime": "./dist/jsx-runtime.mjs",
-    "./jsx-dev-runtime": "./dist/jsx-dev-runtime.mjs",
-    "./package.json": "./package.json",
-  },
-}
-```
-
-```jsonc
-// tsconfig.json
-{
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "#pkg",
-  },
-}
-```
-
-`#pkg/jsx-runtime` が `./src/jsx-runtime.ts` に解決されるため、ビルド前でも自分自身のランタイムで JSX を型チェック・テストできる。
-
 ## ライブラリの依存
 
-- 型だけ使う依存（例: `discord-api-types`）は **`import type`** で取り込み、実行時の import を発生させない
+- 型定義だけを使う依存は **`import type`** で取り込み、実行時の import を発生させない
   - `verbatimModuleSyntax: true` により、型のみの import に `import type` を付け忘れると検出できる
 - 公開物は `"files": ["dist"]`、`"type": "module"` とし、`exports` は `pack.exports: true` で tsdown に生成させる
 
@@ -195,7 +166,7 @@ const text = md`
 `;
 
 // OK: 整形対象にならない名前にする
-const text = discordMd`
+const text = myTag`
   * item
 `;
 ```
