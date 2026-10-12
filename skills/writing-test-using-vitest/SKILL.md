@@ -15,6 +15,12 @@ Follow these fundamental patterns when writing Vitest tests:
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 ```
 
+**vite-plus projects**: If the project uses vite-plus (`vite-plus` in devDependencies, tests run with `vp test`), import from `vite-plus/test` instead of `vitest` in every example below. Do not add `vitest` as a direct dependency.
+
+```typescript
+import { describe, test, expect, vi } from "vite-plus/test";
+```
+
 **Test Structure**: Use `test()` instead of `it()`. Organize with `describe()` blocks (max 4 levels). Structure tests using the Given-When-Then pattern (setup, execution, assertion) but **do not write Given/When/Then comments in the actual code**:
 
 ```typescript
