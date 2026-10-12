@@ -27,6 +27,7 @@ dependencies:
     - elecdeer/dotfiles/skills/commit-message-rules#main
     - elecdeer/dotfiles/skills/create-github-pr#main
     - elecdeer/dotfiles/skills/github-actions#main
+    - elecdeer/dotfiles/skills/typescript-project-setup#main
     - elecdeer/dotfiles/skills/writing-test-using-vitest#main
   mcp: []
 
