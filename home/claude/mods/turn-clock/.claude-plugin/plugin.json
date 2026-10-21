@@ -1,0 +1,5 @@
+{
+  "name": "turn-clock",
+  "version": "0.1.0",
+  "description": "Gives the agent a sense of time by attaching the current timestamp and the time since the previous message to every prompt."
+}

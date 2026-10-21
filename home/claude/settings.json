@@ -6,6 +6,7 @@
     "typescript-lsp@claude-plugins-official": true
   },
   "env": {
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/turn-clock",
     "SSH_AUTH_SOCK": "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock",
     "USE_BUILTIN_RIPGREP": "1"
   },
