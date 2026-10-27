@@ -15,6 +15,10 @@ This is global guidance for Claude Code.
   - Determine the commit message in advance and present it when executing the commit.
   - If the user rejects the commit execution, ask what should be done next.
 
+## Session Start
+
+- Unless the user instructs otherwise, when starting work in a new session, first update the default branch from origin (e.g. `git fetch origin` and bring the local default branch up to date) before beginning the task.
+
 ## Repository Scope
 
 - Other local repositories can be discovered with `gdn repo list`.
