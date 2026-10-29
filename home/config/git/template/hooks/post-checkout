@@ -1,0 +1,35 @@
+#!/bin/bash
+# gdn 管理下リポジトリのルート worktree を常にデフォルトブランチへ保つ。
+# 別ブランチで作業するときは `gdn wt switch <branch>` で linked worktree を使う。
+# 一時的に許可するには GDN_ALLOW_ROOT_CHECKOUT=1 を付けて実行する。
+# init.templateDir 経由で clone / git init 時に .git/hooks へ配置される。
+
+# $3 = 1 はブランチ切り替え（0 はファイル単位の checkout）
+[[ "${3:-}" == "1" ]] || exit 0
+[[ -z "${GDN_ALLOW_ROOT_CHECKOUT:-}" ]] || exit 0
+
+git_dir=$(git rev-parse --path-format=absolute --git-dir) || exit 0
+common_dir=$(git rev-parse --path-format=absolute --git-common-dir) || exit 0
+# linked worktree では何もしない
+[[ "$git_dir" == "$common_dir" ]] || exit 0
+
+# gdn.root 配下のリポジトリだけを対象にする
+gdn_root=$(git config --get gdn.root) || exit 0
+gdn_root="${gdn_root/#\~/$HOME}"
+toplevel=$(git rev-parse --show-toplevel) || exit 0
+[[ "$toplevel" == "$gdn_root"/* ]] || exit 0
+
+# detached HEAD（rebase / bisect 中など）は対象外
+current=$(git symbolic-ref --quiet --short HEAD) || exit 0
+# origin/HEAD が未設定ならネットワークアクセスを避けて何もしない
+default=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD) || exit 0
+default="${default#origin/}"
+
+[[ "$current" != "$default" ]] || exit 0
+
+echo "gdn: ルート worktree は '$default' に保つ運用です（'$current' への切り替えを取り消します）。" >&2
+echo "gdn: '$current' で作業するには: cd \"\$(gdn wt switch $current)\"" >&2
+
+if ! git switch --quiet "$default"; then
+  echo "gdn: '$default' へ戻せませんでした。手動で切り替えてください。" >&2
+fi

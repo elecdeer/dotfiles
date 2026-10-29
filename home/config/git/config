@@ -50,6 +50,10 @@
 [credential "https://gist.github.com"]
   helper = !gh auth git-credential
 
+[init]
+	; clone / git init 時に hooks/post-checkout（gdn ルート worktree のデフォルトブランチ固定）を配置する
+	templateDir = ~/.config/git/template
+
 [gdn]
 	root = ~/dev
 	defaultHost = github.com
