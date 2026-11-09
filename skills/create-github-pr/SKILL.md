@@ -1,6 +1,6 @@
 ---
 name: create-github-pr
-description: Create GitHub Pull Requests with comprehensive workflow including change analysis, issue search, PR template application, and gh CLI web flow. Use when creating a PR from the current branch, when asked to "create a pull request", "make a PR", "open a PR", or similar requests.
+description: Create GitHub Pull Requests with comprehensive workflow including change analysis, issue search, PR template application, and direct draft PR creation via gh CLI. Use when creating a PR from the current branch, when asked to "create a pull request", "make a PR", "open a PR", or similar requests.
 ---
 
 # Create GitHub Pull Request
@@ -112,34 +112,20 @@ Based on the script output:
    - Inform user of the situation
    - Suggest appropriate action (pull, rebase, or force push)
 
-### 7. Open PR Creation in Browser
+### 7. Create Draft PR
 
-Run `gh pr create --web` with the prepared PR metadata and body. Do not create a draft file or a separate confirmation step.
+Run `gh pr create --draft` with the prepared PR metadata and body to create the PR directly as a draft. Do not use `--web`, and do not create a draft file or a separate confirmation step.
 
 ```bash
 gh pr create \
-  --web \
+  --draft \
   --base "<base-branch>" \
   --head "<head-branch>" \
   --title "<prepared PR title>" \
   --body "<prepared PR body>"
 ```
 
-This opens GitHub's PR creation page prefilled with the prepared content, allowing the user to make any final adjustments in the browser before submitting.
-
-If this fails because the generated URL is too long, retry without `--body` and copy the prepared PR body to the clipboard so the user can paste it into the browser:
-
-```bash
-printf '%s' "<prepared PR body>" | pbcopy
-
-gh pr create \
-  --web \
-  --base "<base-branch>" \
-  --head "<head-branch>" \
-  --title "<prepared PR title>"
-```
-
-Only use this fallback for URL length errors. Do not drop the body silently; tell the user that the body is on the clipboard and needs to be pasted into the PR description field.
+After creation, report the PR URL printed by `gh` to the user. The PR stays a draft until the user marks it ready for review.
 
 ## Important Guidelines
 
