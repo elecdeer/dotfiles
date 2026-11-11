@@ -22,6 +22,7 @@ dependencies:
     - mizchi/skills/meta/empirical-prompt-tuning#main
     - yusukebe/hono-skill/skills/hono#main
     - shadcn/ui/skills/shadcn#main
+    - GoogleChrome/modern-web-guidance/skills/modern-web-guidance#main
 
     # --- 自作skills（このリポジトリ自身を配布元として自己参照）---
     - elecdeer/dotfiles/skills/commit-message-rules#main
