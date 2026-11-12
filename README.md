@@ -56,6 +56,24 @@ mise dotfiles apply
 - 新しいファイルを管理下に置くときは `home/` 以下に実体を追加し、`mise.toml` の `[dotfiles]` にマッピングを追記する。
 - `~/.config/sheldon/plugins.toml` はテンプレート（`templates/sheldon-plugins.toml.tera`）。OS 分岐は `os()`、リポジトリパス参照は `{{ vars.repo_root }}` を使う。
 
+### remote の変更を取り込む
+
+```bash
+# 1. 最新化（home/ 以下の既存ファイルは symlink なので、これだけで反映される）
+git pull
+
+# 2. [dotfiles] へのファイル追加やテンプレートの変更があった場合
+mise dotfiles apply
+
+# 3. home/config/mise/config.toml のツールが変わった場合
+mise install
+
+# 4. home/apm/apm.yml や skills/ が変わった場合
+mise run skills-update
+```
+
+- zsh プラグインの変更は、新しいシェルを開くと `sheldon source` が lock を更新して反映する（手動なら `sheldon lock --update`）。
+
 ### パッケージ管理
 
 #### mise（CLI ツール・ランタイム）
