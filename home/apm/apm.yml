@@ -23,6 +23,10 @@ dependencies:
     - honojs/skills/skills/hono#main
     - shadcn/ui/skills/shadcn#main
     - GoogleChrome/modern-web-guidance/skills/modern-web-guidance#main
+    # gist はリポジトリ直下に SKILL.md があり、そのままだと gist ID がディレクトリ名になるため alias で命名する
+    - git: https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d.git
+      ref: main
+      alias: japanese-tech-writing
 
     # --- 自作skills（このリポジトリ自身を配布元として自己参照）---
     - elecdeer/dotfiles/skills/commit-message-rules#main
