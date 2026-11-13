@@ -37,6 +37,76 @@ dotfiles.default_mode = "symlink"
 # 将来 system ライブラリが必要になったら "brew:xxx" / "apt:xxx" 形式でここに追加し、
 # `mise bootstrap packages apply` で導入する。
 
+# macOS 標準のウインドウ配置（画面全体・中央・前のサイズに戻す・左右半分）を ⌃⌥⌘ 系のショートカットにする。
+# 既定は ⌃fn 併用で、fn を修飾キーとして送らない外付けキーボードでは使えない。
+# ⌃⌥ だと VS Code 等の既定ショートカットと衝突するため ⌘ も足す。実際の操作は Karabiner で「英数ホールド + キー」から送る（home/karabiner）。
+# 設定アプリ「キーボードショートカット > ウインドウ」と同じ com.apple.symbolichotkeys に書く。
+# NSUserKeyEquivalents（アプリのショートカット）でメニュー項目を上書きする方法は、このシステムショートカットが優先されるため効かなかった。
+# ID と既定値は /System/Library/ExtensionKit/Extensions/KeyboardSettings.appex/Contents/Resources/en.lproj/DefaultShortcutsTable.xml を参照。
+# parameters = [文字コード(なしは 65535), 仮想キーコード, 修飾フラグ]。修飾フラグは ⌃=0x40000, ⌥=0x80000, ⌘=0x100000,
+# 矢印キーは設定アプリが付けるのと同じく fn(0x800000) を含める。
+# path で ID 単位に書くのは、AppleSymbolicHotKeys 全体を置き換えると他のショートカット設定が消えるため。
+# 反映にはログアウトするか activateSettings -u を実行する。
+[[bootstrap.macos.defaults_entries]] # ⌃⌥⌘F 画面全体に表示
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["237"]
+value = { enabled = true, value = { type = "standard", parameters = [102, 3, 1835008] } }
+
+[[bootstrap.macos.defaults_entries]] # ⌃⌥⌘C 中央に配置
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["238"]
+value = { enabled = true, value = { type = "standard", parameters = [99, 8, 1835008] } }
+
+[[bootstrap.macos.defaults_entries]] # ⌃⌥⌘R 前のサイズに戻す
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["239"]
+value = { enabled = true, value = { type = "standard", parameters = [114, 15, 1835008] } }
+
+[[bootstrap.macos.defaults_entries]] # ⌃⌥⌘← 左半分
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["240"]
+value = { enabled = true, value = { type = "standard", parameters = [65535, 123, 10223616] } }
+
+[[bootstrap.macos.defaults_entries]] # ⌃⌥⌘→ 右半分
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["241"]
+value = { enabled = true, value = { type = "standard", parameters = [65535, 124, 10223616] } }
+
+# 別ディスプレイへの移動はシステムショートカット（symbolichotkeys）に無いため、
+# 「ウインドウ > 移動とサイズ変更 > <ディスプレイ名>に移動」メニューにアプリのショートカットとして割り当てる。
+# 方向指定の項目は無いので、配置（JAPANNEXT MNT が内蔵ディスプレイの上）に合わせて ↑ / ↓ を割り当てる。
+# タイトルにディスプレイ名（NSScreen.localizedName）が入るため、接続するディスプレイが変わったら追記が必要。
+# 上下半分（ID 242/243）は既定の ⌃fn↑↓ に明示的に戻す（同じキーだとそちらが優先されメニューに届かない）。
+# エントリを消すだけでは WindowManager が以前の割り当てを保持し続けたため、既定値を書いて上書きする。
+[[bootstrap.macos.defaults_entries]] # ⌃fn↑ 上半分（既定）
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["242"]
+value = { enabled = true, value = { type = "standard", parameters = [65535, 126, 8650752] } }
+
+[[bootstrap.macos.defaults_entries]] # ⌃fn↓ 下半分（既定）
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["243"]
+value = { enabled = true, value = { type = "standard", parameters = [65535, 125, 8650752] } }
+
+[[bootstrap.macos.defaults_entries]] # ⌃⌥⌘↓ 下の内蔵ディスプレイへ移動
+domain = "NSGlobalDomain"
+key = "NSUserKeyEquivalents"
+path = ["内蔵Retinaディスプレイに移動"]
+value = "^~@\uF701"
+
+[[bootstrap.macos.defaults_entries]] # ⌃⌥⌘↑ 上の外部ディスプレイへ移動
+domain = "NSGlobalDomain"
+key = "NSUserKeyEquivalents"
+path = ["JAPANNEXT MNTに移動"]
+value = "^~@\uF700"
+
 [tasks.setup-agents-skills]
 description = "~/.agents/skills -> ~/.claude/skills の symlink を作成する"
 # mise dotfiles は非リポジトリの home パスを指す相対 symlink を扱えないため task で再現する。

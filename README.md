@@ -35,7 +35,10 @@ mise run skills-install
 # 7. ~/.agents/skills -> ~/.claude/skills の symlink を作成
 mise run setup-agents-skills
 
-# 8. （必要時）system パッケージを導入
+# 8. （macOS）ウインドウ配置に ⌃⌥⌘ 系ショートカットを割り当て（Karabiner で英数ホールド + F 全体 / ←→ 左右半分 / ↑↓ 上下のディスプレイへ移動 / C 中央 / R 前のサイズ）
+mise bootstrap macos defaults apply   # mise.toml の [[bootstrap.macos.defaults_entries]]
+
+# 9. （必要時）system パッケージを導入
 mise bootstrap packages apply
 ```
 

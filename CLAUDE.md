@@ -52,6 +52,7 @@ mise dotfiles apply                 # place dotfiles (creates ~/.config/mise/con
 mise install                        # install tools
 mise run skills-install              # apm.yml から ~/.claude/skills へ Claude Code skills をデプロイ
 mise run setup-agents-skills        # ~/.agents/skills -> ~/.claude/skills
+mise bootstrap macos defaults apply # (macOS) mise.toml の defaults（ウインドウ配置の ⌃⌥⌘ ショートカット等）を適用
 mise bootstrap packages apply       # (optional) system packages
 
 # Full installation (Linux)
