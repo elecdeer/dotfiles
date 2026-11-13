@@ -81,6 +81,7 @@ Located in `hanger/plugins/`（`[dotfiles]` に載せず、テンプレートか
 - Shell layers: `home/zshenv` → `home/zprofile` → `home/zshrc`
 - Git configuration with 1Password SSH signing
 - Git abbreviations in `home/config/zsh-abbr/user-abbreviations`
+- Karabiner-Elements の設定は `home/karabiner/`（`~/.config/karabiner` をディレクトリごと symlink。ファイル単位の symlink だと変更検知されないため `home/config` 配下には置かない）
 - Performance optimizations: deferred plugin loading, intelligent completion caching
 
 ## File Layout Convention

@@ -28,6 +28,11 @@ dotfiles.default_mode = "symlink"
 "~/.docker" = { source = "home/docker", mode = "symlink-each" }
 "~/.local/bin" = { source = "home/local/bin", mode = "symlink-each" }
 
+# Karabiner-Elements は karabiner.json 自体が symlink だと変更を検知できず、GUI 保存でもリンクが壊れるため
+# ディレクトリごと symlink する（https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/）。
+# home/config 配下に置くと symlink-each と衝突するので home/karabiner に分けている。
+"~/.config/karabiner" = "home/karabiner"
+
 # テンプレート要（repo_root 参照 + OS 分岐）。symlink-each 対象の
 # home/config 配下には置かず templates/ から直接生成する。
 "~/.config/sheldon/plugins.toml" = { source = "templates/sheldon-plugins.toml.tera", mode = "template" }
