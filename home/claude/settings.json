@@ -136,6 +136,9 @@
   "preferredNotifChannel": "terminal_bell",
   "sandbox": {
     "enabled": true,
+    "excludedCommands": [
+      "gh *"
+    ],
     "filesystem": {
       "allowWrite": [
         "~/.cache/pnpm",
