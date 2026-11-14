@@ -141,6 +141,13 @@
         "~/.cache/pnpm",
         "~/.local/share/pnpm/store"
       ]
+    },
+    "network": {
+      "allowMachLookup": [
+        "com.apple.CoreAuthentication.agent",
+        "com.apple.CoreAuthentication.agent.libxpc",
+        "com.apple.ctkd.token-client"
+      ]
     }
   },
   "statusLine": {
