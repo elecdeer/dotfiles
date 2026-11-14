@@ -142,7 +142,12 @@
     "filesystem": {
       "allowWrite": [
         "~/.cache/pnpm",
-        "~/.local/share/pnpm/store"
+        "~/.local/share/pnpm"
+      ],
+      "denyWrite": [
+        "~/.local/share/pnpm/.tools",
+        "~/.local/share/pnpm/bin",
+        "~/.local/share/pnpm/global"
       ]
     },
     "network": {
