@@ -1,0 +1,4 @@
+# store の場所を明示する。未指定だと pnpm は $XDG_DATA_HOME/pnpm 直下に一時ファイルを作って
+# hardlink 可否を判定するが、Claude Code の sandbox ではそこに書けず判定に失敗し、
+# プロジェクト内の node_modules/.pnpm-store にフォールバックしてしまうため。
+storeDir: ~/.local/share/pnpm/store

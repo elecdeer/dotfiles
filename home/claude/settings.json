@@ -134,6 +134,15 @@
     "defaultMode": "auto"
   },
   "preferredNotifChannel": "terminal_bell",
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "allowWrite": [
+        "~/.cache/pnpm",
+        "~/.local/share/pnpm/store"
+      ]
+    }
+  },
   "statusLine": {
     "command": "bunx -y ccstatusline@2.2.4",
     "padding": 0,
