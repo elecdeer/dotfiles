@@ -9,7 +9,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "英数キーを押しながら F/C/R/←→ でウインドウ配置、↑↓ で上下のディスプレイへ移動（⌃⌥⌘+キー）。単体押しは英数",
+                        "description": "英数キーを押しながら F/C/R/←→ でウインドウ配置、↑↓ で上下のディスプレイへ移動（⌃⌥⌘+キー）。押した時点で常に英数も送る",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -23,6 +23,10 @@
                                 },
                                 "to": [
                                     {
+                                        "key_code": "japanese_eisuu",
+                                        "repeat": false
+                                    },
+                                    {
                                         "set_variable": {
                                             "name": "eisuu_window_mod",
                                             "value": 1
@@ -35,11 +39,6 @@
                                             "name": "eisuu_window_mod",
                                             "value": 0
                                         }
-                                    }
-                                ],
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "japanese_eisuu"
                                     }
                                 ]
                             },
