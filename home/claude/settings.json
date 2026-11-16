@@ -141,6 +141,7 @@
     ],
     "filesystem": {
       "allowWrite": [
+        "/private/tmp/pnpm-store-operation-locks-**",
         "~/.cache/pnpm",
         "~/.local/share/pnpm"
       ],
