@@ -137,7 +137,8 @@
   "sandbox": {
     "enabled": true,
     "excludedCommands": [
-      "gh *"
+      "gh *",
+      "git switch *"
     ],
     "filesystem": {
       "allowWrite": [
