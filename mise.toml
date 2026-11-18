@@ -140,6 +140,26 @@ description = "apm.yml の #main 参照先を最新化し ~/.claude/skills へ�
 dir = "~"
 run = "apm update --global --target claude"
 
+[tasks.gh-extensions-install]
+description = "gh extension をインストールする（インストール済みのものはスキップ）"
+# mise には gh extension 用のバックエンドが無い。github: バックエンドでバイナリだけ入れると
+# gh の extension ディレクトリに登録されず `gh <name>` として呼べないため、gh 自身に入れさせる。
+run = '''
+set -eu
+installed=$(gh extension list | cut -f2)
+for ext in github/gh-stack; do
+  if printf '%s\n' "$installed" | grep -qx "$ext"; then
+    echo "already installed: $ext"
+  else
+    gh extension install "$ext"
+  fi
+done
+'''
+
+[tasks.gh-extensions-upgrade]
+description = "インストール済みの gh extension をすべて更新する"
+run = "gh extension upgrade --all"
+
 [tasks.bootstrap-git-signing-key]
 description = "Secure Enclave に Git 署名用 SSH 鍵(git-sign)を作成し ~/.ssh/id_git_sign へエクスポートする（冪等）"
 # ssh-keygen -K は Secure Enclave 上の全 resident key をダウンロードしようとするため、
